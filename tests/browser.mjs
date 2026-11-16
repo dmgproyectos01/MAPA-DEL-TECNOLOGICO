@@ -136,13 +136,55 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
       await check(page, row, `Search and center ${code}`, async () => {
         await search(page, code);
         assert.equal(await page.locator('.place.selected').getAttribute('data-id'), code[1]);
-        assert.ok((await page.locator('#detail').innerText()).includes(code));
+        if (['EW04', 'EJ10', 'EH02'].includes(code)) {
+          assert.ok((await page.locator('#detail .room-highlight').innerText()).includes(code), `Confirmed room ${code} must remain highlighted`);
+        } else {
+          assert.equal(await page.locator('#detail .room-highlight').count(), 0, `Unknown room ${code} must not produce a room card`);
+        }
         const selected = await page.locator('.place.selected').boundingBox(), card = await page.locator('#detail').boundingBox();
         assert.ok(selected && selected.x + selected.width > 0 && selected.x < width && selected.y + selected.height > 0 && selected.y < height);
         if (name === 'mobile') assert.ok(selected.y + selected.height/2 < card.y + 3, `Selected center ${selected.y+selected.height/2} covered by card ${card.y}`);
         await closeDetail(page);
       });
     }
+    await check(page, row, 'Building cards omit unknown fields while preserving confirmed information', async () => {
+      const headings = () => page.locator('#detail h3').allTextContents();
+      await search(page, 'EB01');
+      assert.equal(await page.locator('.place.selected').getAttribute('data-id'), 'B');
+      assert.equal(await page.locator('#detail .room-highlight').count(), 0);
+      assert.deepEqual(await headings(), [], 'B must not display empty Salones/Servicios or unknown Pisos/Horarios');
+      assert.equal(await page.locator('#detail .details-grid').count(), 0);
+      await closeDetail(page);
+
+      await search(page, 'EJ10');
+      assert.deepEqual(await headings(), ['Salones', 'Servicios', 'Pisos']);
+      assert.equal(await page.locator('#detail .room-list span').count(), 10);
+      const industrial = await page.locator('#detail').innerText();
+      for (const text of ['EJ10', '2 pisos', 'Baños']) assert.ok(industrial.includes(text), `J lost confirmed data: ${text}`);
+      await closeDetail(page);
+
+      await search(page, 'EH02');
+      assert.deepEqual(await headings(), ['Salones', 'Servicios', 'Horarios']);
+      const teleconferences = await page.locator('#detail').innerText();
+      for (const text of ['EH02', 'Aula Magna', 'Consultorio médico', 'Lunes a viernes', '7:00 a. m.', '1:00 p. m.']) assert.ok(teleconferences.includes(text), `H lost confirmed data: ${text}`);
+      await closeDetail(page);
+
+      await search(page, 'EV01');
+      assert.deepEqual(await headings(), ['Servicios']);
+      assert.equal(await page.locator('#detail .room-highlight').count(), 0);
+      assert.equal(await page.locator('#detail .room-list').count(), 0);
+      assert.equal(await page.locator('#detail .details-grid').count(), 0);
+      const laboratories = await page.locator('#detail').innerText();
+      for (const text of ['Laboratorio de Mecánica', 'Laboratorio de Eléctrica']) assert.ok(laboratories.includes(text), `V lost confirmed service: ${text}`);
+      await closeDetail(page);
+
+      await search(page, 'EW04');
+      assert.deepEqual(await headings(), ['Salones', 'Servicios']);
+      assert.equal(await page.locator('#detail .details-grid').count(), 0);
+      const workshop = await page.locator('#detail').innerText();
+      for (const text of ['EW04', 'Club de Robótica', 'Taller de máquinas']) assert.ok(workshop.includes(text), `W lost confirmed data: ${text}`);
+      await closeDetail(page);
+    });
     await check(page, row, 'E suggestions and keyboard selection', async () => {
       await page.locator('#search').fill('E');
       await page.locator('#suggestions [role="option"]').last().waitFor({ state: 'attached' });

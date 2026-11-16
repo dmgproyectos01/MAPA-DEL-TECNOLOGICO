@@ -25,8 +25,9 @@ Abre `http://localhost:3000`. También funciona con `python3 -m http.server 3000
 ### Usar el mapa
 
 - Busca edificios, departamentos, laboratorios, servicios o códigos de salón. `/` enfoca el buscador; flechas y Enter eligen una sugerencia; Escape cierra la ficha.
-- Escribir `E` muestra EA01, ED01, EE01, EV01, EW01, EJ01 y EH01. Los códigos sin detalle confirmado localizan el edificio e indican que el salón está por confirmar.
+- Escribir `E` muestra EA01, ED01, EE01, EV01, EW01, EJ01 y EH01. Los códigos sin detalle confirmado siguen localizando el edificio, sin mostrar una ficha de salón no asignado.
 - Selecciona un edificio con clic, toque o teclado. Solo aparece un contorno o resaltado transparente sobre su ubicación. Las fichas son flotantes y desplazables; en móvil aparecen abajo.
+- Las fichas muestran salones, servicios, pisos y horarios solo cuando tienen información asignada. Se omiten los apartados vacíos o con el valor «Por confirmar», conservando todos los datos existentes.
 - Explora con rueda, arrastre, pinza táctil o botones de zoom. El botón de mira muestra todo el campus sin deformar su proporción.
 - Para retirar un recorrido, pulsa **Quitar ruta** en la parte superior izquierda del mapa o al inicio de las indicaciones. La **×** de la ficha también borra la línea y sus marcadores. En computadora, **Escape** quita la ruta cuando no estás escribiendo en un campo. El botón del mapa sigue disponible aunque selecciones otro edificio y se oculten las indicaciones.
 - Los filtros marcan las zonas correspondientes sobre el plano; conservan intacta la imagen. El modo oscuro afecta los controles y las fichas.
