@@ -59,7 +59,7 @@ Las rutas son orientativas: la escala usa una conversión provisional de 0.7 met
 npm test
 ```
 
-14 pruebas automáticas cubren búsqueda, datos pendientes, conectividad y geometría. Ver `tests/VALIDACION.md` para límites y verificaciones visuales pendientes. No se afirma que las pruebas automáticas sustituyan una revisión del navegador o una validación del plano en campo.
+15 pruebas automáticas cubren búsqueda, datos pendientes, conectividad y geometría. Ver `tests/VALIDACION.md` para límites y verificaciones visuales pendientes. No se afirma que las pruebas automáticas sustituyan una revisión del navegador o una validación del plano en campo.
 
 ### GitHub Pages
 

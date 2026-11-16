@@ -26,7 +26,7 @@ def clear(a,b,ignore=None,bridge=False):
 nodes={};edges=[];xs=[285,390,590,775,900,1030];ys=[120,225,310,375,440,505,580,685,760,860,935]
 for i,x in enumerate(xs):
  for j,y in enumerate(ys):
-  if not any(abs(x-l['x'])<=l['w']/2+3 and abs(y-l['y'])<=l['h']/2+3 for l in obstacles):nodes[f'{i}-{j}']=[x,y]
+  if x <= 850+(y-100)*.36 and not any(abs(x-l['x'])<=l['w']/2+3 and abs(y-l['y'])<=l['h']/2+3 for l in obstacles):nodes[f'{i}-{j}']=[x,y]
 for i,x in enumerate(xs):
  for j,y in enumerate(ys):
   a=f'{i}-{j}'
@@ -38,7 +38,8 @@ for i,x in enumerate(xs):
     if bridge:bridges.append([nodes[a],nodes[b]])
 # Additional walkway around Metal-Mecánica and a provisional canal crossing.
 nodes['detour-n']=[750,580];nodes['detour-s']=[750,685]
-for a,b,bridge in [('2-6','detour-n',False),('detour-n','detour-s',False),('detour-s','3-7',False),('2-7','2-8',True)]:
+nodes['north-spine']=[720,120];nodes['north-link']=[720,310]
+for a,b,bridge in [('2-0','north-spine',False),('north-spine','north-link',False),('north-link','3-2',False),('2-6','detour-n',False),('detour-n','detour-s',False),('detour-s','3-7',False),('2-7','2-8',True)]:
  if a in nodes and b in nodes and clear(nodes[a],nodes[b],bridge=bridge):
   edges.append([a,b])
   if bridge:bridges.append([nodes[a],nodes[b]])
