@@ -14,3 +14,6 @@ document.querySelector('#explore').onclick=()=>{document.querySelector('.welcome
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();document.querySelector('#suggestions').hidden=true;document.querySelector('#search').setAttribute('aria-expanded','false');}if(e.key==='/'&&!['INPUT','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();document.querySelector('#search').focus();}});
 const {initSearch,storage}=await import('./search.js');
 initSearch(locations,selectLocation,storage);
+const {initCamera}=await import('./camera.js');
+const camera=initCamera(svg);
+window.addEventListener('map-place-tap',e=>selectLocation(e.detail));
