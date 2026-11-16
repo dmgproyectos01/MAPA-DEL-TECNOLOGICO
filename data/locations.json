@@ -2,160 +2,350 @@
   {
     "id": "1",
     "name": "Centro de Cómputo",
-    "x": 350,
-    "y": 140,
-    "w": 75,
-    "h": 50,
+    "x": 371.5,
+    "y": 161.25,
+    "w": 70,
+    "h": 53,
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-1"
+    "node": "door-1",
+    "footprint": [
+      [
+        351,
+        135
+      ],
+      [
+        407,
+        149
+      ],
+      [
+        391,
+        188
+      ],
+      [
+        337,
+        173
+      ]
+    ],
+    "angle": 14.04
   },
   {
     "id": "A",
     "name": "Jefatura de Sistemas",
-    "x": 470,
-    "y": 150,
-    "w": 82,
-    "h": 24,
+    "x": 492.75,
+    "y": 175.5,
+    "w": 85,
+    "h": 29,
     "category": "administracion",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-A"
+    "node": "door-A",
+    "footprint": [
+      [
+        455,
+        161
+      ],
+      [
+        535,
+        177
+      ],
+      [
+        531,
+        190
+      ],
+      [
+        450,
+        174
+      ]
+    ],
+    "angle": 11.31
   },
   {
     "id": "B",
     "name": "Aulas de Sistemas y TIC",
-    "x": 455,
-    "y": 205,
-    "w": 80,
-    "h": 25,
+    "x": 459.75,
+    "y": 210.75,
+    "w": 91,
+    "h": 33,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-B"
+    "node": "door-B",
+    "footprint": [
+      [
+        420,
+        194
+      ],
+      [
+        505,
+        212
+      ],
+      [
+        500,
+        227
+      ],
+      [
+        414,
+        210
+      ]
+    ],
+    "angle": 11.96
   },
   {
     "id": "C",
     "name": "Aulas de Sistemas",
-    "x": 440,
-    "y": 265,
-    "w": 70,
-    "h": 24,
+    "x": 435.75,
+    "y": 249.25,
+    "w": 69,
+    "h": 28,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-C"
+    "node": "door-C",
+    "footprint": [
+      [
+        406,
+        235
+      ],
+      [
+        470,
+        249
+      ],
+      [
+        466,
+        263
+      ],
+      [
+        401,
+        250
+      ]
+    ],
+    "angle": 12.34
   },
   {
     "id": "D",
     "name": "Aulas de Bioquímica",
-    "x": 440,
-    "y": 325,
-    "w": 75,
-    "h": 26,
+    "x": 462.75,
+    "y": 300.25,
+    "w": 107,
+    "h": 37,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-D"
+    "node": "door-D",
+    "footprint": [
+      [
+        416,
+        281
+      ],
+      [
+        516,
+        302
+      ],
+      [
+        510,
+        318
+      ],
+      [
+        409,
+        300
+      ]
+    ],
+    "angle": 11.86
   },
   {
     "id": "E",
     "name": "Laboratorio triple de Química",
-    "x": 420,
-    "y": 385,
-    "w": 78,
-    "h": 25,
+    "x": 428.5,
+    "y": 337.75,
+    "w": 94,
+    "h": 37,
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-E"
+    "node": "door-E",
+    "footprint": [
+      [
+        389,
+        319
+      ],
+      [
+        475,
+        338
+      ],
+      [
+        469,
+        356
+      ],
+      [
+        381,
+        338
+      ]
+    ],
+    "angle": 12.46
   },
   {
     "id": "F",
     "name": "Laboratorio de Operaciones Unitarias",
-    "x": 515,
-    "y": 440,
-    "w": 70,
-    "h": 45,
+    "x": 525.75,
+    "y": 385.0,
+    "w": 77,
+    "h": 52,
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-F"
+    "node": "door-F",
+    "footprint": [
+      [
+        499,
+        359
+      ],
+      [
+        564,
+        373
+      ],
+      [
+        553,
+        411
+      ],
+      [
+        487,
+        397
+      ]
+    ],
+    "angle": 12.15
   },
   {
     "id": "G",
     "name": "Promoción Deportiva y Cultural",
-    "x": 540,
-    "y": 520,
-    "w": 75,
-    "h": 42,
+    "x": 549.0,
+    "y": 458.75,
+    "w": 81,
+    "h": 45,
     "category": "administracion",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-G"
+    "node": "door-G",
+    "footprint": [
+      [
+        522,
+        436
+      ],
+      [
+        589,
+        450
+      ],
+      [
+        577,
+        481
+      ],
+      [
+        508,
+        468
+      ]
+    ],
+    "angle": 11.8
   },
   {
     "id": "I",
     "name": "Centro de Información · Biblioteca",
-    "x": 605,
-    "y": 165,
-    "w": 80,
+    "x": 605.25,
+    "y": 193.25,
+    "w": 84,
     "h": 50,
     "category": "servicios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-I"
+    "node": "door-I",
+    "footprint": [
+      [
+        575,
+        168
+      ],
+      [
+        647,
+        184
+      ],
+      [
+        636,
+        218
+      ],
+      [
+        563,
+        203
+      ]
+    ],
+    "angle": 12.53
   },
   {
     "id": "2",
     "name": "Cafetería",
-    "x": 605,
-    "y": 240,
-    "w": 25,
-    "h": 48,
+    "x": 567.25,
+    "y": 251.25,
+    "w": 27,
+    "h": 44,
     "category": "servicios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-2"
+    "node": "door-2",
+    "footprint": [
+      [
+        563,
+        230
+      ],
+      [
+        581,
+        233
+      ],
+      [
+        571,
+        274
+      ],
+      [
+        554,
+        268
+      ]
+    ],
+    "angle": 9.46
   },
   {
     "id": "H",
     "name": "Teleconferencias y aulas",
-    "x": 650,
-    "y": 280,
-    "w": 65,
-    "h": 25,
+    "x": 630.25,
+    "y": 260.0,
+    "w": 72,
+    "h": 30,
     "category": "edificios",
     "rooms": [
       "EH01",
@@ -165,18 +355,37 @@
       "Aula Magna",
       "Consultorio médico"
     ],
-    "description": "Información de servicios confirmada. Ubicación dibujada de forma aproximada.",
+    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Lunes a viernes · 7:00 a. m. a 1:00 p. m. · America/Mazatlan",
-    "node": "door-H"
+    "node": "door-H",
+    "footprint": [
+      [
+        599,
+        245
+      ],
+      [
+        667,
+        259
+      ],
+      [
+        660,
+        275
+      ],
+      [
+        595,
+        261
+      ]
+    ],
+    "angle": 11.63
   },
   {
     "id": "J",
     "name": "Ingeniería Industrial",
-    "x": 650,
-    "y": 340,
-    "w": 80,
-    "h": 26,
+    "x": 625.25,
+    "y": 302.5,
+    "w": 87,
+    "h": 35,
     "category": "edificios",
     "rooms": [
       "EJ01",
@@ -193,237 +402,526 @@
     "services": [
       "Baños"
     ],
-    "description": "Información de servicios confirmada. Ubicación dibujada de forma aproximada.",
+    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "2 pisos: 4 salones en planta baja y 6 en planta alta.",
     "hours": "Por confirmar",
-    "node": "door-J"
+    "node": "door-J",
+    "footprint": [
+      [
+        589,
+        285
+      ],
+      [
+        669,
+        302
+      ],
+      [
+        661,
+        320
+      ],
+      [
+        582,
+        303
+      ]
+    ],
+    "angle": 12.0
   },
   {
     "id": "K",
     "name": "Ingeniería Bioquímica",
-    "x": 670,
-    "y": 400,
-    "w": 80,
-    "h": 28,
+    "x": 645.5,
+    "y": 350.25,
+    "w": 94,
+    "h": 33,
     "category": "administracion",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-K"
+    "node": "door-K",
+    "footprint": [
+      [
+        607,
+        334
+      ],
+      [
+        692,
+        350
+      ],
+      [
+        685,
+        367
+      ],
+      [
+        598,
+        350
+      ]
+    ],
+    "angle": 10.66
   },
   {
     "id": "L",
     "name": "Oficinas administrativas",
-    "x": 815,
-    "y": 175,
-    "w": 65,
-    "h": 48,
+    "x": 813.5,
+    "y": 192.75,
+    "w": 64,
+    "h": 43,
     "category": "administracion",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-L"
+    "node": "door-L",
+    "footprint": [
+      [
+        791,
+        171
+      ],
+      [
+        845,
+        184
+      ],
+      [
+        837,
+        214
+      ],
+      [
+        781,
+        202
+      ]
+    ],
+    "angle": 13.54
   },
   {
     "id": "L2",
     "name": "Oficinas administrativas",
-    "x": 805,
-    "y": 240,
-    "w": 65,
+    "x": 798.75,
+    "y": 238.25,
+    "w": 61,
     "h": 40,
     "category": "administracion",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-L2"
+    "node": "door-L2",
+    "footprint": [
+      [
+        777,
+        218
+      ],
+      [
+        829,
+        231
+      ],
+      [
+        821,
+        258
+      ],
+      [
+        768,
+        246
+      ]
+    ],
+    "angle": 14.04
   },
   {
     "id": "M",
     "name": "Asesorías y Ciencias Básicas",
-    "x": 830,
-    "y": 355,
-    "w": 65,
-    "h": 26,
+    "x": 818.5,
+    "y": 317.75,
+    "w": 87,
+    "h": 34,
     "category": "administracion",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-M"
+    "node": "door-M",
+    "footprint": [
+      [
+        779,
+        301
+      ],
+      [
+        862,
+        319
+      ],
+      [
+        858,
+        335
+      ],
+      [
+        775,
+        316
+      ]
+    ],
+    "angle": 12.24
   },
   {
     "id": "N",
     "name": "Aulas de Ingeniería Electrónica",
-    "x": 755,
-    "y": 330,
-    "w": 48,
-    "h": 24,
+    "x": 729.0,
+    "y": 295.75,
+    "w": 46,
+    "h": 22,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-N"
+    "node": "door-N",
+    "footprint": [
+      [
+        711,
+        285
+      ],
+      [
+        752,
+        294
+      ],
+      [
+        747,
+        307
+      ],
+      [
+        706,
+        297
+      ]
+    ],
+    "angle": 12.38
   },
   {
     "id": "Ñ",
     "name": "Coordinación de Posgrado · MCC",
-    "x": 870,
-    "y": 420,
-    "w": 70,
-    "h": 27,
+    "x": 856.75,
+    "y": 365.25,
+    "w": 85,
+    "h": 32,
     "category": "edificios",
     "rooms": [],
     "services": [
       "Maestría en Ciencias de la Computación",
       "Aula MCC"
     ],
-    "description": "Información de servicios confirmada. Ubicación dibujada de forma aproximada.",
+    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-Ñ"
+    "node": "door-Ñ",
+    "footprint": [
+      [
+        820,
+        349
+      ],
+      [
+        899,
+        366
+      ],
+      [
+        894,
+        381
+      ],
+      [
+        814,
+        365
+      ]
+    ],
+    "angle": 12.14
   },
   {
     "id": "O",
     "name": "CELE · Idiomas",
-    "x": 805,
-    "y": 465,
-    "w": 65,
-    "h": 26,
+    "x": 808.25,
+    "y": 398.25,
+    "w": 88,
+    "h": 33,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-O"
+    "node": "door-O",
+    "footprint": [
+      [
+        770,
+        382
+      ],
+      [
+        852,
+        398
+      ],
+      [
+        847,
+        415
+      ],
+      [
+        764,
+        398
+      ]
+    ],
+    "angle": 11.04
   },
   {
     "id": "P",
     "name": "Aulas y servicios sanitarios",
-    "x": 805,
-    "y": 525,
-    "w": 70,
-    "h": 28,
+    "x": 801.25,
+    "y": 441.75,
+    "w": 77,
+    "h": 34,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-P"
+    "node": "door-P",
+    "footprint": [
+      [
+        770,
+        425
+      ],
+      [
+        839,
+        438
+      ],
+      [
+        834,
+        459
+      ],
+      [
+        762,
+        445
+      ]
+    ],
+    "angle": 10.67
   },
   {
     "id": "Q",
     "name": "Departamento de Ciencias Básicas",
-    "x": 700,
-    "y": 475,
-    "w": 65,
-    "h": 27,
+    "x": 686.75,
+    "y": 402.75,
+    "w": 72,
+    "h": 29,
     "category": "laboratorios",
     "rooms": [],
     "services": [
       "Cubículos de maestros de Ciencias Básicas",
       "Laboratorio de Ciencias Básicas"
     ],
-    "description": "Información de servicios confirmada. Ubicación dibujada de forma aproximada.",
+    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-Q"
+    "node": "door-Q",
+    "footprint": [
+      [
+        660,
+        388
+      ],
+      [
+        722,
+        400
+      ],
+      [
+        715,
+        417
+      ],
+      [
+        650,
+        406
+      ]
+    ],
+    "angle": 10.95
   },
   {
     "id": "R",
     "name": "Departamento de Ingeniería Industrial",
-    "x": 680,
-    "y": 535,
-    "w": 70,
-    "h": 28,
+    "x": 672.0,
+    "y": 443.0,
+    "w": 79,
+    "h": 30,
     "category": "administracion",
     "rooms": [],
     "services": [
       "Departamento Industrial",
       "Aula JSP"
     ],
-    "description": "Información de servicios confirmada. Ubicación dibujada de forma aproximada.",
+    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-R"
+    "node": "door-R",
+    "footprint": [
+      [
+        640,
+        428
+      ],
+      [
+        711,
+        443
+      ],
+      [
+        705,
+        458
+      ],
+      [
+        632,
+        443
+      ]
+    ],
+    "angle": 11.93
   },
   {
     "id": "S",
     "name": "Idiomas y aulas de dibujo",
-    "x": 925,
-    "y": 485,
-    "w": 65,
-    "h": 26,
+    "x": 893.25,
+    "y": 432.75,
+    "w": 77,
+    "h": 29,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-S"
+    "node": "door-S",
+    "footprint": [
+      [
+        861,
+        418
+      ],
+      [
+        931,
+        433
+      ],
+      [
+        927,
+        447
+      ],
+      [
+        854,
+        433
+      ]
+    ],
+    "angle": 12.09
   },
   {
     "id": "T",
     "name": "Aulas de Mecánica",
-    "x": 920,
-    "y": 550,
-    "w": 65,
-    "h": 26,
+    "x": 888.0,
+    "y": 466.0,
+    "w": 67,
+    "h": 28,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-T"
+    "node": "door-T",
+    "footprint": [
+      [
+        860,
+        452
+      ],
+      [
+        921,
+        465
+      ],
+      [
+        917,
+        480
+      ],
+      [
+        854,
+        467
+      ]
+    ],
+    "angle": 12.03
   },
   {
     "id": "U",
     "name": "Baños y vestidores",
-    "x": 340,
-    "y": 510,
-    "w": 25,
-    "h": 75,
+    "x": 332.75,
+    "y": 470.0,
+    "w": 41,
+    "h": 74,
     "category": "servicios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-U"
+    "node": "door-U",
+    "footprint": [
+      [
+        333,
+        433
+      ],
+      [
+        353,
+        440
+      ],
+      [
+        333,
+        507
+      ],
+      [
+        312,
+        500
+      ]
+    ],
+    "angle": 19.29
   },
   {
     "id": "V",
-    "name": "Departamento de Metal-Mecánica",
-    "x": 795,
-    "y": 610,
-    "w": 60,
-    "h": 55,
-    "category": "edificios",
+    "name": "Laboratorios de Mecánica y Eléctrica",
+    "x": 781.5,
+    "y": 506.75,
+    "w": 56,
+    "h": 69,
+    "category": "laboratorios",
     "rooms": [],
-    "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "services": [
+      "Laboratorio de Mecánica",
+      "Laboratorio de Eléctrica",
+      "Departamento de Metal-Mecánica"
+    ],
+    "description": "Edificio V: laboratorios de Mecánica y Eléctrica, confirmados por el usuario. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-V"
+    "node": "door-V",
+    "footprint": [
+      [
+        769,
+        472
+      ],
+      [
+        809,
+        484
+      ],
+      [
+        795,
+        541
+      ],
+      [
+        753,
+        530
+      ]
+    ],
+    "angle": 16.7
   },
   {
     "id": "W",
     "name": "Taller de Máquinas-Herramientas",
-    "x": 650,
-    "y": 610,
-    "w": 75,
-    "h": 48,
+    "x": 656.25,
+    "y": 522.25,
+    "w": 76,
+    "h": 56,
     "category": "laboratorios",
     "rooms": [
       "EW01",
@@ -435,235 +933,587 @@
       "Club de Robótica",
       "Taller de máquinas"
     ],
-    "description": "Información de servicios confirmada. Ubicación dibujada de forma aproximada.",
+    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-W"
+    "node": "door-W",
+    "footprint": [
+      [
+        632,
+        494
+      ],
+      [
+        694,
+        508
+      ],
+      [
+        681,
+        550
+      ],
+      [
+        618,
+        537
+      ]
+    ],
+    "angle": 12.72
   },
   {
     "id": "X",
     "name": "Almacén y mantenimiento",
-    "x": 800,
-    "y": 715,
-    "w": 65,
-    "h": 45,
+    "x": 772.83,
+    "y": 610.67,
+    "w": 76,
+    "h": 58,
     "category": "servicios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-X"
+    "node": "door-X",
+    "footprint": [
+      [
+        746,
+        573
+      ],
+      [
+        807,
+        587
+      ],
+      [
+        798,
+        627
+      ],
+      [
+        780,
+        626
+      ],
+      [
+        775,
+        631
+      ],
+      [
+        731,
+        620
+      ]
+    ],
+    "angle": 12.93
   },
   {
     "id": "Y",
     "name": "Gimnasio",
-    "x": 470,
-    "y": 475,
-    "w": 28,
-    "h": 24,
+    "x": 468.75,
+    "y": 430.75,
+    "w": 27,
+    "h": 22,
     "category": "deportes",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-Y"
+    "node": "door-Y",
+    "footprint": [
+      [
+        461,
+        420
+      ],
+      [
+        482,
+        424
+      ],
+      [
+        477,
+        442
+      ],
+      [
+        455,
+        437
+      ]
+    ],
+    "angle": 10.78
   },
   {
     "id": "Z",
     "name": "Aulas de Electrónica",
-    "x": 680,
-    "y": 795,
-    "w": 38,
-    "h": 44,
+    "x": 675.5,
+    "y": 728.25,
+    "w": 35,
+    "h": 46,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-Z"
+    "node": "door-Z",
+    "footprint": [
+      [
+        670,
+        705
+      ],
+      [
+        693,
+        711
+      ],
+      [
+        681,
+        751
+      ],
+      [
+        658,
+        746
+      ]
+    ],
+    "angle": 14.62
   },
   {
     "id": "3",
     "name": "Laboratorio de Ingeniería Electrónica",
-    "x": 750,
-    "y": 800,
-    "w": 50,
-    "h": 40,
+    "x": 742.5,
+    "y": 738.75,
+    "w": 54,
+    "h": 43,
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-3"
+    "node": "door-3",
+    "footprint": [
+      [
+        725,
+        718
+      ],
+      [
+        770,
+        726
+      ],
+      [
+        759,
+        761
+      ],
+      [
+        716,
+        750
+      ]
+    ],
+    "angle": 10.08
   },
   {
     "id": "4",
     "name": "Aula modelo Coppel",
-    "x": 900,
-    "y": 615,
-    "w": 26,
-    "h": 26,
+    "x": 841.0,
+    "y": 509.0,
+    "w": 16,
+    "h": 18,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-4"
+    "node": "door-4",
+    "footprint": [
+      [
+        836,
+        500
+      ],
+      [
+        849,
+        505
+      ],
+      [
+        846,
+        518
+      ],
+      [
+        833,
+        513
+      ]
+    ],
+    "angle": 21.04
   },
   {
     "id": "5",
     "name": "Laboratorio de Ingeniería Industrial",
-    "x": 410,
-    "y": 615,
-    "w": 65,
-    "h": 45,
+    "x": 415.25,
+    "y": 530.0,
+    "w": 91,
+    "h": 51,
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-5"
+    "node": "door-5",
+    "footprint": [
+      [
+        382,
+        505
+      ],
+      [
+        460,
+        521
+      ],
+      [
+        450,
+        556
+      ],
+      [
+        369,
+        538
+      ]
+    ],
+    "angle": 11.59
   },
   {
     "id": "6",
     "name": "Unidad Académica · UA",
-    "x": 460,
-    "y": 755,
-    "w": 80,
-    "h": 45,
+    "x": 482.25,
+    "y": 670.0,
+    "w": 105,
+    "h": 56,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-6"
+    "node": "door-6",
+    "footprint": [
+      [
+        445,
+        641
+      ],
+      [
+        535,
+        660
+      ],
+      [
+        519,
+        697
+      ],
+      [
+        430,
+        682
+      ]
+    ],
+    "angle": 11.92
   },
   {
     "id": "7",
     "name": "Unidad de Posgrado · UP",
-    "x": 350,
-    "y": 835,
-    "w": 85,
-    "h": 45,
+    "x": 380.5,
+    "y": 751.0,
+    "w": 110,
+    "h": 68,
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-7"
+    "node": "door-7",
+    "footprint": [
+      [
+        334,
+        737
+      ],
+      [
+        365,
+        718
+      ],
+      [
+        374,
+        735
+      ],
+      [
+        419,
+        745
+      ],
+      [
+        437,
+        756
+      ],
+      [
+        428,
+        786
+      ],
+      [
+        360,
+        772
+      ],
+      [
+        327,
+        759
+      ]
+    ],
+    "angle": -31.5
   },
   {
     "id": "GA",
     "name": "Gimnasio-auditorio",
-    "x": 900,
-    "y": 870,
-    "w": 65,
-    "h": 48,
+    "x": 843.75,
+    "y": 818.5,
+    "w": 62,
+    "h": 76,
     "category": "deportes",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-GA"
+    "node": "door-GA",
+    "footprint": [
+      [
+        818,
+        780
+      ],
+      [
+        875,
+        789
+      ],
+      [
+        869,
+        856
+      ],
+      [
+        813,
+        849
+      ]
+    ],
+    "angle": 8.97
   },
   {
     "id": "FUT",
     "name": "Fútbol y pista de atletismo",
-    "x": 165,
-    "y": 460,
-    "w": 170,
-    "h": 265,
+    "x": 194.0,
+    "y": 421.0,
+    "w": 246.76,
+    "h": 309.72,
     "category": "deportes",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-FUT"
+    "node": "door-FUT",
+    "footprint": [
+      [
+        132.25,
+        266.14
+      ],
+      [
+        317.38,
+        308.88
+      ],
+      [
+        255.75,
+        575.86
+      ],
+      [
+        70.62,
+        533.12
+      ]
+    ],
+    "angle": 13.0
   },
   {
     "id": "BAS",
     "name": "Canchas de baloncesto",
-    "x": 650,
-    "y": 715,
-    "w": 85,
-    "h": 55,
+    "x": 619.0,
+    "y": 588.0,
+    "w": 114.38,
+    "h": 79.9,
     "category": "deportes",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-BAS"
+    "node": "door-BAS",
+    "footprint": [
+      [
+        574.86,
+        548.05
+      ],
+      [
+        676.19,
+        571.44
+      ],
+      [
+        663.14,
+        627.95
+      ],
+      [
+        561.81,
+        604.56
+      ]
+    ],
+    "angle": 13.0
   },
   {
     "id": "BEI",
     "name": "Campo de béisbol",
-    "x": 980,
-    "y": 735,
-    "w": 155,
-    "h": 160,
+    "x": 903.67,
+    "y": 644.33,
+    "w": 202,
+    "h": 182,
     "category": "deportes",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-BEI"
+    "node": "door-BEI",
+    "footprint": [
+      [
+        800,
+        751
+      ],
+      [
+        811,
+        638
+      ],
+      [
+        832,
+        599
+      ],
+      [
+        866,
+        579
+      ],
+      [
+        911,
+        574
+      ],
+      [
+        946,
+        592
+      ],
+      [
+        968,
+        622
+      ],
+      [
+        997,
+        688
+      ],
+      [
+        1002,
+        756
+      ]
+    ],
+    "angle": -84.44
   },
   {
     "id": "EST1",
     "name": "Estacionamiento norte",
-    "x": 340,
-    "y": 245,
-    "w": 80,
-    "h": 150,
+    "x": 337,
+    "y": 257,
+    "w": 56,
+    "h": 122,
     "category": "estacionamientos",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-EST1"
+    "node": "door-EST1",
+    "footprint": [
+      [
+        311,
+        205
+      ],
+      [
+        337,
+        210
+      ],
+      [
+        367,
+        238
+      ],
+      [
+        346,
+        307
+      ],
+      [
+        326,
+        327
+      ]
+    ],
+    "angle": 4.04
   },
   {
     "id": "EST2",
     "name": "Estacionamiento central",
-    "x": 400,
-    "y": 700,
-    "w": 100,
-    "h": 55,
+    "x": 384.25,
+    "y": 596.75,
+    "w": 133,
+    "h": 90,
     "category": "estacionamientos",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-EST2"
+    "node": "door-EST2",
+    "footprint": [
+      [
+        352,
+        551
+      ],
+      [
+        446,
+        574
+      ],
+      [
+        426,
+        641
+      ],
+      [
+        313,
+        621
+      ]
+    ],
+    "angle": 13.75
   },
   {
     "id": "EST3",
     "name": "Estacionamiento sur",
-    "x": 245,
-    "y": 820,
-    "w": 120,
-    "h": 85,
+    "x": 236.75,
+    "y": 754.0,
+    "w": 152,
+    "h": 124,
     "category": "estacionamientos",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Ubicación dibujada de forma aproximada.",
+    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
-    "node": "door-EST3"
+    "node": "door-EST3",
+    "footprint": [
+      [
+        187,
+        691
+      ],
+      [
+        313,
+        737
+      ],
+      [
+        286,
+        815
+      ],
+      [
+        161,
+        773
+      ]
+    ],
+    "angle": 20.06
   },
   {
     "id": "PSI",

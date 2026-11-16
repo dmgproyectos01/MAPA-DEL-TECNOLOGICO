@@ -1,71 +1,107 @@
+"""Generate pedestrian connections from the traced reference paths, not a grid.
+Run from the repository root. Uses only the Python standard library.
+"""
 import json,math
 from pathlib import Path
-ls=json.loads(Path('data/locations.json').read_text())
-obstacles=[l for l in ls if 'x'in l]
-canal=[(220,100),(300,250),(320,430),(365,475),(420,490),(480,575),(550,720),(620,770),(760,805),(900,795),(1020,650),(1110,620)]
-def cross(a,b,c,d):
- def ori(a,b,c):return(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])
- return ori(a,b,c)*ori(a,b,d)<0 and ori(c,d,a)*ori(c,d,b)<0
-def recthit(a,b,l,pad=3):
- xmin,xmax=l['x']-l['w']/2-pad,l['x']+l['w']/2+pad
- ymin,ymax=l['y']-l['h']/2-pad,l['y']+l['h']/2+pad
- dx,dy=b[0]-a[0],b[1]-a[1];lo,hi=0,1
- for p,q in [(-dx,a[0]-xmin),(dx,xmax-a[0]),(-dy,a[1]-ymin),(dy,ymax-a[1])]:
-  if p==0:
-   if q<0:return False
-  else:
-   t=q/p
-   if p<0:lo=max(lo,t)
-   else:hi=min(hi,t)
- return lo<=hi
-bridges=[]
-def clear(a,b,ignore=None,bridge=False):
- if any(recthit(a,b,l) for l in obstacles if l['id']!=ignore):return False
- if not bridge and any(cross(a,b,c,d) for c,d in zip(canal,canal[1:])):return False
+locations=json.loads(Path('data/locations.json').read_text())
+layout=json.loads(Path('data/map-layout.json').read_text())
+obstacles=[l for l in locations if 'footprint' in l]
+def sub(a,b):return(a[0]-b[0],a[1]-b[1])
+def cross(a,b):return a[0]*b[1]-a[1]*b[0]
+def hit(a,b,c,d):
+ r,s=sub(b,a),sub(d,c);den=cross(r,s)
+ if abs(den)<1e-9:return None
+ t,u=cross(sub(c,a),s)/den,cross(sub(c,a),r)/den
+ if -1e-7<=t<=1+1e-7 and -1e-7<=u<=1+1e-7:return [a[0]+r[0]*t,a[1]+r[1]*t]
+ return None
+def inside(p,polygon):
+ result=False
+ for a,b in zip(polygon,polygon[1:]+polygon[:1]):
+  if (a[1]>p[1])!=(b[1]>p[1]) and p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0]:result=not result
+ return result
+def closest(p,a,b):
+ dx,dy=sub(b,a);den=dx*dx+dy*dy;t=max(0,min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/den))if den else 0
+ return[a[0]+t*dx,a[1]+t*dy]
+def segdist(a,b,c,d):
+ if hit(a,b,c,d)is not None:return 0
+ return min(math.dist(a,closest(a,c,d)),math.dist(b,closest(b,c,d)),math.dist(c,closest(c,a,b)),math.dist(d,closest(d,a,b)))
+def polygonhit(a,b,polygon):
+ return inside(a,polygon)or inside(b,polygon)or any(hit(a,b,c,d)is not None for c,d in zip(polygon,polygon[1:]+polygon[:1]))
+canal=list(zip(layout['canal'],layout['canal'][1:]))
+crossings=[(a,b)for path in layout['crossings']for a,b in zip(path,path[1:])]
+def bridge(a,b):return any(segdist(a,b,c,d)<15 for c,d in crossings)
+def valid(a,b):
+ if not inside(a,layout['land'])or not inside(b,layout['land']):return False
+ if any(polygonhit(a,b,l['footprint'])for l in obstacles):return False
+ if any(segdist(a,b,c,d)<8 for c,d in canal)and not bridge(a,b):return False
  return True
-nodes={};edges=[];xs=[285,390,590,775,900,1030];ys=[120,225,310,375,440,505,580,685,760,860,935]
-for i,x in enumerate(xs):
- for j,y in enumerate(ys):
-  if x <= 850+(y-100)*.36 and not any(abs(x-l['x'])<=l['w']/2+3 and abs(y-l['y'])<=l['h']/2+3 for l in obstacles):nodes[f'{i}-{j}']=[x,y]
-for i,x in enumerate(xs):
- for j,y in enumerate(ys):
-  a=f'{i}-{j}'
-  for b in [f'{i+1}-{j}',f'{i}-{j+1}']:
-   if a not in nodes or b not in nodes:continue
-   bridge=((y==580 and i==1) or (y==760 and i==2)) and b==f'{i+1}-{j}'
-   if clear(nodes[a],nodes[b],bridge=bridge):
-    edges.append([a,b])
-    if bridge:bridges.append([nodes[a],nodes[b]])
-# Additional walkway around Metal-Mecánica and a provisional canal crossing.
-nodes['detour-n']=[750,580];nodes['detour-s']=[750,685]
-nodes['north-spine']=[720,120];nodes['north-link']=[720,310]
-for a,b,bridge in [('2-0','north-spine',False),('north-spine','north-link',False),('north-link','3-2',False),('2-6','detour-n',False),('detour-n','detour-s',False),('detour-s','3-7',False),('2-7','2-8',True)]:
- if a in nodes and b in nodes and clear(nodes[a],nodes[b],bridge=bridge):
-  edges.append([a,b])
-  if bridge:bridges.append([nodes[a],nodes[b]])
-# Retain the connected central network.
-adj={n:[] for n in nodes}
-for a,b in edges:adj[a].append(b);adj[b].append(a)
-seen=set();stack=['2-5']
-while stack:
- n=stack.pop()
- if n in seen:continue
- seen.add(n);stack+=adj[n]
-nodes={n:p for n,p in nodes.items() if n in seen};edges=[e for e in edges if all(n in seen for n in e)]
+segments=[(a,b)for path in layout['walkways']for a,b in zip(path,path[1:])]
+nodes={};edges=[];index={}
+def add(p):
+ p=[round(p[0],3),round(p[1],3)];key=tuple(p)
+ if key not in index:index[key]=f'path-{len(index)}';nodes[index[key]]=p
+ return index[key]
+def connect(a,b):
+ if a==b:return
+ pair=[a,b]
+ if pair not in edges and pair[::-1]not in edges:edges.append(pair)
+for a,b in segments:
+ cuts=[a,b]
+ for c,d in segments:
+  p=hit(a,b,c,d)
+  if p is not None:cuts.append(p)
+ cuts=sorted(cuts,key=lambda p:math.dist(p,a));unique=[]
+ for p in cuts:
+  if not unique or math.dist(p,unique[-1])>.05:unique.append(p)
+ for c,d in zip(unique,unique[1:]):
+  count=max(1,math.ceil(math.dist(c,d)/14));part=[[c[0]+(d[0]-c[0])*i/count,c[1]+(d[1]-c[1])*i/count]for i in range(count+1)]
+  for p,q in zip(part,part[1:]):
+   if valid(p,q):connect(add(p),add(q))
+def components():
+ adj={n:[]for n in nodes}
+ for a,b in edges:adj[a].append(b);adj[b].append(a)
+ left=set(nodes);groups=[]
+ while left:
+  stack=[next(iter(left))];seen=set()
+  while stack:
+   n=stack.pop()
+   if n in seen:continue
+   seen.add(n);stack.extend(adj[n])
+  left-=seen;groups.append(seen)
+ return sorted(groups,key=len,reverse=True)
+# Close tiny breaks at hand-traced intersections without adding a rectangular grid.
+while True:
+ groups=components()
+ if len(groups)==1:break
+ main=groups[0];best=None
+ for group in groups[1:]:
+  for a in main:
+   for b in group:
+    d=math.dist(nodes[a],nodes[b])
+    if d>48 or (best and d>=best[0]):continue
+    if valid(nodes[a],nodes[b]):best=(d,a,b)
+ if best is None:break
+ connect(best[1],best[2])
+groups=components();main=groups[0]
+print('Path components:',[(len(g),min(nodes[n][0]for n in g),min(nodes[n][1]for n in g),max(nodes[n][0]for n in g),max(nodes[n][1]for n in g))for g in groups])
+nodes={n:p for n,p in nodes.items()if n in main};edges=[e for e in edges if all(n in main for n in e)]
 base=dict(nodes)
-
 for l in obstacles:
- options=[]
+ options=[];p=l['footprint']
  for n,b in base.items():
-  dx,dy=b[0]-l['x'],b[1]-l['y']; t=min((l['w']/2+4)/abs(dx) if dx else 1e9,(l['h']/2+4)/abs(dy) if dy else 1e9)
-  a=[l['x']+dx*t,l['y']+dy*t]
-  if clear(a,b,l['id']):options.append((math.dist(a,b),n,a))
- if not options:raise Exception('No path for '+l['id'])
- _,n,a=min(options);nodes['door-'+l['id']]=a;edges.append(['door-'+l['id'],n]);l['node']='door-'+l['id']
-accesses=[dict(id='access-computo',name='Centro de Cómputo · entrada/salida vehicular',x=280,y=90),dict(id='access-sistemas',name='Sistemas · entrada peatonal',x=480,y=100),dict(id='access-bronco',name='Plaza del Bronco · entrada/salida peatonal',x=685,y=100),dict(id='access-civica',name='Plaza Cívica · entrada peatonal',x=800,y=105)]
-for a in accesses:
- p=[a['x'],a['y']];options=[(math.dist(p,b),n) for n,b in base.items() if clear(p,b)]
- if not options:raise Exception('Access disconnected')
- _,n=min(options);nodes[a['id']]=p;edges.append([a['id'],n])
-Path('data/routes.json').write_text(json.dumps(dict(nodes=nodes,edges=edges,accesses=accesses,bridges=bridges,metersPerUnit=.7,approximate=True),ensure_ascii=False,indent=2))
-Path('data/locations.json').write_text(json.dumps(ls,ensure_ascii=False,indent=2))
+  for c,d in zip(p,p[1:]+p[:1]):
+   a=closest(b,c,d);dx,dy=sub(b,a);length=math.hypot(dx,dy)
+   if length<1:continue
+   door=[a[0]+dx/length*4,a[1]+dy/length*4]
+   if valid(door,b):options.append((math.dist(door,b),n,door))
+ if not options:raise ValueError('No pedestrian connection for '+l['id'])
+ length,n,door=min(options);print('Door',l['id'],round(length))
+ node='door-'+l['id'];nodes[node]=[round(v,3)for v in door];edges.append([node,n]);l['node']=node
+for a in layout['accesses']:
+ p=[a['x'],a['y']];options=[(math.dist(p,b),n)for n,b in base.items()if valid(p,b)]
+ if not options:raise ValueError('No path from '+a['id'])
+ _,n=min(options);nodes[a['id']]=p;connect(a['id'],n)
+bridges=[[nodes[a],nodes[b]]for a,b in edges if any(segdist(nodes[a],nodes[b],c,d)<8 for c,d in canal)]
+graph=dict(nodes=nodes,edges=edges,accesses=layout['accesses'],bridges=bridges,metersPerUnit=.7,approximate=True,source='Pedestrian paths traced from the user-provided campus reference image.')
+Path('data/routes.json').write_text(json.dumps(graph,ensure_ascii=False,indent=2))
+Path('data/locations.json').write_text(json.dumps(locations,ensure_ascii=False,indent=2))
