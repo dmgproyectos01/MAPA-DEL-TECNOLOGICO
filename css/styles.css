@@ -34,28 +34,7 @@ button:disabled { cursor: default; opacity: .5; }
 svg { display: block; width: 100%; height: 100%; }
 #campus { touch-action: none; user-select: none; }
 
-/* Plano: colores y geometría independientes del tema de la interfaz. */
-.campus-land { fill: #c6d6a6; stroke: #a3b390; stroke-width: 2; }
-.road { fill: none; stroke: #9caaa0; stroke-width: 25; stroke-linecap: round; stroke-linejoin: round; }
-.road-center { fill: none; stroke: #d4dbcd; stroke-width: 1.5; stroke-dasharray: 9 10; }
-.canal { fill: none; stroke: #53aebc; stroke-width: 12; stroke-linejoin: round; }
-.plaza { fill: #e6e2c6; stroke: #c2c6aa; }
-.street { fill: #647361; font-size: 11px; letter-spacing: 3px; text-anchor: middle; }
-.terrain-label { font-size: 8px; fill: #6b7056; text-anchor: middle; }
-.building { fill: #edc4a0; stroke: #bb9374; stroke-width: 1; filter: url(#shadow); transition: fill .16s, stroke .16s; }
-.laboratorios .building, .servicios .building { fill: #c2b5d2; stroke: #9b8eae; }
-.administracion .building { fill: #d3b3bb; stroke: #af8c96; }
-.deportes .building { fill: #d2bb8d; stroke: #b09870; }
-.estacionamientos .building { fill: #acbbb0; stroke: #93a699; }
-.building-code { font-size: 13px; font-weight: 750; text-anchor: middle; fill: #443c36; pointer-events: none; }
-.building-caption { font-size: 7px; font-weight: 650; letter-spacing: .5px; text-anchor: middle; fill: #4d6048; pointer-events: none; }
-.place { cursor: pointer; outline: none; transition: opacity .16s; }
-.place:hover .building, .place:focus-visible .building { fill: #f7d89b; stroke: #7e2a8c; stroke-width: 2; }
-.place.selected .building { fill: #f6c381; stroke: #7e2a8c; stroke-width: 3; }
-.place.selected .building-code { fill: #4d1e59; font-weight: 900; }
-.place.dimmed { opacity: .25; }
-.walkway { fill: none; stroke: #f4f0d6; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
-.bridge { fill: none; stroke: #d7be8f; stroke-width: 11; stroke-dasharray: 2 2; }
+.place { cursor: pointer; }
 .route-halo { fill: none; stroke: white; stroke-width: 9; stroke-linejoin: round; stroke-linecap: round; }
 .route-line { fill: none; stroke: #7e2a8c; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 10 7; animation: route-flow 1.2s linear infinite; pointer-events: none; }
 .route-start { fill: white; stroke: #7e2a8c; stroke-width: 4; }
@@ -203,25 +182,25 @@ svg { display: block; width: 100%; height: 100%; }
 }
 @media (max-height: 600px) and (min-width: 701px) { .welcome { padding: 14px; width: 270px; bottom: 96px; } .welcome h1 { font-size: 21px; } .welcome .primary { margin-top: 10px; } .floating-card { max-height: calc(100dvh - 235px); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
-/* Geometría trazada en el marco de la fotografía original. */
-.campus-land { fill: #b7c977; stroke: #8a9970; stroke-width: 1.2; }
-.parking-land, .parking-land + polygon { fill: #a6b6a0; }
-.parking-land + polygon { fill: url(#parking); }
-.road { stroke-width: 17; }
-.canal { stroke: #24aabd; stroke-width: 10; }
-.walkway { stroke: #f4f0c7; stroke-width: 7; }
-.bridge { stroke-width: 8; }
-.street { font-size: 9px; letter-spacing: .5px; fill: #28392e; }
-.building { stroke-width: 1; }
-.building-code { font-size: 10px; }
-.building-caption { font-size: 4.7px; font-weight: 650; letter-spacing: .1px; fill: #4b483e; }
-.athletics-track { fill: #cdbb98 !important; stroke: #b6aa83 !important; }
-.basketball-court { fill: #b7a574 !important; stroke: #9e9067 !important; }
-.baseball-field { fill: #e4d1a2 !important; stroke: #cdbf8a !important; }
-.place.selected .athletics-track, .place.selected .basketball-court, .place.selected .baseball-field { stroke: #7e2a8c !important; stroke-width: 3 !important; }
-.estacionamientos .building-code { font-size: 7px; }
-.access .access-label { font-size: 6px; paint-order: stroke; stroke: #f6f5e7; stroke-width: 2px; }
-.place[data-id="F"] .building, .place[data-id="G"] .building, .place[data-id="V"] .building, .place[data-id="W"] .building, .place[data-id="X"] .building, .place[data-id="Z"] .building, .place[data-id="3"] .building, .place[data-id="5"] .building { fill: #c5c8cd; stroke: #979ea2; }
-.place[data-id="1"] .building, .place[data-id="I"] .building, .place[data-id="6"] .building, .place[data-id="7"] .building, .place[data-id="L"] .building, .place[data-id="L2"] .building { fill: #b68ac3; stroke: #9670a7; }
-.place.selected .building { stroke: #7e2a8c; stroke-width: 3; }
-@media (max-width: 1050px) { .welcome { display: none; } }
+/* Exact raster base: no drawing or tint is applied to the source image. */
+#map-host { background: #fff; }
+#campus-base { opacity: 1 !important; filter: none !important; }
+.hotspot .hotspot-shape { fill: transparent; stroke: transparent; stroke-width: 1.5; vector-effect: non-scaling-stroke; pointer-events: all; transition: fill .12s, stroke .12s; }
+.hotspot:hover .hotspot-shape, .hotspot:focus-visible .hotspot-shape { fill: #7e2a8c14; stroke: #7e2a8c; }
+.hotspot.selected .hotspot-shape { fill: #7e2a8c26; stroke: #7e2a8c; stroke-width: 2; }
+.hotspot.dimmed { opacity: 0; pointer-events: none; }
+.hotspot.dimmed .hotspot-shape { pointer-events: none; }
+#campus[data-filter]:not([data-filter="all"]) .hotspot:not(.dimmed) .hotspot-shape { fill: #7e2a8c14; stroke: #7e2a8c; }
+.access-hotspot circle { fill: transparent; stroke: transparent; vector-effect: non-scaling-stroke; }
+.access-hotspot:hover circle, .access-hotspot:focus-visible circle { fill: #193b6922; stroke: #193b69; stroke-width: 2; }
+.route-halo { stroke-width: 3; }
+.route-line { stroke-width: 1.6; stroke-dasharray: 5 3; }
+.route-start, .route-end { r: 3px; stroke-width: 1.2; }
+.route-advisory { background: var(--warm-soft); color: var(--warm-ink) !important; padding: 10px; border-radius: 6px; }
+/* On phones the controls sit in the free space below the complete image. */
+@media (max-width: 700px) {
+  .map-tools { flex-direction: row; bottom: 82px; gap: 10px; }
+  .north { height: 44px; padding: 5px 0; }
+  .zoom-group { display: flex; }
+  .zoom-group button + button { border-top: 0; border-left: 1px solid var(--line); }
+}

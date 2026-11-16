@@ -1,36 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {inflateSync} from 'node:zlib';
 import {searchLocations} from '../js/search.js';
 import {shortestPath} from '../js/routes.js';
-import {pointInPolygon,intersection,segmentHitsPolygon} from '../js/geometry.js';
-const locations=JSON.parse(readFileSync(new URL('../data/locations.json',import.meta.url))),graph=JSON.parse(readFileSync(new URL('../data/routes.json',import.meta.url))),layout=JSON.parse(readFileSync(new URL('../data/map-layout.json',import.meta.url)));
+import {campus} from '../js/map.js';
+import {segmentHitsPolygon} from '../js/geometry.js';
+const read=p=>JSON.parse(readFileSync(new URL('../'+p,import.meta.url)));
+const locations=read('data/locations.json'),graph=read('data/routes.json'),layout=read('data/map-layout.json'),base=read('assets/mapa-campus-base.json');
 for(const room of ['EE01','EV01','ED01','EW04','EJ10','EH02'])test('Busca '+room,()=>{const[r]=searchLocations(room,locations);assert.equal(r.location.id,room[1]);assert.equal(r.room,room);});
 test('E ofrece los siete ejemplos solicitados',()=>assert.deepEqual(searchLocations('E',locations).map(r=>r.label),['EA01','ED01','EE01','EV01','EW01','EJ01','EH01']));
 test('Ignora acentos y mayúsculas',()=>assert.equal(searchLocations('PSICOLOGIA',locations)[0].location.id,'PSI'));
-test('Pendientes sin letra ni punto inventado',()=>{for(const id of ['PSI','DEN','MIC','QUI','BIO']){const l=locations.find(l=>l.id===id);assert.equal(l.x,undefined);assert.equal(l.node,undefined);}});
+test('Pendientes sin ubicación inventada',()=>{for(const id of ['PSI','DEN','MIC','QUI','BIO']){const l=locations.find(l=>l.id===id);assert.equal(l.x,undefined);assert.equal(l.node,undefined);}});
 test('Datos confirmados de Industrial y talleres',()=>{assert.equal(locations.find(l=>l.id==='J').rooms.length,10);assert.equal(locations.find(l=>l.id==='W').rooms.length,4);for(const id of ['R','Q'])assert.equal(locations.find(l=>l.id===id).rooms.length,0);});
-test('Todas las ubicaciones tienen ruta desde los cuatro accesos',()=>{for(const a of graph.accesses)for(const l of locations.filter(l=>l.x)){const r=shortestPath(graph,a.id,l.node);assert.ok(r,`${a.id} → ${l.id}`);assert.ok(r.meters>0);assert.equal(r.path.at(-1),l.node);}});
-test('Ningún camino atraviesa las plantas poligonales de los edificios o deportes',()=>{for(const[a,b]of graph.edges)for(const l of locations.filter(l=>l.footprint))assert.ok(!segmentHitsPolygon(graph.nodes[a],graph.nodes[b],l.footprint),`${a} → ${b} atraviesa ${l.id}`);});
-test('El canal solo se cruza en pasos señalados por confirmar',()=>{const canal=layout.canal;const ori=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);for(const[a,b]of graph.edges){const p=graph.nodes[a],q=graph.nodes[b];const crosses=canal.slice(1).some((d,i)=>{const c=canal[i];return ori(p,q,c)*ori(p,q,d)<0&&ori(c,d,p)*ori(c,d,q)<0;});if(crosses)assert.ok(graph.bridges.some(([s,t])=>JSON.stringify([s,t])===JSON.stringify([p,q])||JSON.stringify([s,t])===JSON.stringify([q,p])),`Cruce sin puente: ${a} ${b}`);}});
-test('Sin ruta para destinos inexistentes',()=>assert.equal(shortestPath(graph,graph.accesses[0].id,'unknown'),null));
-test('Los caminos permanecen dentro del contorno de la fotografía',()=>{for(const[id,p]of Object.entries(graph.nodes))assert.ok(pointInPolygon(p,layout.land),`Nodo exterior: ${id}`);});
-test('V es laboratorio de Mecánica y Eléctrica y aparece al buscar ambos',()=>{const v=locations.find(l=>l.id==='V');assert.equal(v.category,'laboratorios');for(const q of ['laboratorio de mecanica','laboratorio de electrica'])assert.ok(searchLocations(q,locations).some(r=>r.location.id==='V'));});
-test('El trazado mantiene edificios inclinados y plantas verticales de la referencia',()=>{const get=id=>locations.find(l=>l.id===id);assert.ok(get('A').angle>8&&get('A').angle<16);assert.ok(get('V').h>get('V').w);assert.ok(get('V').x>get('W').x);assert.ok(get('7').x<get('6').x&&get('7').y>get('6').y);assert.ok(get('BAS').x<get('BEI').x);assert.ok(get('GA').y>get('BEI').y);});
-test('Detecta colisiones con edificios rotados sin usar su caja envolvente',()=>{const p=[[0,10],[10,0],[20,10],[10,20]];assert.equal(segmentHitsPolygon([0,0],[3,3],p),false);assert.equal(segmentHitsPolygon([0,10],[20,10],p),true);assert.ok(intersection([0,0],[20,20],[0,20],[20,0]));});
-test('Las conexiones finales a los edificios son accesos cortos, no atajos por el campus',()=>{for(const l of locations.filter(l=>l.node)){const edge=graph.edges.find(([a,b])=>a===l.node||b===l.node);const a=graph.nodes[edge[0]],b=graph.nodes[edge[1]];assert.ok(Math.hypot(a[0]-b[0],a[1]-b[1])<45,`Acceso excesivo a ${l.id}`);}});
-
-const distanceToSegment=(p,a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],d=dx*dx+dy*dy,t=d?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/d)):0;return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);};
-test('Los pasillos cotejados junto a M conservan íntegro su recorrido en el mapa',()=>{
- const sourceEdges=graph.edges.filter((_,i)=>graph.edgeKinds[i]==='walkway').map(([a,b])=>[graph.nodes[a],graph.nodes[b]]);
- for(const item of layout.pedestrianCorrections.paths)for(let i=1;i<item.points.length;i++){
-  const a=item.points[i-1],b=item.points[i],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/3));
-  for(let k=0;k<=n;k++){const p=[a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n];assert.ok(sourceEdges.some(([c,d])=>distanceToSegment(p,c,d)<.02),`${item.id}: tramo ausente o desplazado en ${p}`);}
- }
-});
-test('Las correcciones del sector M evitan edificios antes de generar la red',()=>{
- for(const item of layout.pedestrianCorrections.paths)for(let i=1;i<item.points.length;i++)for(const l of locations.filter(l=>l.footprint))assert.ok(!segmentHitsPolygon(item.points[i-1],item.points[i],l.footprint),`${item.id} cruza ${l.id}`);
-});
-test('El sector señalado no recibe atajos automáticos entre componentes',()=>{
- graph.edges.forEach(([a,b],i)=>{if(graph.edgeKinds[i]==='junction')assert.ok(!segmentHitsPolygon(graph.nodes[a],graph.nodes[b],layout.pedestrianCorrections.protectedArea),`Conexión automática añadida junto a M: ${a}–${b}`);});
-});
+test('V conserva los laboratorios de Mecánica y Eléctrica',()=>{const v=locations.find(l=>l.id==='V');assert.equal(v.category,'laboratorios');for(const q of ['laboratorio de mecanica','laboratorio de electrica'])assert.ok(searchLocations(q,locations).some(r=>r.location.id==='V'));});
+test('La base es el recorte lossless registrado y versionado',()=>{const bytes=readFileSync(new URL('../assets/'+base.image,import.meta.url));assert.equal(createHash('sha256').update(bytes).digest('hex'),base.assetSha256);assert.match(base.image,/-v\d+\.webp$/);assert.equal(base.campusPixelsRemoved,0);assert.equal(base.source.sha256,'a6f63493b969501b67a5846be4baa75dde70e80201cc06ff488e7651a56d5e36');});
+test('La proporción SVG coincide con los píxeles del recorte',()=>{assert.equal(layout.base.image,base.image);assert.equal(base.width/base.height,(base.crop[2]-base.crop[0])/(base.crop[3]-base.crop[1]));for(const l of locations.filter(l=>l.footprint))for(const[x,y]of l.footprint)assert.ok(x>=0&&x<=base.width&&y>=0&&y<=base.height,l.id);});
+test('El mapa tiene una única imagen original y ninguna ilustración antigua',()=>{const svg=campus(locations,layout);assert.equal((svg.match(/<image /g)||[]).length,1);assert.match(svg,/id="campus-base"/);assert.ok(svg.indexOf('id="campus-base"')<svg.indexOf('id="hotspots"'));assert.doesNotMatch(svg,/class="(?:road|canal|tree|building|walkway|plaza)"/);assert.match(svg,/class="hotspot-shape"/);});
+const maskInfo=graph.navigationMask,compressed=readFileSync(new URL('../'+maskInfo.file,import.meta.url)),bits=inflateSync(compressed);
+const roundEven=x=>{const f=Math.floor(x);return x-f===.5?(f%2?f+1:f):Math.round(x);};
+function inMask(point){const x=roundEven(point[0]/maskInfo.unitsPerPixel),y=roundEven(point[1]/maskInfo.unitsPerPixel);if(x<0||x>=maskInfo.width||y<0||y>=maskInfo.height)return false;const index=y*maskInfo.width+x;return !!(bits[index>>3]&(1<<(7-(index&7))));}
+test('La máscara peatonal registrada coincide con el fichero verificado',()=>{assert.equal(createHash('sha256').update(compressed).digest('hex'),graph.maskSha256);assert.equal(maskInfo.encoding,'zlib+packed-msb');assert.ok(bits.length>=Math.ceil(maskInfo.width*maskInfo.height/8));});
+test('Todos los nodos están en superficies peatonales de la imagen',()=>{for(const[id,p]of Object.entries(graph.nodes))assert.ok(inMask(p),id);});
+test('Cada segmento sigue píxeles transitables sin atajos sobre jardines ni canal',()=>{for(const[a,b]of graph.edges){const p=graph.nodes[a],q=graph.nodes[b],steps=Math.max(1,Math.ceil(Math.hypot(q[0]-p[0],q[1]-p[1])/maskInfo.unitsPerPixel*2.5));for(let i=0;i<=steps;i++)assert.ok(inMask([p[0]+(q[0]-p[0])*i/steps,p[1]+(q[1]-p[1])*i/steps]),`${a} → ${b}`);}});
+test('Todas las rutas confirmadas están conectadas a los accesos peatonales',()=>{for(const a of graph.accesses.filter(a=>a.node))for(const l of locations.filter(l=>l.node)){const r=shortestPath(graph,a.id,l.node);assert.ok(r,`${a.id} → ${l.id}`);assert.equal(r.path.at(-1),l.node);}});
+test('Las ubicaciones sin acceso verificado no reciben una conexión inventada',()=>{for(const l of locations.filter(l=>l.routeStatus==='access-unconfirmed'))assert.equal(l.node,undefined,l.id);for(const a of graph.accesses.filter(a=>!a.node))assert.equal(shortestPath(graph,a.id,locations.find(l=>l.node).node),null);});
+test('La red no cruza las plantas de edificios ni áreas deportivas',()=>{for(const[a,b]of graph.edges)for(const l of locations.filter(l=>l.footprint))assert.ok(!segmentHitsPolygon(graph.nodes[a],graph.nodes[b],l.footprint),`${a} → ${b} atraviesa ${l.id}`);});
+test('Destinos inexistentes no generan rutas',()=>assert.equal(shortestPath(graph,graph.accesses.find(a=>a.node).id,'unknown'),null));

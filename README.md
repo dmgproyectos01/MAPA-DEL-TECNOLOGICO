@@ -6,100 +6,91 @@ Aplicación web estática e interactiva para localizar edificios, salones, servi
 
 Repositorio inicializado para la reconstrucción segura del proyecto. El desarrollo se realizará sin Unity, con respaldos frecuentes mediante commits en GitHub.
 
-## Implementación actual
+## Versión con el plano original
 
-Mapa SVG interactivo del Instituto Tecnológico de Culiacán, reconstruido desde cero a partir de la distribución de la imagen de referencia. HTML5, CSS y JavaScript nativos, sin dependencias de ejecución, sin Unity, sin Blender y sin backend obligatorio.
+La única capa visual del campus es `assets/mapa-campus-base-v2.webp`. Los caminos, edificios, canal, jardines, estacionamientos y deportes son los píxeles del plano original; no se dibujan encima figuras que los sustituyan. El SVG contiene la imagen, zonas transparentes para seleccionar lugares y la ruta activa.
+
+El archivo procede de una [copia del plano en alta resolución](https://github.com/Serpens55/ChatbotPrueba2/blob/94c1ce3c9188efc874408d85c617e26f739b0510/static/img/mapa.png). Se conserva la sección del campus, sus accesos y brújula. Se elimina la leyenda, logotipos y hashtag de la sección derecha. La máscara de recorte conserva el campus completo: la validación cuenta **cero píxeles del campus eliminados**. La codificación WebP es sin pérdida y se comprueba comparando los píxeles visibles después de decodificar. `assets/mapa-campus-base.json` registra fuente, hashes, recorte, máscara y proporción.
 
 ### Abrir localmente
 
-Con Node.js 20 o posterior:
+Requiere Node.js 20 o posterior. La aplicación no necesita instalar paquetes ni ejecutar un compilador:
 
 ```sh
 npm run dev
 ```
 
-Abre `http://localhost:3000`. Como alternativa, ejecuta `python3 -m http.server 3000`. No hace falta `npm install`. Servir mediante HTTP es necesario para los módulos JavaScript y la lectura de JSON; abrir `index.html` directamente con `file://` puede estar bloqueado por el navegador.
+Abre `http://localhost:3000`. También funciona con `python3 -m http.server 3000`. Servir mediante HTTP permite leer los módulos JavaScript y JSON; `file://` puede bloquearlos.
 
-### Uso
+### Usar el mapa
 
-- Busca edificios, departamentos, servicios o códigos de salón. `/` enfoca el buscador. Flechas y Enter seleccionan sugerencias; Escape cierra la información.
-- Escribir `E` muestra EA01, ED01, EE01, EV01, EW01, EJ01 y EH01. Los códigos de salones sin detalle confirmado localizan su edificio y avisan que la información está por confirmar.
-- Selecciona un edificio con clic, toque o teclado. Su ficha contiene salones, servicios, pisos y horarios disponibles.
-- Usa rueda, arrastre, botones +/− y gestos con dos dedos para explorar. El botón de mira restablece la vista de todo el campus.
-- Pulsa **Cómo llegar**, elige uno de los cuatro accesos y un destino. Se muestran una ruta animada, distancia aproximada, tiempo estimado e instrucciones. Usa **Borrar ruta** para retirarla.
-- Los filtros permiten localizar aulas, laboratorios, administración, deportes, estacionamientos y salud.
-- Guarda favoritos desde cada ficha. Favoritos, visitas, búsquedas y modo de color se almacenan únicamente en el navegador mediante localStorage. El historial de visitas y el de búsquedas tienen controles independientes para limpiarlos.
-- La leyenda se despliega desde la barra inferior. En móvil las fichas aparecen abajo y permiten desplazamiento interno.
+- Busca edificios, departamentos, laboratorios, servicios o códigos de salón. `/` enfoca el buscador; flechas y Enter eligen una sugerencia; Escape cierra la ficha.
+- Escribir `E` muestra EA01, ED01, EE01, EV01, EW01, EJ01 y EH01. Los códigos sin detalle confirmado localizan el edificio e indican que el salón está por confirmar.
+- Selecciona un edificio con clic, toque o teclado. Solo aparece un contorno o resaltado transparente sobre su ubicación. Las fichas son flotantes y desplazables; en móvil aparecen abajo.
+- Explora con rueda, arrastre, pinza táctil o botones de zoom. El botón de mira muestra todo el campus sin deformar su proporción.
+- Los filtros marcan las zonas correspondientes sobre el plano; conservan intacta la imagen. El modo oscuro afecta los controles y las fichas.
+- Favoritos, visitas, búsquedas y tema se guardan localmente. Los historiales incluyen controles para limpiarlos.
 
-### Datos y límites
+### Datos confirmados
 
-`data/locations.json` contiene lugares, geometría y datos; `data/routes.json` contiene nodos, conexiones, accesos y escala aproximada. W, R, Q, J, H y Ñ incorporan los datos confirmados del encargo. Las letras y posiciones restantes siguen el mapa de referencia; los detalles desconocidos se indican como **por confirmar**.
+W, R, Q, J, H y Ñ conservan los datos confirmados del encargo. V incluye Laboratorio de Mecánica y Laboratorio de Eléctrica y mantiene el Departamento de Metal-Mecánica. Psicología, Dentista, Microbiología e Investigación, Química-Bioquímica y Biotecnología Agrícola siguen sin un edificio asignado cuando no existe confirmación oficial. El consultorio médico está en H. Los servicios de salud muestran lunes a viernes de 7:00 a. m. a 1:00 p. m., zona America/Mazatlan.
 
-Psicología, Dentista, Microbiología e Investigación, Química-Bioquímica y Biotecnología Agrícola no tienen un edificio asignado mientras no exista confirmación oficial. El consultorio médico está en H. Los servicios de salud muestran lunes a viernes, de 7:00 a. m. a 1:00 p. m., zona horaria America/Mazatlan.
+### Rutas sobre la imagen
 
-Las rutas son orientativas: la escala usa una conversión provisional de 0.7 metros por unidad del dibujo. Los andadores, puertas y puentes sobre el canal requieren validación en campo. Los cruces provisionales están señalados en el mapa y en la tarjeta de rutas. No se han confirmado accesibilidad física ni cierres temporales.
+La red se extrae del centro de los píxeles de pasillos claros y de explanadas transitables identificadas en la fuente. Los peldaños, el puente visible y los cruces anotados se registran explícitamente. La máscara binaria `data/navigation-mask.bin` permite comprobar cada segmento, sin añadir diagonales para unir componentes por jardines o edificios.
 
-### Estructura
+El destino es el punto del camino más cercano al contorno del edificio. No se afirma conocer una puerta o un salón interior no señalados en la fuente. Donde falta un acceso peatonal conectado verificable, el lugar se puede buscar y seleccionar, pero la ruta aparece como acceso por confirmar. El acceso vehicular por Cómputo tiene esa misma limitación para recorrido peatonal.
 
-- `index.html`: entrada de la aplicación.
-- `css/styles.css`: estilos, temas y adaptación de pantalla.
-- `js/app.js`: interfaz y fichas.
-- `js/map.js`: representación SVG.
-- `js/camera.js`: cámara y gestos.
-- `js/search.js`: búsqueda y almacenamiento local.
-- `js/routes.js`: Dijkstra, trazado e instrucciones.
-- `js/preferences.js`: filtros, favoritos, visitas y tema.
-- `data/`: ubicaciones y red peatonal.
-- `tools/build-routes.py`: regeneración de la red y conexiones de puertas a partir de los datos. Ejecutar desde la raíz del repositorio; revisar los cruces provisionales antes de modificar su geometría.
-- `tests/`: pruebas y lista de verificación visual.
+La distancia usa una escala provisional de 0.7 metros por unidad del plano. Los cruces viales y pasos ocultos por símbolos que necesiten confirmación se avisan en las rutas que los usan. La guía no acredita accesibilidad física ni cierres actuales.
 
-### Pruebas
+### Archivos principales
+
+- `index.html`, `css/styles.css`: interfaz estática y estilos responsivos.
+- `js/map.js`: imagen original y zonas SVG transparentes.
+- `js/app.js`, `js/search.js`: fichas y búsqueda predictiva.
+- `js/camera.js`: zoom y gestos registrados al mismo marco de la imagen.
+- `js/routes.js`: rutas Dijkstra con cola de prioridad y avisos de cruces anotados.
+- `js/preferences.js`: filtros, tema, favoritos e historial.
+- `data/locations.json`: datos y contornos de selección alineados a los techos reales.
+- `data/routes.json`, `data/navigation-mask.bin`: red y máscara peatonal verificable.
+- `assets/mapa-campus-base.json`: procedencia y registro geométrico del recorte.
+- `tests/`: pruebas automáticas, validación de navegador y capturas.
+
+### Comprobar y regenerar
 
 ```sh
 npm test
 ```
 
-19 pruebas automáticas cubren búsqueda, datos pendientes, conectividad y geometría. Ver `tests/VALIDACION.md` para límites y verificaciones visuales pendientes. No se afirma que las pruebas automáticas sustituyan una revisión del navegador o una validación del plano en campo.
+Las pruebas de Node no requieren dependencias. Verifican búsquedas, datos confirmados, proporción, unicidad de la imagen, integridad de la máscara y rutas completas sobre sus píxeles.
+
+Para la comprobación Playwright en un equipo de desarrollo:
+
+```sh
+npm install --no-save playwright@1.62.1
+npx playwright install chromium
+python3 -m pip install Pillow numpy
+npm run test:browser
+```
+
+`CAMPUS_QA_URL` permite probar la página publicada. Se comprueban computadora y celular, consola, textos, búsquedas, selección, zoom, filtros, tema, favoritos y rutas. Se compara el activo servido con su SHA y los píxeles del original; la diferencia introducida al reducir la imagen para pantalla se informa aparte. Las capturas e informe quedan en `tests/screenshots/` y `work/qa-raster-report.json`.
+
+La preparación del recorte y regeneración de la red son herramientas de desarrollo, no dependencias de ejecución de la web:
+
+```sh
+python3 -m pip install Pillow numpy scipy
+python3 tools/prepare-campus-image.py ruta/al/original.png
+python3 tools/build-routes.py
+```
+
+La primera herramienta exige la resolución registrada de 4096 × 2212 para evitar aplicar un recorte a otra imagen. La segunda usa el recorte local por defecto y verifica la máscara antes de guardar datos. Después de regenerar, actualizar el registro `base` de `data/map-layout.json` y ejecutar las pruebas.
 
 ### GitHub Pages
 
-El workflow `.github/workflows/pages.yml` valida la aplicación y prepara exclusivamente los archivos estáticos. Al subir a `main`, intenta habilitar Pages y publicar con GitHub Actions, conservando la visibilidad del repositorio.
+La dirección se conserva:
 
-Si la primera ejecución falla al habilitar Pages, un administrador debe abrir **Settings → Pages → Build and deployment → Source → GitHub Actions** y volver a ejecutar **Validar y publicar en GitHub Pages** desde Actions. El token de Actions puede no tener permiso para habilitar Pages automáticamente. Los repositorios privados necesitan un plan que admita GitHub Pages; no se cambia la privacidad automáticamente.
+https://dmgproyectos01.github.io/MAPA-DEL-TECNOLOGICO/
 
-La URL esperada, únicamente después de un despliegue satisfactorio, es `https://dmgproyectos01.github.io/MAPA-DEL-TECNOLOGICO/`. El estado de publicación se confirma en el job `deploy`, no por la existencia de esta URL en la documentación.
+`.github/workflows/pages.yml` ejecuta las pruebas, publica únicamente los archivos estáticos y después abre la dirección publicada con Playwright. El trabajo `verify-published` guarda capturas y comparación de píxeles como artefacto `capturas-pagina-publicada`. Un cambio queda comprobado cuando los trabajos `deploy` y `verify-published` terminan correctamente para ese commit.
 
-## Ajuste de interfaz institucional
-
-La interfaz utiliza morado y naranja inspirados en el emblema del ITC, blanco y azul marino. Los códigos usados son una adaptación para pantalla, no una certificación de valores oficiales de impresión. Referencia institucional: [Significado del logotipo y lema](https://www.culiacan.tecnm.mx/wp-content/uploads/2012/10/SIGNIFICADO-DEL-LOGOTIPO-Y-LEMA.pdf).
-
-El encabezado, buscador, filtros y tarjetas comparten esta paleta. El bloque de bienvenida es compacto y se oculta al explorar. El modo oscuro cambia los controles y conserva los colores del plano. La cámara considera el espacio ocupado por la tarjeta para centrar el edificio en el área visible, también en móvil.
-
-Se revisó visualmente la interfaz en Chromium con vistas de 1920 × 1080, 1366 × 768, 768 × 1024 y 390 × 844 dentro de un marco de prueba. Las capturas se encuentran en `tests/screenshots/`. Esta revisión comprueba distribución y tarjetas; no confirma fidelidad del trazado al mapa original ni gestos en un dispositivo táctil físico.
-
-### Trazado del plano a partir de la fotografía
-
-El dibujo inicial se sustituyó por polígonos trazados manualmente en el marco de coordenadas de la fotografía: contorno del campus, plantas inclinadas de edificios, canal, vialidades, explanadas, estacionamientos y áreas deportivas. `data/map-layout.json` conserva estas coordenadas y los caminos de referencia. No se certifica una reproducción idéntica píxel a píxel; el trazado es manual y las medidas reales siguen por confirmar.
-
-Se localizó el [PDF oficial de marzo de 2022](https://www.culiacan.tecnm.mx/wp-content/uploads/2022/03/MAPA-DE-UBICACION-ACCESOS-MARZO-2022.pdf), pero la política de red del entorno impidió descargarlo. El archivo original PNG, JPG, PDF o SVG permitiría comprobar y afinar la coincidencia exacta del trazado manual. Las zonas interactivas actuales utilizan las nuevas plantas poligonales. No se debe regenerar con IA ni reinterpretar posiciones si se requiere igualdad estructural. Si la fuente es vectorial, se puede conservar la nitidez al ampliar; si es rasterizada, el aumento de resolución no recupera detalles inexistentes.
-
-
-## Corrección de estructura y laboratorios del edificio V
-
-Se reemplazó la distribución rectangular inicial por un trazado vectorial basado directamente en las posiciones de la fotografía. Cambiaron las coordenadas, contornos y orientación de los edificios, el perímetro del campus, los estacionamientos y las zonas deportivas. El campo de fútbol y su pista tienen la inclinación del mapa de referencia; se restituyeron las posiciones relativas de W, V, UA, UP, canchas, campo de béisbol y gimnasio-auditorio. No se añade la gran leyenda blanca lateral ni vegetación ajena al trazado.
-
-El edificio **V** incorpora **Laboratorio de Mecánica** y **Laboratorio de Eléctrica**, según la corrección del usuario. Conserva el servicio de Departamento de Metal-Mecánica. Aparece en el filtro de laboratorios y al buscar cualquiera de esas especialidades. EV01 sigue localizando V, con el aviso de información específica del salón por confirmar.
-
-La red peatonal se reconstruye desde los caminos trazados, sin generar una cuadrícula. El generador detecta intersecciones, evita las plantas poligonales de edificios y deportes, conecta puertas a puntos cercanos y conserva únicamente la red conectada. Los cruces del canal se limitan a los pasos señalados como provisionales; deben verificarse en campo.
-
-Se revisó el nuevo trazado en Chromium a 1920 × 1080, 1366 × 768, 768 × 1024 y 390 × 844. Se comprobó la búsqueda de Eléctrica, la ficha de V, EV01 en móvil y una ruta desde Sistemas a V. Las capturas de `tests/screenshots/` corresponden al nuevo plano. En móvil y tableta se oculta la bienvenida para mantener todo el dibujo visible.
-
-## Pasillos señalados junto al edificio M
-
-A partir del recorte marcado en azul se corrigió el corredor al oeste de M, su unión con el camino bajo las oficinas administrativas y los ramales entre M–Ñ, Ñ–O y O–P. También se retiraron las prolongaciones que atravesaban N, M, Ñ y O en ese sector, y el tramo que cortaba la esquina norte de V. Los colores de los pasillos siguen siendo los claros de la fotografía; el rayón azul del usuario se utiliza como indicación y no se dibuja en la aplicación.
-
-`data/map-layout.json` conserva los recorridos corregidos en `pedestrianCorrections`. El generador tiene prohibido introducir conexiones automáticas entre componentes dentro de esa zona, para evitar que reaparezcan diagonales o desvíos que no se hayan cotejado. `data/routes.json` identifica el origen de cada arista mediante `edgeKinds`.
-
-Las 22 pruebas incluyen cobertura completa de estos pasillos en el mapa, ausencia de cruces de edificios antes de generar la red y ausencia de conexiones automáticas en el sector protegido. Se comprobó visualmente la continuidad junto a M y una ruta desde Sistemas hasta su acceso oeste. Capturas: `tests/screenshots/pasillos-sector-m.png` y `tests/screenshots/ruta-sector-m.png`.
-
-Esta corrección corresponde a los pasillos cotejados del sector señalado. No constituye una certificación de igualdad píxel a píxel del campus completo; se mantiene la necesidad de la fuente original para esa comparación.
+El nombre versionado de la imagen y las versiones de módulos/JSON evitan reutilizar la ilustración anterior por caché. No se cambia el público ni la dirección del sitio mediante este proyecto.

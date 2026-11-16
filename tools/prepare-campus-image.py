@@ -17,10 +17,11 @@ base=im.crop(crop).convert('RGBA');alpha=Image.new('L',base.size,0);ImageDraw.Dr
 # The largest non-white component is the complete connected campus footprint.
 a=np.asarray(im);foreground=(a.min(axis=2)<245);components,count=ndimage.label(foreground);sizes=np.bincount(components.ravel());sizes[0]=0;campus=components==sizes.argmax();outside=np.ones(campus.shape,dtype=bool);outside[:crop[3],:crop[2]]=np.asarray(alpha)==0
 assert not (campus&outside).any(),'Crop would remove campus pixels.'
-base.putalpha(alpha);target=Path('assets/mapa-campus-base-v1.webp');base.save(target,'WEBP',lossless=True,method=6,exact=True)
+clean=Image.new('RGBA',base.size,(255,255,255,0));clean.paste(base,(0,0),alpha);base=clean
+target=Path('assets/mapa-campus-base-v2.webp');base.save(target,'WEBP',lossless=True,method=6,exact=True)
 back=Image.open(target).convert('RGBA');visible=np.asarray(alpha)>0
 assert np.array_equal(np.asarray(back)[visible],np.asarray(base)[visible]),'Image encoding changed visible pixels.'
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
-metadata=dict(version=1,image=target.name,source={'url':'https://raw.githubusercontent.com/Serpens55/ChatbotPrueba2/94c1ce3c9188efc874408d85c617e26f739b0510/static/img/mapa.png','sha256':sha(source),'width':4096,'height':2212},crop=list(crop),clip=clip,pixelsPerSvgUnit=1/scale,width=base.width*scale,height=base.height*scale,assetSha256=sha(target),encoding='WebP lossless; original visible RGB and alpha pixels verified after decoding.',campusPixelsRemoved=0)
+metadata=dict(version=2,image=target.name,source={'url':'https://raw.githubusercontent.com/Serpens55/ChatbotPrueba2/94c1ce3c9188efc874408d85c617e26f739b0510/static/img/mapa.png','sha256':sha(source),'width':4096,'height':2212},crop=list(crop),clip=clip,pixelsPerSvgUnit=1/scale,width=base.width*scale,height=base.height*scale,assetSha256=sha(target),encoding='WebP lossless; original visible RGB and alpha pixels verified after decoding.',campusPixelsRemoved=0)
 Path('assets/mapa-campus-base.json').write_text(json.dumps(metadata,ensure_ascii=False,indent=2))
 print(json.dumps({'asset':str(target),'bytes':target.stat().st_size,'viewBox':[0,0,metadata['width'],metadata['height']],'campusPixelsRemoved':0}))

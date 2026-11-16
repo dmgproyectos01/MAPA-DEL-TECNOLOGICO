@@ -40,3 +40,40 @@ jobs:
       - name: Publicar
         id: deployment
         uses: actions/deploy-pages@v4
+
+  verify-published:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar herramientas de comprobación
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.62.1
+          npx playwright install --with-deps chromium
+          python -m pip install Pillow numpy
+      - name: Descargar fuente para comparar píxeles
+        run: |
+          mkdir -p work/source-research
+          python - <<'PYCODE'
+          import json,urllib.request,pathlib
+          info=json.loads(pathlib.Path('assets/mapa-campus-base.json').read_text())
+          urllib.request.urlretrieve(info['source']['url'],'work/source-research/mapa-chatbot.png')
+          PYCODE
+      - name: Probar la página publicada y tomar capturas
+        env:
+          CAMPUS_QA_URL: https://dmgproyectos01.github.io/MAPA-DEL-TECNOLOGICO/
+        run: node tests/browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas-pagina-publicada
+          path: |
+            tests/screenshots/raster-*.png
+            work/qa-raster-report.json
+          retention-days: 14
