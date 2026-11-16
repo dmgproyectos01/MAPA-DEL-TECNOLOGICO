@@ -36,15 +36,16 @@ def valid(a,b):
  if any(segdist(a,b,c,d)<8 for c,d in canal)and not bridge(a,b):return False
  return True
 segments=[(a,b)for path in layout['walkways']for a,b in zip(path,path[1:])]
-nodes={};edges=[];index={}
+nodes={};edges=[];index={};edge_kinds={}
 def add(p):
  p=[round(p[0],3),round(p[1],3)];key=tuple(p)
  if key not in index:index[key]=f'path-{len(index)}';nodes[index[key]]=p
  return index[key]
-def connect(a,b):
+def connect(a,b,kind='walkway'):
  if a==b:return
  pair=[a,b]
- if pair not in edges and pair[::-1]not in edges:edges.append(pair)
+ if pair not in edges and pair[::-1]not in edges:
+  edges.append(pair);edge_kinds[tuple(sorted(pair))]=kind
 for a,b in segments:
  cuts=[a,b]
  for c,d in segments:
@@ -79,9 +80,10 @@ while True:
    for b in sorted(group):
     d=math.dist(nodes[a],nodes[b])
     if d>48 or (best and d>=best[0]):continue
+    if polygonhit(nodes[a],nodes[b],layout['pedestrianCorrections']['protectedArea']):continue
     if valid(nodes[a],nodes[b]):best=(d,a,b)
  if best is None:break
- connect(best[1],best[2])
+ connect(best[1],best[2],'junction')
 groups=components();main=groups[0]
 print('Path components:',[(len(g),min(nodes[n][0]for n in g),min(nodes[n][1]for n in g),max(nodes[n][0]for n in g),max(nodes[n][1]for n in g))for g in groups])
 nodes={n:p for n,p in nodes.items()if n in main};edges=[e for e in edges if all(n in main for n in e)]
@@ -100,8 +102,8 @@ for l in obstacles:
 for a in layout['accesses']:
  p=[a['x'],a['y']];options=[(math.dist(p,b),n)for n,b in base.items()if valid(p,b)]
  if not options:raise ValueError('No path from '+a['id'])
- _,n=min(options);nodes[a['id']]=p;connect(a['id'],n)
+ _,n=min(options);nodes[a['id']]=p;connect(a['id'],n,'entrance')
 bridges=[[nodes[a],nodes[b]]for a,b in edges if any(segdist(nodes[a],nodes[b],c,d)<8 for c,d in canal)]
-graph=dict(nodes=nodes,edges=edges,accesses=layout['accesses'],bridges=bridges,metersPerUnit=.7,approximate=True,source='Pedestrian paths traced from the user-provided campus reference image.')
+graph=dict(nodes=nodes,edges=edges,edgeKinds=[edge_kinds.get(tuple(sorted(e)),'entrance')for e in edges],accesses=layout['accesses'],bridges=bridges,metersPerUnit=.7,approximate=True,source='Pedestrian paths traced from the user-provided campus reference image.')
 Path('data/routes.json').write_text(json.dumps(graph,ensure_ascii=False,indent=2))
 Path('data/locations.json').write_text(json.dumps(locations,ensure_ascii=False,indent=2))

@@ -19,3 +19,18 @@ test('V es laboratorio de Mecánica y Eléctrica y aparece al buscar ambos',()=>
 test('El trazado mantiene edificios inclinados y plantas verticales de la referencia',()=>{const get=id=>locations.find(l=>l.id===id);assert.ok(get('A').angle>8&&get('A').angle<16);assert.ok(get('V').h>get('V').w);assert.ok(get('V').x>get('W').x);assert.ok(get('7').x<get('6').x&&get('7').y>get('6').y);assert.ok(get('BAS').x<get('BEI').x);assert.ok(get('GA').y>get('BEI').y);});
 test('Detecta colisiones con edificios rotados sin usar su caja envolvente',()=>{const p=[[0,10],[10,0],[20,10],[10,20]];assert.equal(segmentHitsPolygon([0,0],[3,3],p),false);assert.equal(segmentHitsPolygon([0,10],[20,10],p),true);assert.ok(intersection([0,0],[20,20],[0,20],[20,0]));});
 test('Las conexiones finales a los edificios son accesos cortos, no atajos por el campus',()=>{for(const l of locations.filter(l=>l.node)){const edge=graph.edges.find(([a,b])=>a===l.node||b===l.node);const a=graph.nodes[edge[0]],b=graph.nodes[edge[1]];assert.ok(Math.hypot(a[0]-b[0],a[1]-b[1])<45,`Acceso excesivo a ${l.id}`);}});
+
+const distanceToSegment=(p,a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],d=dx*dx+dy*dy,t=d?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/d)):0;return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);};
+test('Los pasillos cotejados junto a M conservan íntegro su recorrido en el mapa',()=>{
+ const sourceEdges=graph.edges.filter((_,i)=>graph.edgeKinds[i]==='walkway').map(([a,b])=>[graph.nodes[a],graph.nodes[b]]);
+ for(const item of layout.pedestrianCorrections.paths)for(let i=1;i<item.points.length;i++){
+  const a=item.points[i-1],b=item.points[i],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/3));
+  for(let k=0;k<=n;k++){const p=[a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n];assert.ok(sourceEdges.some(([c,d])=>distanceToSegment(p,c,d)<.02),`${item.id}: tramo ausente o desplazado en ${p}`);}
+ }
+});
+test('Las correcciones del sector M evitan edificios antes de generar la red',()=>{
+ for(const item of layout.pedestrianCorrections.paths)for(let i=1;i<item.points.length;i++)for(const l of locations.filter(l=>l.footprint))assert.ok(!segmentHitsPolygon(item.points[i-1],item.points[i],l.footprint),`${item.id} cruza ${l.id}`);
+});
+test('El sector señalado no recibe atajos automáticos entre componentes',()=>{
+ graph.edges.forEach(([a,b],i)=>{if(graph.edgeKinds[i]==='junction')assert.ok(!segmentHitsPolygon(graph.nodes[a],graph.nodes[b],layout.pedestrianCorrections.protectedArea),`Conexión automática añadida junto a M: ${a}–${b}`);});
+});
