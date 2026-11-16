@@ -38,12 +38,43 @@ async function closeDetail(page) {
 }
 async function fit(page) {
   await closeDetail(page);
+  if (await page.locator('#clear-active-route').isVisible()) await page.locator('#clear-active-route').click();
   if (await page.locator('#route-panel').isVisible()) {
     if (await page.locator('#clear-route').isVisible()) await page.locator('#clear-route').click();
     else await page.locator('#route-panel .close').click();
   }
   await page.locator('#reset').click();
   await settled(page);
+}
+
+
+// Check hit-testing before clicking: Playwright scrolling a hidden control into
+// view would otherwise mask the discoverability regression reported by users.
+async function assertImmediatelyClickable(page, selector) {
+  const state = await page.locator(selector).evaluate(el => {
+    const box = el.getBoundingClientRect(), x = box.x + box.width/2, y = box.y + box.height/2;
+    const hit = document.elementFromPoint(x, y);
+    return { text: el.textContent.trim(), visible: box.width > 0 && box.height > 0 && box.x >= 0 && box.y >= 0 && box.right <= innerWidth && box.bottom <= innerHeight, unobscured: !!hit && (el === hit || el.contains(hit)), disabled: el.disabled };
+  });
+  assert.match(state.text, /Quitar ruta$/);
+  assert.ok(state.visible && state.unobscured && !state.disabled, `${selector}: ${JSON.stringify(state)}`);
+}
+async function openRoute(page) {
+  await fit(page);
+  await search(page, 'EH02');
+  await page.locator('#get-route').click();
+  await page.locator('#route-panel').waitFor({ state: 'visible' });
+  await page.locator('.route-line').waitFor({ state: 'attached', timeout: 10000 });
+  await settled(page);
+}
+async function assertRouteRemoved(page) {
+  await page.locator('.route-line').waitFor({ state: 'detached' });
+  assert.equal(await page.locator('#route-layer > *').count(), 0, 'Route path and endpoint markers must all be removed');
+  assert.equal(await page.locator('#route-panel').isVisible(), false);
+  assert.equal(await page.locator('#clear-active-route').isVisible(), false);
+  await settled(page);
+  const transform = await page.locator('#world').getAttribute('transform');
+  assert.ok(!transform || /scale\(1\)/.test(transform), `Campus view was not reset: ${transform}`);
 }
 
 for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844]]) {
@@ -162,10 +193,9 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
       await page.locator('.filters button[data-filter="all"]').click();
     });
     await check(page, row, 'Route is shown over base and can be erased', async () => {
-      await search(page, 'EH02');
-      await page.locator('#get-route').click();
-      await page.locator('#route-panel').waitFor({ state: 'visible' });
-      await page.locator('.route-line').waitFor({ state: 'attached', timeout:10000 });
+      await openRoute(page);
+      await assertImmediatelyClickable(page, '#clear-route');
+      await assertImmediatelyClickable(page, '#clear-active-route');
       assert.ok((await page.locator('.route-line').getAttribute('d')).startsWith('M'));
       const summary = await page.locator('#route-summary').innerText();
       assert.ok(/m/.test(summary) && /min/.test(summary), summary);
@@ -176,8 +206,32 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
         assert.ok(endpoint&&panel&&endpoint.y+endpoint.height/2<panel.y+2,`Route destination is hidden by the bottom card: endpoint=${JSON.stringify(endpoint)}, panel=${JSON.stringify(panel)}`);
       }
       await page.locator('#clear-route').click();
-      assert.equal(await page.locator('.route-line').count(), 0);
+      await assertRouteRemoved(page);
       await fit(page);
+    });
+    await check(page, row, 'Closing the route card removes the route and markers', async () => {
+      await openRoute(page);
+      await page.locator('#route-panel .close').click();
+      await assertRouteRemoved(page);
+    });
+    await check(page, row, 'Quitar ruta remains reachable after selecting another building', async () => {
+      await openRoute(page);
+      await search(page, 'EW04');
+      assert.equal(await page.locator('#route-panel').isVisible(), false);
+      assert.equal(await page.locator('.route-line').count(), 1);
+      await assertImmediatelyClickable(page, '#clear-active-route');
+      await page.locator('#clear-active-route').click();
+      await assertRouteRemoved(page);
+      await closeDetail(page);
+    });
+    await check(page, row, 'Escape respects search editing and removes the route from the map', async () => {
+      await openRoute(page);
+      await page.locator('#search').focus();
+      await page.keyboard.press('Escape');
+      assert.equal(await page.locator('.route-line').count(), 1, 'Escape while editing search must not erase the route');
+      await page.locator('#reset').focus();
+      await page.keyboard.press('Escape');
+      await assertRouteRemoved(page);
     });
     await check(page, row, 'No console or page errors', async () => { assert.deepEqual(consoleErrors,[]);assert.deepEqual(pageErrors,[]);assert.deepEqual(failedRequests,[]); });
   } catch (error) {
