@@ -19,3 +19,5 @@ const camera=initCamera(svg);
 window.addEventListener('map-place-tap',e=>selectLocation(e.detail));
 const {initRoutes}=await import('./routes.js');
 await initRoutes(locations,camera,notify);
+const {initPreferences}=await import('./preferences.js');
+initPreferences(locations,storage,selectLocation,notify);
