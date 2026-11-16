@@ -51,3 +51,15 @@ Las 19 pruebas automáticas incluyen el edificio V como laboratorio de Mecánica
 En Chromium se comprobó el plano reconstruido en las cuatro resoluciones anteriores, la búsqueda de Laboratorio de Eléctrica, la ficha de V y su ruta desde Sistemas. En móvil se verificaron EV01, el aviso de salón por confirmar, el centrado de V y el cierre de la tarjeta. Capturas adicionales: `edificio-v-movil.png` y `ruta-edificio-v.png`.
 
 El trazado manual permite mejorar la fidelidad de la distribución y conservar nitidez al ampliar, pero no acredita igualdad píxel a píxel con la fotografía original. Las medidas y cruces provisionales requieren comprobación en campo.
+
+## Sector marcado en azul junto a M
+
+- 22 pruebas automáticas aprobadas.
+- Corredor continuo al oeste de M, con uniones explícitas bajo las oficinas administrativas.
+- Ramales entre M–Ñ, Ñ–O y O–P fuera de las plantas de los edificios.
+- Comprobación de que todos los puntos de los tramos cotejados aparecen en las aristas que dibuja el mapa.
+- Conexiones automáticas prohibidas dentro del sector para evitar cambios posteriores del trazado.
+- En Chromium: selección de M, cierre de su ficha, inspección ampliada de los pasillos y ruta desde Sistemas hasta el acceso oeste de M.
+- Evidencia: `pasillos-sector-m.png` y `ruta-sector-m.png`.
+
+La revisión corresponde al sector indicado en el recorte, sin atribuir al mapa completo una coincidencia exacta aún no verificada.

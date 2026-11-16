@@ -93,3 +93,13 @@ El edificio **V** incorpora **Laboratorio de Mecánica** y **Laboratorio de Elé
 La red peatonal se reconstruye desde los caminos trazados, sin generar una cuadrícula. El generador detecta intersecciones, evita las plantas poligonales de edificios y deportes, conecta puertas a puntos cercanos y conserva únicamente la red conectada. Los cruces del canal se limitan a los pasos señalados como provisionales; deben verificarse en campo.
 
 Se revisó el nuevo trazado en Chromium a 1920 × 1080, 1366 × 768, 768 × 1024 y 390 × 844. Se comprobó la búsqueda de Eléctrica, la ficha de V, EV01 en móvil y una ruta desde Sistemas a V. Las capturas de `tests/screenshots/` corresponden al nuevo plano. En móvil y tableta se oculta la bienvenida para mantener todo el dibujo visible.
+
+## Pasillos señalados junto al edificio M
+
+A partir del recorte marcado en azul se corrigió el corredor al oeste de M, su unión con el camino bajo las oficinas administrativas y los ramales entre M–Ñ, Ñ–O y O–P. También se retiraron las prolongaciones que atravesaban N, M, Ñ y O en ese sector, y el tramo que cortaba la esquina norte de V. Los colores de los pasillos siguen siendo los claros de la fotografía; el rayón azul del usuario se utiliza como indicación y no se dibuja en la aplicación.
+
+`data/map-layout.json` conserva los recorridos corregidos en `pedestrianCorrections`. El generador tiene prohibido introducir conexiones automáticas entre componentes dentro de esa zona, para evitar que reaparezcan diagonales o desvíos que no se hayan cotejado. `data/routes.json` identifica el origen de cada arista mediante `edgeKinds`.
+
+Las 22 pruebas incluyen cobertura completa de estos pasillos en el mapa, ausencia de cruces de edificios antes de generar la red y ausencia de conexiones automáticas en el sector protegido. Se comprobó visualmente la continuidad junto a M y una ruta desde Sistemas hasta su acceso oeste. Capturas: `tests/screenshots/pasillos-sector-m.png` y `tests/screenshots/ruta-sector-m.png`.
+
+Esta corrección corresponde a los pasillos cotejados del sector señalado. No constituye una certificación de igualdad píxel a píxel del campus completo; se mantiene la necesidad de la fuente original para esa comparación.
