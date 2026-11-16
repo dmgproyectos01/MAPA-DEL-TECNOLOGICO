@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "image": "mapa-campus-base-v1.webp",
+  "source": {
+    "url": "https://raw.githubusercontent.com/Serpens55/ChatbotPrueba2/94c1ce3c9188efc874408d85c617e26f739b0510/static/img/mapa.png",
+    "sha256": "a6f63493b969501b67a5846be4baa75dde70e80201cc06ff488e7651a56d5e36",
+    "width": 4096,
+    "height": 2212
+  },
+  "crop": [
+    0,
+    0,
+    2620,
+    2212
+  ],
+  "clip": [
+    [
+      0,
+      0
+    ],
+    [
+      900,
+      0
+    ],
+    [
+      900,
+      130
+    ],
+    [
+      905,
+      175
+    ],
+    [
+      920,
+      225
+    ],
+    [
+      940,
+      275
+    ],
+    [
+      960,
+      325
+    ],
+    [
+      980,
+      380
+    ],
+    [
+      1000,
+      435
+    ],
+    [
+      1020,
+      500
+    ],
+    [
+      1016,
+      550
+    ],
+    [
+      1040,
+      650
+    ],
+    [
+      1070,
+      750
+    ],
+    [
+      1092,
+      810
+    ],
+    [
+      1092,
+      929
+    ],
+    [
+      0,
+      929
+    ]
+  ],
+  "pixelsPerSvgUnit": 2.3813953488372093,
+  "width": 1100.1953125,
+  "height": 928.8671875,
+  "assetSha256": "878d77843bd8347e4119a0919bf920a93dbdca08dcad7cd18c0366f2b7ec4283",
+  "encoding": "WebP lossless; original visible RGB and alpha pixels verified after decoding.",
+  "campusPixelsRemoved": 0
+}
