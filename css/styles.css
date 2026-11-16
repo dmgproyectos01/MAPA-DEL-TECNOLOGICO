@@ -224,3 +224,4 @@ svg { display: block; width: 100%; height: 100%; }
 .place[data-id="F"] .building, .place[data-id="G"] .building, .place[data-id="V"] .building, .place[data-id="W"] .building, .place[data-id="X"] .building, .place[data-id="Z"] .building, .place[data-id="3"] .building, .place[data-id="5"] .building { fill: #c5c8cd; stroke: #979ea2; }
 .place[data-id="1"] .building, .place[data-id="I"] .building, .place[data-id="6"] .building, .place[data-id="7"] .building, .place[data-id="L"] .building, .place[data-id="L2"] .building { fill: #b68ac3; stroke: #9670a7; }
 .place.selected .building { stroke: #7e2a8c; stroke-width: 3; }
+@media (max-width: 1050px) { .welcome { display: none; } }

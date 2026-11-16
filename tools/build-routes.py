@@ -62,21 +62,21 @@ def components():
  for a,b in edges:adj[a].append(b);adj[b].append(a)
  left=set(nodes);groups=[]
  while left:
-  stack=[next(iter(left))];seen=set()
+  stack=[min(left)];seen=set()
   while stack:
    n=stack.pop()
    if n in seen:continue
    seen.add(n);stack.extend(adj[n])
   left-=seen;groups.append(seen)
- return sorted(groups,key=len,reverse=True)
+ return sorted(groups,key=lambda group:(-len(group),min(group)))
 # Close tiny breaks at hand-traced intersections without adding a rectangular grid.
 while True:
  groups=components()
  if len(groups)==1:break
  main=groups[0];best=None
  for group in groups[1:]:
-  for a in main:
-   for b in group:
+  for a in sorted(main):
+   for b in sorted(group):
     d=math.dist(nodes[a],nodes[b])
     if d>48 or (best and d>=best[0]):continue
     if valid(nodes[a],nodes[b]):best=(d,a,b)

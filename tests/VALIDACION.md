@@ -9,7 +9,7 @@ Ejecutar `npm test` (Node 20 o posterior). Sin dependencias.
 - Búsqueda sin acentos ni distinción de mayúsculas.
 - Datos confirmados y ubicaciones pendientes sin edificio inventado.
 - Conectividad de todos los destinos desde los cuatro accesos.
-- Segmentos de caminos fuera de edificios, canchas y estacionamientos.
+- Segmentos de caminos fuera de las plantas poligonales, incluyendo edificios inclinados, canchas y estacionamientos.
 - Cruces del canal solamente en los pasos explícitos del modelo.
 
 El modelo del campus es aproximado. Los pasos del canal están representados como puentes provisionales y requieren validación en campo.
@@ -42,3 +42,12 @@ Al abrir el proyecto en un navegador, verificar en cada tamaño:
 8. Confirmar persistencia de favoritos, historial y tema tras recargar.
 9. Confirmar que árboles y vegetación no cubran superficies transitables o edificios.
 10. Validar los andadores, las entradas de edificios y los puentes en campo antes de uso como guía oficial.
+
+
+## Comprobaciones del trazado reconstruido
+
+Las 19 pruebas automáticas incluyen el edificio V como laboratorio de Mecánica y Eléctrica, su búsqueda, las proporciones verticales de V, la inclinación de A y las posiciones relativas de W, UA, UP y deportes. También verifican colisiones con polígonos rotados y que las conexiones a puertas sean cortas.
+
+En Chromium se comprobó el plano reconstruido en las cuatro resoluciones anteriores, la búsqueda de Laboratorio de Eléctrica, la ficha de V y su ruta desde Sistemas. En móvil se verificaron EV01, el aviso de salón por confirmar, el centrado de V y el cierre de la tarjeta. Capturas adicionales: `edificio-v-movil.png` y `ruta-edificio-v.png`.
+
+El trazado manual permite mejorar la fidelidad de la distribución y conservar nitidez al ampliar, pero no acredita igualdad píxel a píxel con la fotografía original. Las medidas y cruces provisionales requieren comprobación en campo.

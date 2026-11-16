@@ -5,7 +5,7 @@ export function searchLocations(query,locations){
  if(room){const l=locations.find(l=>l.id.toUpperCase()===room[1].toUpperCase());if(l)return[{location:l,room:`E${l.id}${room[2].padStart(2,'0')}`,label:`E${l.id}${room[2].padStart(2,'0')}`,description:`Edificio ${l.id} · ${l.rooms.includes(`E${l.id}${room[2].padStart(2,'0')}`)?'Salón confirmado':'Información específica del salón por confirmar'}`}];}
  if(q==='e')return['EA01','ED01','EE01','EV01','EW01','EJ01','EH01'].flatMap(code=>searchLocations(code,locations));
  const results=[];
- for(const l of locations){for(const r of l.rooms){if(normalize(r).includes(q))results.push({location:l,room:r,label:r,description:`Edificio ${l.id} · ${l.name}`});}if(normalize([l.id,l.name,...l.services,l.category,l.id==='H'?'doctor médico salud':''].join(' ')).includes(q))results.push({location:l,label:l.name,description:`${l.x?'Edificio '+l.id:'Ubicación por confirmar'} · ${l.services[0]||l.category}`});}
+ for(const l of locations){for(const r of l.rooms){if(normalize(r).includes(q))results.push({location:l,room:r,label:r,description:`Edificio ${l.id} · ${l.name}`});}if(normalize([l.id,l.name,...l.services,l.category,l.id==='H'?'doctor médico salud':''].join(' ')).includes(q))results.push({location:l,label:l.name,description:`${l.x?'Edificio '+l.id:'Ubicación por confirmar'} · ${l.services.find(service=>normalize(service).includes(q))||l.services[0]||l.category}`});}
  return results.slice(0,16);
 }
 export function initSearch(locations,select,storage){

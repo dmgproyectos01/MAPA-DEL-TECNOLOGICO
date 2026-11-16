@@ -59,7 +59,7 @@ Las rutas son orientativas: la escala usa una conversión provisional de 0.7 met
 npm test
 ```
 
-15 pruebas automáticas cubren búsqueda, datos pendientes, conectividad y geometría. Ver `tests/VALIDACION.md` para límites y verificaciones visuales pendientes. No se afirma que las pruebas automáticas sustituyan una revisión del navegador o una validación del plano en campo.
+19 pruebas automáticas cubren búsqueda, datos pendientes, conectividad y geometría. Ver `tests/VALIDACION.md` para límites y verificaciones visuales pendientes. No se afirma que las pruebas automáticas sustituyan una revisión del navegador o una validación del plano en campo.
 
 ### GitHub Pages
 
@@ -77,8 +77,19 @@ El encabezado, buscador, filtros y tarjetas comparten esta paleta. El bloque de 
 
 Se revisó visualmente la interfaz en Chromium con vistas de 1920 × 1080, 1366 × 768, 768 × 1024 y 390 × 844 dentro de un marco de prueba. Las capturas se encuentran en `tests/screenshots/`. Esta revisión comprueba distribución y tarjetas; no confirma fidelidad del trazado al mapa original ni gestos en un dispositivo táctil físico.
 
-### Pendiente: sustituir el plano por su fuente exacta
+### Trazado del plano a partir de la fotografía
 
-El dibujo SVG actual conserva la aproximación anterior. Todavía **no es una reproducción 100 % idéntica** del mapa entregado como referencia. No se ha alterado su geometría durante el ajuste de interfaz.
+El dibujo inicial se sustituyó por polígonos trazados manualmente en el marco de coordenadas de la fotografía: contorno del campus, plantas inclinadas de edificios, canal, vialidades, explanadas, estacionamientos y áreas deportivas. `data/map-layout.json` conserva estas coordenadas y los caminos de referencia. No se certifica una reproducción idéntica píxel a píxel; el trazado es manual y las medidas reales siguen por confirmar.
 
-Se localizó el [PDF oficial de marzo de 2022](https://www.culiacan.tecnm.mx/wp-content/uploads/2022/03/MAPA-DE-UBICACION-ACCESOS-MARZO-2022.pdf), pero la política de red del entorno impidió descargarlo. Hace falta el archivo original PNG, JPG, PDF o SVG para integrar su trazado fiel, conservar proporciones y orientar las zonas interactivas sobre la misma base. No se debe regenerar con IA ni reinterpretar posiciones si se requiere igualdad estructural. Si la fuente es vectorial, se puede conservar la nitidez al ampliar; si es rasterizada, el aumento de resolución no recupera detalles inexistentes.
+Se localizó el [PDF oficial de marzo de 2022](https://www.culiacan.tecnm.mx/wp-content/uploads/2022/03/MAPA-DE-UBICACION-ACCESOS-MARZO-2022.pdf), pero la política de red del entorno impidió descargarlo. El archivo original PNG, JPG, PDF o SVG permitiría comprobar y afinar la coincidencia exacta del trazado manual. Las zonas interactivas actuales utilizan las nuevas plantas poligonales. No se debe regenerar con IA ni reinterpretar posiciones si se requiere igualdad estructural. Si la fuente es vectorial, se puede conservar la nitidez al ampliar; si es rasterizada, el aumento de resolución no recupera detalles inexistentes.
+
+
+## Corrección de estructura y laboratorios del edificio V
+
+Se reemplazó la distribución rectangular inicial por un trazado vectorial basado directamente en las posiciones de la fotografía. Cambiaron las coordenadas, contornos y orientación de los edificios, el perímetro del campus, los estacionamientos y las zonas deportivas. El campo de fútbol y su pista tienen la inclinación del mapa de referencia; se restituyeron las posiciones relativas de W, V, UA, UP, canchas, campo de béisbol y gimnasio-auditorio. No se añade la gran leyenda blanca lateral ni vegetación ajena al trazado.
+
+El edificio **V** incorpora **Laboratorio de Mecánica** y **Laboratorio de Eléctrica**, según la corrección del usuario. Conserva el servicio de Departamento de Metal-Mecánica. Aparece en el filtro de laboratorios y al buscar cualquiera de esas especialidades. EV01 sigue localizando V, con el aviso de información específica del salón por confirmar.
+
+La red peatonal se reconstruye desde los caminos trazados, sin generar una cuadrícula. El generador detecta intersecciones, evita las plantas poligonales de edificios y deportes, conecta puertas a puntos cercanos y conserva únicamente la red conectada. Los cruces del canal se limitan a los pasos señalados como provisionales; deben verificarse en campo.
+
+Se revisó el nuevo trazado en Chromium a 1920 × 1080, 1366 × 768, 768 × 1024 y 390 × 844. Se comprobó la búsqueda de Eléctrica, la ficha de V, EV01 en móvil y una ruta desde Sistemas a V. Las capturas de `tests/screenshots/` corresponden al nuevo plano. En móvil y tableta se oculta la bienvenida para mantener todo el dibujo visible.

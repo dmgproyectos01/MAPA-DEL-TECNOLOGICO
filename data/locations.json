@@ -891,7 +891,7 @@
       "Laboratorio de Eléctrica",
       "Departamento de Metal-Mecánica"
     ],
-    "description": "Edificio V: laboratorios de Mecánica y Eléctrica, confirmados por el usuario. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
+    "description": "Edificio V: laboratorios de Mecánica y Eléctrica. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
     "node": "door-V",
