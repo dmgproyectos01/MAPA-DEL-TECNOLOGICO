@@ -68,3 +68,17 @@ El workflow `.github/workflows/pages.yml` valida la aplicación y prepara exclus
 Si la primera ejecución falla al habilitar Pages, un administrador debe abrir **Settings → Pages → Build and deployment → Source → GitHub Actions** y volver a ejecutar **Validar y publicar en GitHub Pages** desde Actions. El token de Actions puede no tener permiso para habilitar Pages automáticamente. Los repositorios privados necesitan un plan que admita GitHub Pages; no se cambia la privacidad automáticamente.
 
 La URL esperada, únicamente después de un despliegue satisfactorio, es `https://dmgproyectos01.github.io/MAPA-DEL-TECNOLOGICO/`. El estado de publicación se confirma en el job `deploy`, no por la existencia de esta URL en la documentación.
+
+## Ajuste de interfaz institucional
+
+La interfaz utiliza morado y naranja inspirados en el emblema del ITC, blanco y azul marino. Los códigos usados son una adaptación para pantalla, no una certificación de valores oficiales de impresión. Referencia institucional: [Significado del logotipo y lema](https://www.culiacan.tecnm.mx/wp-content/uploads/2012/10/SIGNIFICADO-DEL-LOGOTIPO-Y-LEMA.pdf).
+
+El encabezado, buscador, filtros y tarjetas comparten esta paleta. El bloque de bienvenida es compacto y se oculta al explorar. El modo oscuro cambia los controles y conserva los colores del plano. La cámara considera el espacio ocupado por la tarjeta para centrar el edificio en el área visible, también en móvil.
+
+Se revisó visualmente la interfaz en Chromium con vistas de 1920 × 1080, 1366 × 768, 768 × 1024 y 390 × 844 dentro de un marco de prueba. Las capturas se encuentran en `tests/screenshots/`. Esta revisión comprueba distribución y tarjetas; no confirma fidelidad del trazado al mapa original ni gestos en un dispositivo táctil físico.
+
+### Pendiente: sustituir el plano por su fuente exacta
+
+El dibujo SVG actual conserva la aproximación anterior. Todavía **no es una reproducción 100 % idéntica** del mapa entregado como referencia. No se ha alterado su geometría durante el ajuste de interfaz.
+
+Se localizó el [PDF oficial de marzo de 2022](https://www.culiacan.tecnm.mx/wp-content/uploads/2022/03/MAPA-DE-UBICACION-ACCESOS-MARZO-2022.pdf), pero la política de red del entorno impidió descargarlo. Hace falta el archivo original PNG, JPG, PDF o SVG para integrar su trazado fiel, conservar proporciones y orientar las zonas interactivas sobre la misma base. No se debe regenerar con IA ni reinterpretar posiciones si se requiere igualdad estructural. Si la fuente es vectorial, se puede conservar la nitidez al ampliar; si es rasterizada, el aumento de resolución no recupera detalles inexistentes.

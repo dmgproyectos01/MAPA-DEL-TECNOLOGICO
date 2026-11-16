@@ -14,14 +14,21 @@ Ejecutar `npm test` (Node 20 o posterior). Sin dependencias.
 
 El modelo del campus es aproximado. Los pasos del canal están representados como puentes provisionales y requieren validación en campo.
 
-## Revisión visual pendiente
+## Revisión visual de la interfaz institucional
 
-La infraestructura de vista previa del entorno devolvió `relay could not open browser port 4173: timed out waiting for relay readiness`. No se han verificado visualmente los tamaños siguientes ni se han generado capturas:
+Se verificó en Chromium la nueva interfaz en marcos de prueba de 1920 × 1080, 1366 × 768, 768 × 1024 y 390 × 844. Capturas: `tests/screenshots/`.
 
-- 1920 × 1080.
-- 1366 × 768.
-- 768 × 1024.
-- 390 × 844.
+- Colores institucionales en encabezado, botones, filtros y tarjetas.
+- Encabezado y buscador sin desbordamientos visibles.
+- Filtros con desplazamiento horizontal en pantallas estrechas.
+- Búsqueda de EH02, apertura y cierre de la ficha.
+- Título de la ficha legible, contenido con desplazamiento interno.
+- Centrado del edificio por encima de la tarjeta inferior en 390 × 844.
+- Temas claro y oscuro; el mapa conserva su paleta.
+
+La vista previa reenviada sigue sin conexión, pero se pudo verificar la aplicación local en Chromium. No se probó pinza en dispositivo táctil físico. La fidelidad del mapa a la referencia permanece pendiente del archivo fuente original.
+
+## Verificaciones adicionales y en campo
 
 Al abrir el proyecto en un navegador, verificar en cada tamaño:
 

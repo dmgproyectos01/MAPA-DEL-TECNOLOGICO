@@ -14,6 +14,6 @@ export function initCamera(svg){
  // Captured pointer clicks retarget to the SVG: recover the place under the release point.
  svg.addEventListener('pointerup',e=>{if(!moved){const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('.place');if(target){window.dispatchEvent(new CustomEvent('map-place-tap',{detail:target.dataset.id}));window.mapDragged=true;setTimeout(()=>window.mapDragged=false,80);}}});
  document.querySelector('#zoom-in').onclick=()=>zoom(1.4);document.querySelector('#zoom-out').onclick=()=>zoom(1/1.4);document.querySelector('#reset').onclick=()=>animate(base());document.querySelector('#north').onclick=()=>animate(base());
- window.addEventListener('campus-select',e=>{const l=e.detail;if(l.x){const mobile=innerWidth<700;const k=2.6;animate({k,x:(mobile?590:480)-l.x*k,y:(mobile?330:480)-l.y*k});}});
+ window.addEventListener('campus-select',e=>{const l=e.detail;if(l.x){const mobile=innerWidth<700,rect=svg.getBoundingClientRect(),card=document.querySelector('#detail').getBoundingClientRect();const center=new DOMPoint(mobile?rect.left+rect.width/2:rect.left+Math.max(80,card.left-rect.left)/2,mobile?rect.top+Math.max(50,card.top-rect.top)/2:rect.top+rect.height/2).matrixTransform(svg.getScreenCTM().inverse());const k=2.6;animate({k,x:center.x-l.x*k,y:center.y-l.y*k});}});
  return{reset:()=>animate(base()),focus:(x,y,k=1.4)=>animate({k,x:590-x*k,y:480-y*k})};
 }
