@@ -12,3 +12,5 @@ svg.addEventListener('click',e=>{const place=e.target.closest('.place');if(place
 svg.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.place')){e.preventDefault();selectLocation(e.target.dataset.id);}});
 document.querySelector('#explore').onclick=()=>{document.querySelector('.welcome').classList.add('dismissed');notify('Selecciona un edificio o busca tu salón.');};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();document.querySelector('#suggestions').hidden=true;document.querySelector('#search').setAttribute('aria-expanded','false');}if(e.key==='/'&&!['INPUT','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();document.querySelector('#search').focus();}});
+const {initSearch,storage}=await import('./search.js');
+initSearch(locations,selectLocation,storage);
