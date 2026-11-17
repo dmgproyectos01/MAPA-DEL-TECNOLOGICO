@@ -77,6 +77,61 @@ async function assertRouteRemoved(page) {
   assert.ok(!transform || /scale\(1\)/.test(transform), `Campus view was not reset: ${transform}`);
 }
 
+
+const floorContents = {
+  'planta-baja': ['6 salones', '1 salón con computadoras', 'Laboratorio de Mecatrónica', 'Baños'],
+  'planta-alta': ['3 salones', '1 salón con computadoras', 'Oficinas administrativas', 'Baños'],
+  'primer-piso': [
+    'Laboratorio de Instrumentación y Procesamiento de Señales',
+    'Laboratorio de Microbiología de Alimentos y Biología Molecular',
+    'Laboratorio de Bioprocesos y Análisis Ambientales',
+    'Aula UP-15',
+    'Laboratorio de Microbiología Molecular y Bioactivos',
+    'Laboratorio de Posgrado e Investigación en Ciencias Ambientales',
+    'Laboratorio de Cromatografía y Espectrometría',
+    'Baños'
+  ],
+  'segundo-piso': ['8 salones', 'Incubadora de Software', 'Área de Calidad', 'Baños'],
+  'tercer-piso': [
+    'Cubículo de la Dra. Flor de la Cruz Saida Lizárraga',
+    'Cubículo de la Dra. Carmen Guadalupe López Varela',
+    'Cubículo del Dr. José Fernando Hernández Silva',
+    'Cubículo del Dr. Leonel Ernesto Amabilis Sosa',
+    'Cubículo del Dr. Modesto Guadalupe Medina Meléndrez',
+    'Cubículo de la Dra. Yaneth Alejandra Bustos Terrones',
+    'Cubículo del Dr. David Enrique Castro Palazuelos',
+    'Cubículo de la Dra. Blenda Ramírez Pereda',
+    'Cubículo del Dr. Guillermo Javier Rubio Astorga',
+    '4 salones', 'Sala de Usos Múltiples', 'Oficinas DEPI'
+  ]
+};
+async function assertFloor(page, level) {
+  const active = page.locator('#detail .floor-tabs[role="tablist"] [role="tab"][aria-selected="true"]');
+  assert.equal(await active.count(), 1);
+  assert.equal(await active.getAttribute('data-level'), level);
+  assert.equal(await page.locator('#detail .floor-panel[role="tabpanel"]').count(), 1);
+  const items = await page.locator('#detail .floor-panel .floor-items li').allTextContents();
+  assert.equal(items.length, floorContents[level].length, `Incorrect ${level} item count`);
+  floorContents[level].forEach((name, i) => assert.ok(items[i].includes(name), `${level} item ${i}: missing full name ${name}`));
+  if (level === 'primer-piso') assert.match(items[3], /computadoras/i, 'UP-15 must retain its computer-room description');
+  const roomCodes = (await page.locator('#detail').innerText()).match(/\b(?:UA|UP)-?\d+\b/g) || [];
+  assert.ok(roomCodes.every(code => code === 'UP-15'), `Invented classroom codes: ${roomCodes}`);
+  const layout = await page.locator('#detail').evaluate(card => ({
+    overflow: card.scrollWidth > card.clientWidth + 1,
+    itemOverflow: [...card.querySelectorAll('.floor-panel,.floor-items li')].some(el => el.scrollWidth > el.clientWidth + 1),
+    pageOverflow: document.documentElement.scrollWidth > innerWidth + 1
+  }));
+  assert.deepEqual(layout, { overflow: false, itemOverflow: false, pageOverflow: false }, 'Full floor names must wrap inside the card');
+}
+async function assertSearchFloor(page, query, id, level, match) {
+  await search(page, query);
+  assert.equal(await page.locator('.place.selected').getAttribute('data-id'), id);
+  await assertFloor(page, level);
+  const item = page.locator('#detail .floor-item.is-match');
+  assert.equal(await item.count(), 1, `${query} should highlight one matching floor item`);
+  assert.ok((await item.innerText()).includes(match), `Wrong floor item for ${query}`);
+}
+
 for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844]]) {
   const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1, isMobile: name === 'mobile', hasTouch: name === 'mobile', colorScheme: 'light' });
   const page = await context.newPage();
@@ -212,6 +267,82 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
       await page.locator('#detail').waitFor({ state: 'visible' });
       assert.equal(await page.locator('.place.selected').getAttribute('data-id'), 'W');
       await closeDetail(page); assert.equal(await page.locator('#detail').isVisible(), false);
+    });
+    await check(page, row, 'UA pointer selection shows both confirmed floor inventories and keyboard tabs', async () => {
+      await fit(page);
+      await page.locator('.place[data-id="6"]').click();
+      await page.locator('#detail').waitFor({ state: 'visible' });
+      await settled(page);
+      assert.equal(await page.locator('.place.selected').getAttribute('data-id'), '6');
+      assert.deepEqual(await page.locator('#detail .floor-tabs [role="tab"]').evaluateAll(tabs => tabs.map(tab => tab.dataset.level)), ['planta-baja', 'planta-alta']);
+      await assertFloor(page, 'planta-baja');
+      await page.screenshot({path:path.join(out,`raster-${name}-ua.png`),fullPage:true});
+      const lower = page.locator('#detail [role="tab"][data-level="planta-baja"]');
+      await lower.focus(); await page.keyboard.press('ArrowRight');
+      await assertFloor(page, 'planta-alta');
+      assert.equal(await page.locator('#detail [role="tab"]:focus').getAttribute('data-level'), 'planta-alta');
+      await page.keyboard.press('Home'); await assertFloor(page, 'planta-baja');
+      await page.keyboard.press('End'); await assertFloor(page, 'planta-alta');
+      await page.keyboard.press('ArrowLeft'); await assertFloor(page, 'planta-baja');
+      await closeDetail(page);
+      for (const filter of ['salones', 'laboratorios', 'administracion']) {
+        await page.locator(`.filters button[data-filter="${filter}"]`).click();
+        for (const id of ['6', '7']) assert.equal(await page.locator(`.place[data-id="${id}"]`).evaluate(el => el.classList.contains('dimmed')), false, `${filter} must include the confirmed spaces in ${id}`);
+      }
+      await page.locator('.filters button[data-filter="all"]').click();
+    });
+    await check(page, row, 'UP pointer selection preserves all three floors and scrollable complete names', async () => {
+      await fit(page);
+      await page.locator('.place[data-id="7"]').click();
+      await page.locator('#detail').waitFor({ state: 'visible' });
+      await settled(page);
+      assert.equal(await page.locator('.place.selected').getAttribute('data-id'), '7');
+      assert.deepEqual(await page.locator('#detail .floor-tabs [role="tab"]').evaluateAll(tabs => tabs.map(tab => tab.dataset.level)), ['primer-piso', 'segundo-piso', 'tercer-piso']);
+      await assertFloor(page, 'primer-piso');
+      await page.locator('#detail [role="tab"][data-level="segundo-piso"]').click();
+      await assertFloor(page, 'segundo-piso');
+      await page.locator('#detail [role="tab"][data-level="tercer-piso"]').click();
+      await assertFloor(page, 'tercer-piso');
+      await page.screenshot({path:path.join(out,`raster-${name}-up.png`),fullPage:true});
+      const panel = page.locator('#detail .floor-panel');
+      await panel.locator('.floor-items li').last().scrollIntoViewIfNeeded();
+      const scroll = await panel.evaluate(el => ({top:el.scrollTop,height:el.clientHeight,total:el.scrollHeight}));
+      assert.ok(scroll.top > 0 && scroll.total > scroll.height, `Third-floor list must scroll: ${JSON.stringify(scroll)}`);
+      assert.ok((await panel.locator('.floor-items li').last().innerText()).includes('Oficinas DEPI'));
+      for (const selector of ['#detail .close', '#detail #save-place']) {
+        assert.ok(await page.locator(selector).evaluate(el => { const r=el.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return r.y>=0&&r.bottom<=innerHeight&&!!hit&&(hit===el||el.contains(hit)); }), `${selector} became inaccessible after list scroll`);
+      }
+      await page.locator('#detail [role="tab"][data-level="tercer-piso"]').focus();
+      await page.keyboard.press('Home'); await assertFloor(page, 'primer-piso');
+      await page.keyboard.press('ArrowRight'); await assertFloor(page, 'segundo-piso');
+      await page.keyboard.press('End'); await assertFloor(page, 'tercer-piso');
+      await closeDetail(page);
+      assert.equal(await page.locator('#detail').isVisible(), false);
+    });
+    await check(page, row, 'Floor-item searches select the matching UA or UP level', async () => {
+      await fit(page);
+      for (const [query,id,level,match] of [
+        ['UP-15','7','primer-piso','Aula UP-15'],
+        ['Laboratorio de Mecatrónica','6','planta-baja','Laboratorio de Mecatrónica'],
+        ['Laboratorio de Instrumentación y Procesamiento de Señales','7','primer-piso','Laboratorio de Instrumentación y Procesamiento de Señales'],
+        ['Incubadora de Software','7','segundo-piso','Incubadora de Software'],
+        ['Saida Lizárraga','7','tercer-piso','Cubículo de la Dra. Flor de la Cruz Saida Lizárraga'],
+        ['DEPI','7','tercer-piso','Oficinas DEPI']
+      ]) { await assertSearchFloor(page,query,id,level,match); await closeDetail(page); }
+    });
+    await check(page, row, 'Recent professor search restores the matching third-floor cubicle', async () => {
+      await assertSearchFloor(page,'Saida Lizárraga','7','tercer-piso','Cubículo de la Dra. Flor de la Cruz Saida Lizárraga');
+      await closeDetail(page);
+      await page.locator('#search').fill('');
+      await page.locator('#search').focus();
+      const recent=page.locator('#suggestions [role="option"]').filter({hasText:'Saida Lizárraga'}).first();
+      await recent.waitFor({state:'visible'});
+      await recent.click();
+      await page.locator('#detail').waitFor({state:'visible'});
+      await assertFloor(page,'tercer-piso');
+      assert.equal(await page.locator('.place.selected').getAttribute('data-id'),'7');
+      assert.ok((await page.locator('#detail .floor-item.is-match').innerText()).includes('Saida Lizárraga'));
+      await closeDetail(page);
     });
     await check(page, row, 'Theme changes controls while preserving raster', async () => {
       const href = await page.locator('#campus-base').getAttribute('href');

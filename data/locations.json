@@ -9004,9 +9004,13 @@
     "h": 54.22,
     "category": "edificios",
     "rooms": [],
-    "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
+    "services": [
+      "Laboratorio de Mecatrónica",
+      "Oficinas administrativas",
+      "Baños"
+    ],
+    "description": "Unidad Académica con salones, salones con computadoras, Laboratorio de Mecatrónica y oficinas administrativas distribuidos en dos plantas.",
+    "floors": "2 plantas: planta baja y planta alta.",
     "hours": "Por confirmar",
     "footprint": [
       [
@@ -9034,7 +9038,62 @@
       "x": 487.529296875,
       "y": 642.900390625,
       "approximate": true
-    }
+    },
+    "code": "UA",
+    "aliases": [
+      "UA",
+      "Unidad Académica"
+    ],
+    "levels": [
+      {
+        "id": "planta-baja",
+        "name": "Planta baja",
+        "items": [
+          {
+            "name": "6 salones",
+            "type": "classrooms",
+            "count": 6
+          },
+          {
+            "name": "1 salón con computadoras",
+            "type": "computer-room",
+            "count": 1
+          },
+          {
+            "name": "Laboratorio de Mecatrónica",
+            "type": "laboratory"
+          },
+          {
+            "name": "Baños",
+            "type": "service"
+          }
+        ]
+      },
+      {
+        "id": "planta-alta",
+        "name": "Planta alta",
+        "items": [
+          {
+            "name": "3 salones",
+            "type": "classrooms",
+            "count": 3
+          },
+          {
+            "name": "1 salón con computadoras",
+            "type": "computer-room",
+            "count": 1
+          },
+          {
+            "name": "Oficinas administrativas",
+            "type": "office"
+          },
+          {
+            "name": "Baños",
+            "type": "service"
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "7",
@@ -9044,10 +9103,24 @@
     "w": 101.2,
     "h": 51.02,
     "category": "edificios",
-    "rooms": [],
-    "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
+    "rooms": [
+      "UP-15"
+    ],
+    "services": [
+      "Laboratorio de Instrumentación y Procesamiento de Señales",
+      "Laboratorio de Microbiología de Alimentos y Biología Molecular",
+      "Laboratorio de Bioprocesos y Análisis Ambientales",
+      "Laboratorio de Microbiología Molecular y Bioactivos",
+      "Laboratorio de Posgrado e Investigación en Ciencias Ambientales",
+      "Laboratorio de Cromatografía y Espectrometría",
+      "Baños",
+      "Incubadora de Software",
+      "Área de Calidad",
+      "Sala de Usos Múltiples",
+      "Oficinas DEPI"
+    ],
+    "description": "Unidad de Posgrado de tres pisos con laboratorios, Aula UP-15 equipada con computadoras, salones, cubículos y oficinas.",
+    "floors": "3 pisos.",
     "hours": "Por confirmar",
     "footprint": [
       [
@@ -9230,7 +9303,132 @@
     "angle": 8.31,
     "geometrySource": "Contorno del techo segmentado del raster de referencia; zona de interacción transparente.",
     "routeStatus": "access-unconfirmed",
-    "routePending": "Acceso peatonal conectado por confirmar"
+    "routePending": "Acceso peatonal conectado por confirmar",
+    "code": "UP",
+    "aliases": [
+      "UP",
+      "Unidad de Posgrado"
+    ],
+    "levels": [
+      {
+        "id": "primer-piso",
+        "name": "Primer piso",
+        "items": [
+          {
+            "name": "Laboratorio de Instrumentación y Procesamiento de Señales",
+            "type": "laboratory"
+          },
+          {
+            "name": "Laboratorio de Microbiología de Alimentos y Biología Molecular",
+            "type": "laboratory"
+          },
+          {
+            "name": "Laboratorio de Bioprocesos y Análisis Ambientales",
+            "type": "laboratory"
+          },
+          {
+            "name": "Aula UP-15",
+            "type": "computer-room",
+            "room": "UP-15",
+            "description": "Equipada con computadoras."
+          },
+          {
+            "name": "Laboratorio de Microbiología Molecular y Bioactivos",
+            "type": "laboratory"
+          },
+          {
+            "name": "Laboratorio de Posgrado e Investigación en Ciencias Ambientales",
+            "type": "laboratory"
+          },
+          {
+            "name": "Laboratorio de Cromatografía y Espectrometría",
+            "type": "laboratory"
+          },
+          {
+            "name": "Baños",
+            "type": "service"
+          }
+        ]
+      },
+      {
+        "id": "segundo-piso",
+        "name": "Segundo piso",
+        "items": [
+          {
+            "name": "8 salones",
+            "type": "classrooms",
+            "count": 8
+          },
+          {
+            "name": "Incubadora de Software",
+            "type": "service"
+          },
+          {
+            "name": "Área de Calidad",
+            "type": "service"
+          },
+          {
+            "name": "Baños",
+            "type": "service"
+          }
+        ]
+      },
+      {
+        "id": "tercer-piso",
+        "name": "Tercer piso",
+        "items": [
+          {
+            "name": "Cubículo de la Dra. Flor de la Cruz Saida Lizárraga",
+            "type": "cubicle"
+          },
+          {
+            "name": "Cubículo de la Dra. Carmen Guadalupe López Varela",
+            "type": "cubicle"
+          },
+          {
+            "name": "Cubículo del Dr. José Fernando Hernández Silva",
+            "type": "cubicle"
+          },
+          {
+            "name": "Cubículo del Dr. Leonel Ernesto Amabilis Sosa",
+            "type": "cubicle"
+          },
+          {
+            "name": "Cubículo del Dr. Modesto Guadalupe Medina Meléndrez",
+            "type": "cubicle"
+          },
+          {
+            "name": "Cubículo de la Dra. Yaneth Alejandra Bustos Terrones",
+            "type": "cubicle"
+          },
+          {
+            "name": "Cubículo del Dr. David Enrique Castro Palazuelos",
+            "type": "cubicle"
+          },
+          {
+            "name": "Cubículo de la Dra. Blenda Ramírez Pereda",
+            "type": "cubicle"
+          },
+          {
+            "name": "Cubículo del Dr. Guillermo Javier Rubio Astorga",
+            "type": "cubicle"
+          },
+          {
+            "name": "4 salones",
+            "type": "classrooms",
+            "count": 4
+          },
+          {
+            "name": "Sala de Usos Múltiples",
+            "type": "room"
+          },
+          {
+            "name": "Oficinas DEPI",
+            "type": "office"
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "GA",

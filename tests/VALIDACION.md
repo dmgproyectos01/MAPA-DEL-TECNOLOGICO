@@ -4,7 +4,7 @@ La imagen base es un recorte del PNG original de 4096 × 2212, codificado como W
 
 ## Pruebas automáticas
 
-`npm test` ejecuta 21 comprobaciones sin dependencias adicionales:
+`npm test` ejecuta 47 comprobaciones sin dependencias adicionales:
 
 - EE01, EV01, ED01, EW04, EJ10 y EH02; siete sugerencias con E; acentos y mayúsculas.
 - Datos confirmados y ubicaciones pendientes sin edificio inventado; laboratorios de Mecánica y Eléctrica en V.
@@ -12,12 +12,17 @@ La imagen base es un recorte del PNG original de 4096 × 2212, codificado como W
 - SHA y lectura de máscara peatonal; todos los nodos y segmentos dentro de las superficies autorizadas.
 - Conectividad de los destinos confirmados desde los tres accesos peatonales.
 - Ausencia de conexiones inventadas a accesos pendientes y ausencia de cruces de edificios o deportes.
+- Identidad de UA/UP, distribución confirmada por piso, cantidades sin códigos inventados, cada laboratorio y profesor, UP-15, selección con piso e historial de búsquedas.
 
 La extracción contiene 1132 nodos y 1183 aristas. Se comprobó adicionalmente con Node a densidades de 2, 2.5, 4 y 8 muestras por píxel y redondeo bancario: 310776 muestras y cero fuera de la máscara. Los cruces por esquinas exigen cobertura de todos los píxeles adyacentes; las reparaciones siguen cuatro vecinos dentro de la máscara, sin ampliarla.
 
 ## Playwright
 
-`npm run test:browser` abre la aplicación real en 1366 × 768 y 390 × 844. Las 32 comprobaciones cubren consola, red, desbordamiento, proporción, transparencia de zonas no seleccionadas, búsquedas y teclado, selección y cierre, zoom, tema, favoritos e historial, filtro de laboratorios y ruta con borrado. También se comprueba que el destino no quede detrás de la tarjeta inferior en móvil.
+`npm run test:browser` abre la aplicación real en 1366 × 768 y 390 × 844. Las 50 comprobaciones cubren consola, red, desbordamiento, proporción, transparencia de zonas no seleccionadas, búsquedas y teclado, selección y cierre, zoom, tema, favoritos e historial, filtros y eliminación de rutas. También se comprueba que el destino no quede detrás de la tarjeta inferior en móvil.
+
+UA y UP se seleccionan con clic real sobre sus zonas del mapa. Se verifican todos sus botones de piso, navegación por teclado, listas completas, desplazamiento vertical con los controles accesibles, búsquedas de UP-15, Mecatrónica, un laboratorio de UP, Incubadora de Software, Saida Lizárraga y DEPI. La búsqueda reciente de la profesora restaura el tercer piso. Los filtros de salones, laboratorios y administración incluyen los espacios confirmados de ambas unidades.
+
+El artefacto `capturas-pagina-publicada` incluye `raster-desktop-ua.png`, `raster-desktop-up.png`, `raster-mobile-ua.png` y `raster-mobile-up.png`, generados al comprobar la página publicada.
 
 La comparación independiente reconstruye el recorte desde la fuente PNG, aplica la misma máscara de eliminación de leyenda y compara los píxeles visibles con el archivo WebP: **cero diferencias**, **cero píxeles del campus eliminados**. La diferencia de remuestreo del navegador al reducir la imagen para pantalla se registra por separado y no se confunde con cambios en el plano.
 
