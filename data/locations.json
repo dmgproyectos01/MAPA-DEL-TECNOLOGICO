@@ -5683,13 +5683,15 @@
     "w": 63.41,
     "h": 71.39,
     "category": "laboratorios",
-    "rooms": [],
+    "rooms": [
+      "EVLE"
+    ],
     "services": [
       "Laboratorio de Mecánica",
       "Laboratorio de Eléctrica",
       "Departamento de Metal-Mecánica"
     ],
-    "description": "Edificio V: laboratorios de Mecánica y Eléctrica. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
+    "description": "Edificio V: laboratorios de Mecánica y Eléctrica. El salón EVLE está dentro del Laboratorio de Eléctrica. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
     "floors": "Por confirmar",
     "hours": "Por confirmar",
     "footprint": [

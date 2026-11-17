@@ -132,11 +132,11 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
     const baseOnlyStyle=await page.addStyleTag({content:'.topbar,.welcome,.filters,.map-tools,.bottom-bar,.map-note,.toast,.floating-card,.legend-box,.place,#route-layer{visibility:hidden!important}'});
     await page.locator('#campus-base').screenshot({ path: path.join(out, `raster-${name}-base.png`) });
     await baseOnlyStyle.evaluate(el=>el.remove());
-    for (const code of ['EE01', 'EV01', 'ED01', 'EW04', 'EJ10', 'EH02']) {
+    for (const code of ['EE01', 'EV01', 'EVLE', 'ED01', 'EW04', 'EJ10', 'EH02']) {
       await check(page, row, `Search and center ${code}`, async () => {
         await search(page, code);
         assert.equal(await page.locator('.place.selected').getAttribute('data-id'), code[1]);
-        if (['EW04', 'EJ10', 'EH02'].includes(code)) {
+        if (['EVLE', 'EW04', 'EJ10', 'EH02'].includes(code)) {
           assert.ok((await page.locator('#detail .room-highlight').innerText()).includes(code), `Confirmed room ${code} must remain highlighted`);
         } else {
           assert.equal(await page.locator('#detail .room-highlight').count(), 0, `Unknown room ${code} must not produce a room card`);
@@ -170,12 +170,13 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
       await closeDetail(page);
 
       await search(page, 'EV01');
-      assert.deepEqual(await headings(), ['Servicios']);
-      assert.equal(await page.locator('#detail .room-highlight').count(), 0);
-      assert.equal(await page.locator('#detail .room-list').count(), 0);
+      assert.deepEqual(await headings(), ['Salones', 'Servicios']);
+      assert.equal(await page.locator('#detail .room-highlight').count(), 0, 'EV01 remains an unconfirmed room');
+      assert.deepEqual(await page.locator('#detail .room-list span').allTextContents(), ['EVLE']);
       assert.equal(await page.locator('#detail .details-grid').count(), 0);
       const laboratories = await page.locator('#detail').innerText();
       for (const text of ['Laboratorio de Mecánica', 'Laboratorio de Eléctrica']) assert.ok(laboratories.includes(text), `V lost confirmed service: ${text}`);
+      assert.match(await page.locator('#detail > p').innerText(), /EVLE.*Laboratorio de Eléctrica|Laboratorio de Eléctrica.*EVLE/i, 'Description must locate EVLE inside the electrical laboratory');
       await closeDetail(page);
 
       await search(page, 'EW04');
