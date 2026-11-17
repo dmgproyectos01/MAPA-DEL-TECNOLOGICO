@@ -34,6 +34,16 @@ Abre `http://localhost:3000`. También funciona con `python3 -m http.server 3000
 - Los filtros marcan las zonas correspondientes sobre el plano; conservan intacta la imagen. El modo oscuro afecta los controles y las fichas.
 - Favoritos, visitas, búsquedas y tema se guardan localmente. Los historiales incluyen controles para limpiarlos.
 
+### Fotos, videos y eventos en vivo
+
+El botón **Eventos** abre la galería sin salir del mapa. Las fotos y videos se agrupan por evento; las transmisiones de YouTube se reproducen dentro del apartado al elegir verlas. El acceso de administrador permite preparar borradores, adjuntar archivos y publicar. Los visitantes solo pueden consultar eventos publicados.
+
+GitHub Pages sirve la interfaz. Para recibir archivos y compartir publicaciones entre dispositivos se requiere activar el servicio Supabase descrito en `backend/README.md`. La configuración pública está en `data/events-config.json`: URL del proyecto, clave pública y nombre del bucket. No se incluyen contraseñas, claves privadas ni claves de servicio en los archivos del sitio. Cuando la configuración está vacía, la galería muestra su estado inicial y explica que la publicación todavía no está habilitada; no simula subidas ni guarda publicaciones públicas únicamente en el teléfono.
+
+Las transmisiones de YouTube se inician desde el canal del organizador. Registrar un enlace o marcar su estado en esta página no inicia una emisión desde la cámara. La interfaz valida los enlaces y carga el reproductor al solicitar verlo.
+
+`npm run test:events` comprueba el flujo de administración y galería con respuestas de un servicio simulado en un contexto aislado de navegador. Esas pruebas no publican contenido real y no acreditan que una cuenta de almacenamiento o un canal estén activos. La comprobación de la página pública también conserva las pruebas del mapa.
+
 ### Datos confirmados
 
 W, R, Q, J, H y Ñ conservan los datos confirmados del encargo. V incluye Laboratorio de Mecánica y Laboratorio de Eléctrica y mantiene el Departamento de Metal-Mecánica. Psicología, Dentista, Microbiología e Investigación, Química-Bioquímica y Biotecnología Agrícola siguen sin un edificio asignado cuando no existe confirmación oficial. El consultorio médico está en H. Los servicios de salud muestran lunes a viernes de 7:00 a. m. a 1:00 p. m., zona America/Mazatlan.

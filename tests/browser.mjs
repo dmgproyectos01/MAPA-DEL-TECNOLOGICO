@@ -407,6 +407,31 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
       await page.keyboard.press('Escape');
       await assertRouteRemoved(page);
     });
+    await check(page, row, 'Events opens and closes without blocking the map or inventing publication', async () => {
+      const launcher=page.locator('#open-events');
+      await launcher.waitFor({state:'visible'});
+      await page.waitForFunction(() => !document.querySelector('#open-events').disabled);
+      const transform=await page.locator('#world').getAttribute('transform');
+      await launcher.click();
+      await page.locator('#events-dialog').waitFor({state:'visible'});
+      assert.equal(await page.locator('#events-dialog').evaluate(el=>el.open),true);
+      await page.screenshot({path:path.join(out,`events-${name}-published-gallery.png`),fullPage:true});
+      const configResponse=await page.request.get(new URL('data/events-config.json?v=events-v1',target).href);
+      assert.ok(configResponse.ok());
+      const config=await configResponse.json();
+      if(!config.url||!config.publishableKey){
+        await page.locator('#events-manage').click();
+        assert.ok((await page.locator('#events-gallery-feedback').innerText()).includes('La publicación de eventos todavía no está habilitada.'));
+        assert.equal(await page.locator('#events-login-form').count(),0);
+      }
+      await page.keyboard.press('Escape');
+      await page.locator('#events-dialog').waitFor({state:'hidden'});
+      assert.equal(await launcher.evaluate(el=>document.activeElement===el),true);
+      assert.equal(await page.locator('#world').getAttribute('transform'),transform);
+      await search(page,'EH02');
+      assert.equal(await page.locator('.place.selected').getAttribute('data-id'),'H');
+      await closeDetail(page);
+    });
     await check(page, row, 'No console or page errors', async () => { assert.deepEqual(consoleErrors,[]);assert.deepEqual(pageErrors,[]);assert.deepEqual(failedRequests,[]); });
   } catch (error) {
     report.failures.push({viewport:name,name:'Setup or fatal',error:error.stack||String(error)});

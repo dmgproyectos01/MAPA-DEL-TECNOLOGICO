@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "node tools/serve.mjs",
     "test": "node --test tests/*.test.mjs",
-    "test:browser": "node tests/browser.mjs"
+    "test:browser": "node tests/browser.mjs",
+    "test:events": "node tests/events-browser.mjs"
   }
 }
