@@ -25,7 +25,7 @@ export async function ensureLocalSFU(){
  }catch{
   container=`campus-native-live-${process.pid}`;
   execFileSync('docker',['pull',SFU_IMAGE],{stdio:'pipe'});
-  execFileSync('docker',['run','-d','--rm','--name',container,'--network','host','--cap-drop','ALL','--security-opt','no-new-privileges','--read-only',SFU_IMAGE,'--dev','--bind','127.0.0.1','--node-ip','127.0.0.1','--keys',`${SFU_KEY}: ${SFU_SECRET}`,'--config-body','port: 17880\nrtc:\n  tcp_port: 17881\n  port_range_start: 17900\n  port_range_end: 17910\n  use_external_ip: false\n'],{stdio:'pipe'});
+  execFileSync('docker',['run','-d','--rm','--name',container,'--network','host','--cap-drop','ALL','--security-opt','no-new-privileges','--read-only',SFU_IMAGE,'--dev','--bind','127.0.0.1','--node-ip','127.0.0.1','--keys',`${SFU_KEY}: ${SFU_SECRET}`,'--config-body','port: 17880\nrtc:\n  tcp_port: 17881\n  port_range_start: 17900\n  port_range_end: 17910\n  use_external_ip: false\n  enable_loopback_candidate: true\n  use_mdns: true\n'],{stdio:'pipe'});
   created=true;
   let ready=false;
   for(let i=0;i<60;i++){

@@ -42,12 +42,18 @@ async function contextFor(backend,{width=1366,height=768,capture=false}={}){
  const context=await browser.newContext({viewport:{width,height},isMobile:width<700,hasTouch:width<700,permissions:capture?['camera','microphone']:[]});
  await context.addInitScript(()=>{
   window.__captureCalls=0;window.__captureTracks=[];window.__captureErrors=[];
-  window.__nativeRTCPeers=new Set();
+  window.__nativeRTCPeers=new Set();window.__nativeRTCDetails=new Map();
   // Passive observation only: the constructor, SDP, transport, media and method
   // return values remain native. This gives getStats() access to real SFU RTP.
   const setRemoteDescription=RTCPeerConnection.prototype.setRemoteDescription;
   RTCPeerConnection.prototype.setRemoteDescription=function(...args){
-   window.__nativeRTCPeers.add(this);return Reflect.apply(setRemoteDescription,this,args);
+   if(!window.__nativeRTCPeers.has(this)){
+    window.__nativeRTCPeers.add(this);const timeline=[];window.__nativeRTCDetails.set(this,timeline);
+    const record=event=>{timeline.push({atMs:Math.round(performance.now()),event,connection:this.connectionState,ice:this.iceConnectionState,gathering:this.iceGatheringState,signaling:this.signalingState});if(timeline.length>32)timeline.shift();};
+    record('observed');
+    for(const event of ['connectionstatechange','iceconnectionstatechange','icegatheringstatechange','signalingstatechange'])this.addEventListener(event,()=>record(event));
+   }
+   return Reflect.apply(setRemoteDescription,this,args);
   };
   const original=navigator.mediaDevices?.getUserMedia?.bind(navigator.mediaDevices);
   if(original)navigator.mediaDevices.getUserMedia=async constraints=>{
@@ -76,9 +82,32 @@ async function inboundAudioRTP(page){
   return rows;
  });
 }
+async function iceDiagnostics(page){
+ return page.evaluate(async()=>{
+  const category=value=>typeof value!=='string'||!value?'absent':value.endsWith('.local')?'mDNS':/^(127\.|::1$|::ffff:127\.|0:0:0:0:0:0:0:1$)/i.test(value)?'loopback':'other';
+  const sdpSummary=value=>(value?.sdp||'').split(/\r?\n/).filter(line=>line.startsWith('a=candidate:')).slice(0,24).map(line=>{const p=line.trim().split(/\s+/);return{category:category(p[4]),protocol:p[2]?.toLowerCase(),type:p[7]};});
+  const result=[];let index=0;
+  for(const pc of window.__nativeRTCPeers||[]){
+   const row={peer:index++,connection:pc.connectionState,ice:pc.iceConnectionState,gathering:pc.iceGatheringState,signaling:pc.signalingState,transportPolicy:pc.getConfiguration().iceTransportPolicy,timeline:window.__nativeRTCDetails?.get(pc)||[],localSDPCandidates:sdpSummary(pc.localDescription),remoteSDPCandidates:sdpSummary(pc.remoteDescription),stats:{local:[],remote:[],pairs:[],transports:[]}};
+   try{
+    const stats=await pc.getStats(),candidates=new Map();
+    for(const value of stats.values())if(['local-candidate','remote-candidate'].includes(value.type)){
+     const address=value.address||value.ip||'',candidate={category:category(address),type:value.candidateType,protocol:value.protocol,unspecified:address==='0.0.0.0'||address==='::'};
+     candidates.set(value.id,candidate);row.stats[value.type==='local-candidate'?'local':'remote'].push(candidate);
+    }
+    for(const value of stats.values()){
+     if(value.type==='candidate-pair')row.stats.pairs.push({state:value.state,nominated:value.nominated===true,local:candidates.get(value.localCandidateId)||null,remote:candidates.get(value.remoteCandidateId)||null,bytesSent:value.bytesSent,bytesReceived:value.bytesReceived});
+     if(value.type==='transport')row.stats.transports.push({dtls:value.dtlsState,ice:value.iceState,bytesSent:value.bytesSent,bytesReceived:value.bytesReceived});
+    }
+   }catch{row.statsUnavailable=true;}
+   result.push(row);
+  }
+  return result;
+ });
+}
 async function diagnostics(page,{captureCause=false}={}){
  if(!page)return null;
- const detail=await page.evaluate(async()=>({state:document.querySelector('#native-live-panel')?.dataset.state,status:document.querySelector('#native-live-status')?.textContent,captureCalls:window.__captureCalls,captureErrors:window.__captureErrors,rtcPeerConnections:window.__nativeRTCPeers?.size,tracks:window.__captureTracks?.map(track=>({kind:track.kind,state:track.readyState,enabled:track.enabled})),permissions:await Promise.all(['camera','microphone'].map(async name=>({name,state:(await navigator.permissions.query({name})).state})))})).catch(error=>({readError:error.message}));
+ const detail=await page.evaluate(async()=>({state:document.querySelector('#native-live-panel')?.dataset.state,status:document.querySelector('#native-live-status')?.textContent,captureCalls:window.__captureCalls,captureErrors:window.__captureErrors,rtcPeerConnections:window.__nativeRTCPeers?.size,tracks:window.__captureTracks?.map(track=>({kind:track.kind,state:track.readyState,enabled:track.enabled})),permissions:await Promise.all(['camera','microphone','local-network-access','local-network','loopback-network'].map(async name=>{try{return{name,state:(await navigator.permissions.query({name})).state};}catch{return{name,state:'unsupported'};}}))})).catch(error=>({readError:error.message}));
  if(captureCause)detail.directPrepare=await page.evaluate(async()=>{
   const {createNativeLive}=await import('/js/native-live.js');const video=document.createElement('video');document.body.append(video);
   const live=createNativeLive({request:async()=>{throw Error('Unexpected backend request from preview diagnostic');}});
@@ -86,7 +115,7 @@ async function diagnostics(page,{captureCause=false}={}){
   catch(error){return{name:error.name,message:error.message,cause:error.cause?{name:error.cause.name,message:error.cause.message,stack:error.cause.stack}:null};}
   finally{await live.destroy().catch(()=>{});video.remove();}
  }).catch(error=>({diagnosticError:error.message}));
- detail.console=page.nativeConsole;detail.pageErrors=page.nativePageErrors;detail.inboundAudioRTP=await inboundAudioRTP(page).catch(()=>[]);
+ detail.console=page.nativeConsole;detail.pageErrors=page.nativePageErrors;detail.inboundAudioRTP=await inboundAudioRTP(page).catch(()=>[]);detail.ice=await iceDiagnostics(page).catch(()=>[]);
  return JSON.parse(JSON.stringify(detail,(key,value)=>typeof value==='string'?safeText(value):value));
 }
 async function openEvents(page){await page.waitForFunction(()=>!document.querySelector('#open-events')?.disabled);await page.locator('#open-events').click();await page.locator('#events-dialog').waitFor({state:'visible'});}
