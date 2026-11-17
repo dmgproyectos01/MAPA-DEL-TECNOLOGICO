@@ -244,9 +244,14 @@ try{
     await until(()=>backend.state.event.live_state==='ended','Host stop did not finish the production backend session');
     assert.ok([...backend.state.sessions.values()].every(session=>session.state==='ended'));
     assert.equal(await viewerPage.evaluate(()=>window.__captureCalls),0);
-    const stopped=await backend.invoke('view',{eventId:EVENT},null);assert.ok(stopped.status>=400,'A stopped stream must not issue new viewer credentials');
+    const stopped=await backend.invoke('view',{eventId:EVENT},null),stoppedBody=await stopped.json();
+    assert.equal(stopped.status,404,'A stopped stream must return the production unavailable response');
+    assert.equal(stoppedBody.error?.code,'STREAM_UNAVAILABLE');
+    assert.deepEqual(Object.keys(stoppedBody),['error'],'A stopped stream must not issue any connection credentials');
+    assert.deepEqual(Object.keys(stoppedBody.error).sort(),['code','message']);
+    assert.ok(!/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/.test(JSON.stringify(stoppedBody)),'The denial must not contain a JWT');
     assert.deepEqual(backend.state.unexpected,[]);assert.deepEqual(hostPage.nativePageErrors,[]);assert.deepEqual(viewerPage.nativePageErrors,[]);
-    return{decodedFramesBefore:before.frames,decodedFramesAfter:after,videoWidth:before.width,videoHeight:before.height,audioTrackReceived:true,audioRTP:{before:audioBefore,after:audioAfter},viewerCaptureRequests:0,providerSnapshots:backend.state.providerSnapshots,nativeResponses:backend.state.nativeResponses};
+    return{decodedFramesBefore:before.frames,decodedFramesAfter:after,videoWidth:before.width,videoHeight:before.height,audioTrackReceived:true,audioRTP:{before:audioBefore,after:audioAfter},viewerCaptureRequests:0,postStopView:{status:stopped.status,code:stoppedBody.error.code,tokenIssued:false},providerSnapshots:backend.state.providerSnapshots,nativeResponses:backend.state.nativeResponses};
    }catch(error){
     if(backend.state.releaseConfirm)backend.state.releaseConfirm();
     const debug={host:await diagnostics(hostPage,{captureCause:backend.state.sessions.size===0}),viewer:await diagnostics(viewerPage),actions:backend.state.actions.map(item=>({action:item.action,transition:item.payload.p_action})),unexpected:backend.state.unexpected,providerSnapshots:backend.state.providerSnapshots,nativeResponses:backend.state.nativeResponses};

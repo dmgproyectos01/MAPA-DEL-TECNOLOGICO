@@ -93,7 +93,7 @@ export async function createNativeTestBackend(origin){
    }
    if(action==='campus_live_get_view'){
     const row=snapshot();
-    if(!row||row.state!=='live')return json({message:'No active stream'},404);
+    if(!row||row.state!=='live')return json({message:'event_unavailable'},400);
     return json({...row,status:state.event.status,native_live_enabled:true,live_state:state.event.live_state,native_last_seen_at:row.heartbeat_at});
    }
   }
