@@ -31,7 +31,7 @@ function localDateValue(value) {
   return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}`;
 }
 function eventDate(value) {
-  if (!value || !Number.isFinite(new Date(value).getTime())) return 'Fecha por confirmar';
+  if (!value || !Number.isFinite(new Date(value).getTime())) return 'Sin fecha';
   return new Intl.DateTimeFormat('es-MX', { timeZone: TZ, dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
 }
 function utcFromCampusDate(value) {

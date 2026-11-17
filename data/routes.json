@@ -9270,7 +9270,7 @@
       "x": 284,
       "y": 128,
       "routeStatus": "access-unconfirmed",
-      "note": "Conexión desde acceso vehicular a pasillo peatonal por confirmar."
+      "note": "Sin ruta peatonal disponible desde este acceso."
     },
     {
       "id": "access-sistemas",
@@ -10626,7 +10626,7 @@
         ]
       ],
       "widthPixels": 9,
-      "note": "Cruce corto de avenida entre puente visible y pasillo enfrentado; por confirmar en campo."
+      "note": "Cruce corto de avenida entre puente visible y pasillo enfrentado."
     },
     {
       "id": "z-marker-occlusion",
@@ -10642,7 +10642,7 @@
         ]
       ],
       "widthPixels": 3,
-      "note": "Paso oculto por el marcador Z en el plano; conexión aproximada por confirmar."
+      "note": "Paso oculto por el marcador Z en el plano; conexión aproximada."
     },
     {
       "id": "upper-garden-exclusion",

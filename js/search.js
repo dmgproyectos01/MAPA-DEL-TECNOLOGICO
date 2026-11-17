@@ -9,7 +9,7 @@ function buildingResult(location, detail) {
   return {
     location,
     label: location.name,
-    description: `${location.x ? 'Edificio ' + buildingCode(location) : 'Ubicación por confirmar'} · ${detail || location.services?.[0] || location.category}`
+    description: `${location.x ? 'Edificio ' + buildingCode(location) : 'Servicio del campus'} · ${detail || location.services?.[0] || location.category}`
   };
 }
 
@@ -24,7 +24,7 @@ export function searchLocations(query, locations) {
     const location = locations.find(place => String(place.id).toUpperCase() === legacyRoom[1].toUpperCase());
     if (location) {
       const room = `E${location.id}${legacyRoom[2].padStart(2, '0')}`;
-      return [{location, room, label: room, description: `Edificio ${buildingCode(location)} · ${location.rooms?.includes(room) ? 'Salón confirmado' : 'Información específica del salón por confirmar'}`}];
+      return [{location, room, label: room, description: `Edificio ${buildingCode(location)} · ${location.rooms?.includes(room) ? 'Salón confirmado' : 'Consultar salones del edificio'}`}];
     }
   }
 

@@ -9,9 +9,7 @@
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         357.77,
@@ -190,9 +188,7 @@
     "category": "administracion",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         456.4551,
@@ -1159,9 +1155,7 @@
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         422.55,
@@ -1200,9 +1194,7 @@
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         460.8,
@@ -1241,9 +1233,7 @@
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         419.95,
@@ -1282,9 +1272,7 @@
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         469.64,
@@ -1323,9 +1311,7 @@
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         501.3867,
@@ -2448,9 +2434,7 @@
     "category": "administracion",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         522.8027,
@@ -3549,9 +3533,7 @@
     "category": "servicios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         578.2324,
@@ -4770,9 +4752,7 @@
     "category": "servicios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         561.02,
@@ -4893,8 +4873,7 @@
       "Aula Magna",
       "Consultorio médico"
     ],
-    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
+    "description": "Información de servicios confirmada.",
     "hours": "Lunes a viernes · 7:00 a. m. a 1:00 p. m. · America/Mazatlan",
     "footprint": [
       [
@@ -4947,9 +4926,8 @@
     "services": [
       "Baños"
     ],
-    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
+    "description": "Información de servicios confirmada.",
     "floors": "2 pisos: 4 salones en planta baja y 6 en planta alta.",
-    "hours": "Por confirmar",
     "footprint": [
       [
         677.19,
@@ -4988,9 +4966,7 @@
     "category": "administracion",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         605.2,
@@ -5028,10 +5004,10 @@
     "h": 39.78,
     "category": "administracion",
     "rooms": [],
-    "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "services": [
+      "Psicología"
+    ],
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         838.03,
@@ -5058,7 +5034,8 @@
       "x": 785.673828125,
       "y": 212.900390625,
       "approximate": true
-    }
+    },
+    "appointmentUrl": "https://misael-burgos.youcanbook.me/"
   },
   {
     "id": "L2",
@@ -5069,10 +5046,10 @@
     "h": 39.47,
     "category": "administracion",
     "rooms": [],
-    "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "services": [
+      "Psicología"
+    ],
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         791.55,
@@ -5195,7 +5172,8 @@
       "x": 825.986328125,
       "y": 222.978515625,
       "approximate": true
-    }
+    },
+    "appointmentUrl": "https://misael-burgos.youcanbook.me/"
   },
   {
     "id": "M",
@@ -5207,9 +5185,7 @@
     "category": "administracion",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         858.74,
@@ -5248,9 +5224,7 @@
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         748.11,
@@ -5292,9 +5266,7 @@
       "Maestría en Ciencias de la Computación",
       "Aula MCC"
     ],
-    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Información de servicios confirmada.",
     "footprint": [
       [
         896.81,
@@ -5333,9 +5305,7 @@
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         849.08,
@@ -5374,9 +5344,7 @@
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         830.94,
@@ -5418,9 +5386,7 @@
       "Cubículos de maestros de Ciencias Básicas",
       "Laboratorio de Ciencias Básicas"
     ],
-    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Información de servicios confirmada.",
     "footprint": [
       [
         720.45,
@@ -5462,9 +5428,7 @@
       "Departamento Industrial",
       "Aula JSP"
     ],
-    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Información de servicios confirmada.",
     "footprint": [
       [
         638.03,
@@ -5503,9 +5467,7 @@
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         871.72,
@@ -5544,9 +5506,7 @@
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         911.38,
@@ -5585,9 +5545,7 @@
     "category": "servicios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         335.94,
@@ -5672,8 +5630,7 @@
     ],
     "angle": -69.81,
     "geometrySource": "Contorno del techo segmentado del raster de referencia; zona de interacción transparente.",
-    "routeStatus": "access-unconfirmed",
-    "routePending": "Acceso peatonal conectado por confirmar"
+    "routeStatus": "access-unconfirmed"
   },
   {
     "id": "V",
@@ -5691,9 +5648,7 @@
       "Laboratorio de Eléctrica",
       "Departamento de Metal-Mecánica"
     ],
-    "description": "Edificio V: laboratorios de Mecánica y Eléctrica. El salón EVLE está dentro del Laboratorio de Eléctrica. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Edificio V: laboratorios de Mecánica y Eléctrica. El salón EVLE está dentro del Laboratorio de Eléctrica.",
     "footprint": [
       [
         773.08,
@@ -5952,9 +5907,7 @@
       "Club de Robótica",
       "Taller de máquinas"
     ],
-    "description": "Información de servicios confirmada. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Información de servicios confirmada.",
     "footprint": [
       [
         632.4023,
@@ -7105,9 +7058,7 @@
     "category": "servicios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         744.1,
@@ -7396,8 +7347,7 @@
     ],
     "angle": 10.52,
     "geometrySource": "Contorno del techo segmentado del raster de referencia; zona de interacción transparente.",
-    "routeStatus": "access-unconfirmed",
-    "routePending": "Acceso peatonal conectado por confirmar"
+    "routeStatus": "access-unconfirmed"
   },
   {
     "id": "Y",
@@ -7409,9 +7359,7 @@
     "category": "deportes",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         462.33,
@@ -7488,8 +7436,7 @@
     ],
     "angle": 11.77,
     "geometrySource": "Contorno del techo segmentado del raster de referencia; zona de interacción transparente.",
-    "routeStatus": "access-unconfirmed",
-    "routePending": "Acceso peatonal conectado por confirmar"
+    "routeStatus": "access-unconfirmed"
   },
   {
     "id": "Z",
@@ -7501,9 +7448,7 @@
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         670.62,
@@ -7674,9 +7619,7 @@
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         773.44,
@@ -7715,9 +7658,7 @@
     "category": "edificios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         836,
@@ -7756,9 +7697,7 @@
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         385.4883,
@@ -9011,7 +8950,6 @@
     ],
     "description": "Unidad Académica con salones, salones con computadoras, Laboratorio de Mecatrónica y oficinas administrativas distribuidos en dos plantas.",
     "floors": "2 plantas: planta baja y planta alta.",
-    "hours": "Por confirmar",
     "footprint": [
       [
         524.87,
@@ -9121,7 +9059,6 @@
     ],
     "description": "Unidad de Posgrado de tres pisos con laboratorios, Aula UP-15 equipada con computadoras, salones, cubículos y oficinas.",
     "floors": "3 pisos.",
-    "hours": "Por confirmar",
     "footprint": [
       [
         339.3,
@@ -9303,7 +9240,6 @@
     "angle": 8.31,
     "geometrySource": "Contorno del techo segmentado del raster de referencia; zona de interacción transparente.",
     "routeStatus": "access-unconfirmed",
-    "routePending": "Acceso peatonal conectado por confirmar",
     "code": "UP",
     "aliases": [
       "UP",
@@ -9440,9 +9376,7 @@
     "category": "deportes",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         818,
@@ -9463,8 +9397,7 @@
     ],
     "angle": 8.97,
     "geometrySource": "Zona transparente cotejada en la imagen de referencia.",
-    "routeStatus": "access-unconfirmed",
-    "routePending": "Acceso peatonal conectado por confirmar"
+    "routeStatus": "access-unconfirmed"
   },
   {
     "id": "FUT",
@@ -9476,9 +9409,7 @@
     "category": "deportes",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         201.98,
@@ -9875,8 +9806,7 @@
     ],
     "angle": -78.19,
     "geometrySource": "Contorno del techo segmentado del raster de referencia; zona de interacción transparente.",
-    "routeStatus": "access-unconfirmed",
-    "routePending": "Acceso peatonal conectado por confirmar"
+    "routeStatus": "access-unconfirmed"
   },
   {
     "id": "BAS",
@@ -9888,9 +9818,7 @@
     "category": "deportes",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         579.9,
@@ -9929,9 +9857,7 @@
     "category": "deportes",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         943.56,
@@ -10168,8 +10094,7 @@
     ],
     "angle": 2.89,
     "geometrySource": "Contorno del techo segmentado del raster de referencia; zona de interacción transparente.",
-    "routeStatus": "access-unconfirmed",
-    "routePending": "Acceso peatonal conectado por confirmar"
+    "routeStatus": "access-unconfirmed"
   },
   {
     "id": "EST1",
@@ -10181,9 +10106,7 @@
     "category": "estacionamientos",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         357,
@@ -10222,9 +10145,7 @@
     "category": "estacionamientos",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         352,
@@ -10263,9 +10184,7 @@
     "category": "estacionamientos",
     "rooms": [],
     "services": [],
-    "description": "Identificación según el mapa de referencia. Posición y contorno trazados a partir de la fotografía de referencia; medidas por confirmar.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar",
+    "description": "Identificación según el mapa de referencia.",
     "footprint": [
       [
         187,
@@ -10286,8 +10205,7 @@
     ],
     "angle": 20.06,
     "geometrySource": "Zona transparente cotejada en la imagen de referencia.",
-    "routeStatus": "access-unconfirmed",
-    "routePending": "Acceso peatonal conectado por confirmar"
+    "routeStatus": "access-unconfirmed"
   },
   {
     "id": "PSI",
@@ -10295,9 +10213,10 @@
     "category": "salud",
     "rooms": [],
     "services": [],
-    "description": "Ubicación exacta por confirmar. No se ha asignado un edificio.",
-    "floors": "Por confirmar",
-    "hours": "Lunes a viernes · 7:00 a. m. a 1:00 p. m. · America/Mazatlan"
+    "description": "Atención psicológica en Oficinas Administrativas. Agenda tu cita con el psicólogo.",
+    "hours": "Lunes a viernes · 7:00 a. m. a 1:00 p. m. · America/Mazatlan",
+    "buildingId": "L",
+    "appointmentUrl": "https://misael-burgos.youcanbook.me/"
   },
   {
     "id": "DEN",
@@ -10305,8 +10224,7 @@
     "category": "salud",
     "rooms": [],
     "services": [],
-    "description": "Ubicación exacta por confirmar. No se ha asignado un edificio.",
-    "floors": "Por confirmar",
+    "description": "",
     "hours": "Lunes a viernes · 7:00 a. m. a 1:00 p. m. · America/Mazatlan"
   },
   {
@@ -10315,9 +10233,7 @@
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Ubicación exacta por confirmar. No se ha asignado un edificio.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar"
+    "description": ""
   },
   {
     "id": "QUI",
@@ -10325,9 +10241,7 @@
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Ubicación exacta por confirmar. No se ha asignado un edificio.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar"
+    "description": ""
   },
   {
     "id": "BIO",
@@ -10335,8 +10249,6 @@
     "category": "laboratorios",
     "rooms": [],
     "services": [],
-    "description": "Ubicación exacta por confirmar. No se ha asignado un edificio.",
-    "floors": "Por confirmar",
-    "hours": "Por confirmar"
+    "description": ""
   }
 ]
