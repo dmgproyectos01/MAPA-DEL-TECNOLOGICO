@@ -62,7 +62,7 @@ async function contextFor(backend,{width=1366,height=768,capture=false}={}){
  await backend.install(page);await page.goto(target,{waitUntil:'networkidle'});
  return{context,page};
 }
-function safeText(value){return String(value).replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g,'[redacted token]').replace(/((?:https?|wss?):\/\/[^\s?\"'#)]+)[?#][^\s\"')]+/g,'$1?[redacted query]');}
+function safeText(value){return String(value).replace(/((?:https?|wss?):\/\/[^\s?\"'#)]+)[?#][^\s\"')]+/g,'$1?[redacted query]').replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g,'[redacted token]');}
 async function inboundAudioRTP(page){
  return page.evaluate(async()=>{
   const rows=[];let index=0;

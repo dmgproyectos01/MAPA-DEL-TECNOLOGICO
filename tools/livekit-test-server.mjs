@@ -1,8 +1,9 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { randomUUID, webcrypto } from 'node:crypto';
 
-export const SFU_IMAGE='livekit/livekit-server@sha256:ae6f913f12677b95898b1c9e3ff0e3c8ca2655c662c045dea706007fe19bcf9e';
-export const SFU_RELEASE='https://github.com/livekit/livekit/releases/tag/v1.9.8';
+export const SFU_VERSION='1.13.11';
+export const SFU_IMAGE='livekit/livekit-server@sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20';
+export const SFU_RELEASE='https://github.com/livekit/livekit/releases/tag/v1.13.11';
 export const SFU_URL='ws://127.0.0.1:17880';
 export const SFU_KEY='campus-test-key';
 // Local disposable test credentials. They are never used by the published site.
@@ -34,7 +35,7 @@ export async function ensureLocalSFU(){
   if(!ready){execFileSync('docker',['stop',container],{stdio:'pipe'});throw Error('The pinned LiveKit SFU did not start');}
  }
  const version=execFileSync('docker',['exec',container,'/livekit-server','--version'],{encoding:'utf8'}).trim();
- if(!version.includes('1.9.8'))throw Error(`Unexpected SFU version: ${version}`);
+ if(!version.includes(SFU_VERSION))throw Error(`Unexpected SFU version: ${version}`);
  return{container,image:SFU_IMAGE,version,release:SFU_RELEASE,url:SFU_URL,close(){if(created)execFileSync('docker',['stop',container],{stdio:'pipe'});},logs(){
    const run=spawnSync('docker',['logs','--tail','500',container],{encoding:'utf8'});
    return (String(run.stdout||'')+String(run.stderr||'')).split('\n').flatMap(line=>{

@@ -44,6 +44,8 @@ Un administrador publica el evento con la opción de directo habilitada y elige 
 
 `npm run test:events` comprueba administración y galería con un backend simulado. `npm run test:live` añade pruebas entre emisor y espectador mediante el SDK y un SFU LiveKit real y desechable; Auth/SQL se aíslan con fixtures, sin usar cuentas ni cámaras de personas. Su informe distingue bloqueos del navegador de una transmisión probada. El job `native-live-check` debe pasar antes de publicar. Ninguna prueba local o de CI activa por sí sola una cuenta de video o de almacenamiento en producción.
 
+El entorno de integración fija [LiveKit Server 1.13.11](https://github.com/livekit/livekit/releases/tag/v1.13.11) por digest y utiliza Chromium completo en modo headless nuevo. La prueba exige que avancen tanto los fotogramas decodificados como los bytes y paquetes RTP de audio del espectador; mantener una conexión abierta no cuenta como video recibido.
+
 ### Datos confirmados
 
 W, R, Q, J, H y Ñ conservan los datos confirmados del encargo. V incluye Laboratorio de Mecánica y Laboratorio de Eléctrica y mantiene el Departamento de Metal-Mecánica. Psicología, Dentista, Microbiología e Investigación, Química-Bioquímica y Biotecnología Agrícola siguen sin un edificio asignado cuando no existe confirmación oficial. El consultorio médico está en H. Los servicios de salud muestran lunes a viernes de 7:00 a. m. a 1:00 p. m., zona America/Mazatlan.
