@@ -1,0 +1,50 @@
+{
+  "supabase": {
+    "projectRef": "ljsvnfggfgxqwsiuqtrc",
+    "apiUrl": "https://ljsvnfggfgxqwsiuqtrc.supabase.co",
+    "region": "us-west-2",
+    "migrations": [
+      {
+        "version": "20261117034308",
+        "name": "campus_events"
+      },
+      {
+        "version": "20261117034330",
+        "name": "campus_native_live"
+      },
+      {
+        "version": "20261117035031",
+        "name": "campus_owner_indexes"
+      }
+    ],
+    "storage": {
+      "bucket": "campus-events",
+      "public": false,
+      "maxBytes": 47185920
+    },
+    "edgeFunction": {
+      "name": "campus-live",
+      "version": 1,
+      "verifyJwt": false,
+      "bundleSha256": "de09cb801b95b70ee47b1afff7d2201f3d2b99316fb21f99fe1ae71a6371454c"
+    }
+  },
+  "verification": {
+    "applicationTablesWithRls": 4,
+    "directSessionTableAccess": false,
+    "nativeRpcsServiceRoleOnly": true,
+    "verifiedAdministrators": 1,
+    "ownerForeignKeyIndexes": 2,
+    "healthAdvisories": 0
+  },
+  "client": {
+    "configuration": "data/events-config.json",
+    "keyType": "publishable",
+    "nativeLiveEnabled": false
+  },
+  "pending": [
+    "LiveKit secrets entered by the owner in Edge Functions Secrets",
+    "Production broadcast, viewer reception and stop verification"
+  ],
+  "securityNotes": "See backend/NATIVE-LIVE.md for reviewed SECURITY DEFINER and private-session RLS advisory findings."
+}

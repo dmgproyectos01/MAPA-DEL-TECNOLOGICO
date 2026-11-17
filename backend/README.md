@@ -1,8 +1,8 @@
 # Backend de eventos del campus
 
-Este directorio prepara una galería compartida de fotos y videos y el estado de transmisiones de eventos. **No existe una conexión de Supabase ni un backend desplegado por el mero hecho de añadir estos archivos.** Hasta conectar un proyecto autorizado, ejecutar el SQL y crear la identidad administradora, no se deben mostrar cargas, publicación o emisiones como si estuvieran operativas.
+Este directorio contiene el backend de la galería compartida de fotos y videos y de las transmisiones de eventos. El proyecto autorizado de Supabase ya tiene instalados el esquema, las políticas, el bucket privado y la función `campus-live`. El registro de despliegue y sus comprobaciones están en [deployment.json](deployment.json). La emisión pública requiere además los secretos del propietario y una prueba completa en producción.
 
-La página continúa siendo estática y conserva su URL actual de GitHub Pages. Supabase aporta Auth, PostgreSQL y Storage; no es necesario mover el sitio ni introducir un servidor propio. No se crea aquí ningún proyecto, recurso de pago, usuario, contraseña ni lista de administradores automática.
+La página continúa siendo estática y conserva su URL actual de GitHub Pages. Supabase aporta Auth, PostgreSQL y Storage. Se usa el proyecto que creó el propietario y una cuenta Auth verificada que este autorizó expresamente. Las contraseñas y los secretos privados permanecen fuera del repositorio. Los scripts no contratan planes ni convierten registros nuevos en administradores.
 
 ## Preparar el proyecto conectado
 

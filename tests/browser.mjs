@@ -412,25 +412,54 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
       await launcher.waitFor({state:'visible'});
       await page.waitForFunction(() => !document.querySelector('#open-events').disabled);
       const transform=await page.locator('#world').getAttribute('transform');
-      await launcher.click();
-      await page.locator('#events-dialog').waitFor({state:'visible'});
-      assert.equal(await page.locator('#events-dialog').evaluate(el=>el.open),true);
-      await page.screenshot({path:path.join(out,`events-${name}-published-gallery.png`),fullPage:true});
-      const configResponse=await page.request.get(new URL('data/events-config.json?v=events-v1',target).href);
+      const configResponse=await page.request.get(new URL('data/events-config.json?v=native-v1',target).href);
       assert.ok(configResponse.ok());
-      const config=await configResponse.json();
-      if(!config.url||!config.publishableKey){
+      const config=await configResponse.json(),configured=Boolean(config.url&&config.publishableKey);
+      const backendOrigin=configured?new URL(config.url).origin:null,mutations=[];
+      const observe=request=>{
+        const url=new URL(request.url());
+        if(url.origin===backendOrigin&&!['GET','HEAD','OPTIONS'].includes(request.method())&&(/^\/(rest|auth|functions)\/v1\//.test(url.pathname)||url.pathname.startsWith('/storage/v1/object/')&&!url.pathname.startsWith('/storage/v1/object/sign/')))mutations.push({method:request.method(),path:url.pathname});
+      };
+      page.on('request',observe);
+      let publicReadStatus,publishedCount;
+      try{
+        if(configured){
+          const [response]=await Promise.all([
+            page.waitForResponse(response=>{const url=new URL(response.url());return url.origin===backendOrigin&&url.pathname==='/rest/v1/campus_events'&&url.searchParams.get('status')==='eq.published'&&response.request().method()==='GET';}),
+            launcher.click()
+          ]);
+          assert.ok(response.ok(),`Public events read returned HTTP ${response.status()}`);
+          const published=await response.json();
+          assert.ok(Array.isArray(published),'The public gallery must read an event array');
+          assert.ok(published.every(event=>event.status==='published'),'The public response must contain only published events');
+          publicReadStatus=response.status();publishedCount=published.length;
+        }else await launcher.click();
+        await page.locator('#events-dialog').waitFor({state:'visible'});
+        assert.equal(await page.locator('#events-dialog').evaluate(el=>el.open),true);
+        await page.waitForFunction(()=>document.querySelector('#events-gallery')?.getAttribute('aria-busy')==='false');
+        if(configured){
+          assert.equal(await page.locator('#events-gallery [data-event-id]').count(),publishedCount);
+          if(!publishedCount)assert.equal(await page.locator('#events-gallery .events-empty h3').innerText(),'No hay eventos publicados.');
+        }
+        await page.screenshot({path:path.join(out,`events-${name}-published-gallery.png`),fullPage:true});
         await page.locator('#events-manage').click();
-        assert.ok((await page.locator('#events-gallery-feedback').innerText()).includes('La publicación de eventos todavía no está habilitada.'));
-        assert.equal(await page.locator('#events-login-form').count(),0);
-      }
-      await page.keyboard.press('Escape');
-      await page.locator('#events-dialog').waitFor({state:'hidden'});
-      assert.equal(await launcher.evaluate(el=>document.activeElement===el),true);
-      assert.equal(await page.locator('#world').getAttribute('transform'),transform);
+        if(configured){
+          await page.locator('#events-login-form').waitFor({state:'visible'});
+          assert.equal(await page.locator('#events-new-event,#events-editor-form').count(),0,'A public visitor must not open the publisher');
+        }else{
+          assert.ok((await page.locator('#events-gallery-feedback').innerText()).includes('La publicación de eventos todavía no está habilitada.'));
+          assert.equal(await page.locator('#events-login-form').count(),0);
+        }
+        await page.keyboard.press('Escape');
+        await page.locator('#events-dialog').waitFor({state:'hidden'});
+        assert.equal(await launcher.evaluate(el=>document.activeElement===el),true);
+        assert.equal(await page.locator('#world').getAttribute('transform'),transform);
+        assert.deepEqual(mutations,[],'Public gallery verification must never write to the backend');
+      }finally{page.off('request',observe);}
       await search(page,'EH02');
       assert.equal(await page.locator('.place.selected').getAttribute('data-id'),'H');
       await closeDetail(page);
+      return{eventsConfigured:configured,...(configured?{publicReadStatus,publishedCount}:{}),backendMutations:mutations.length};
     });
     await check(page, row, 'No console or page errors', async () => { assert.deepEqual(consoleErrors,[]);assert.deepEqual(pageErrors,[]);assert.deepEqual(failedRequests,[]); });
   } catch (error) {

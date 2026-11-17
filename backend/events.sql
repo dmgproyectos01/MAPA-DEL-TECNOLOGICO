@@ -96,6 +96,8 @@ create table if not exists public.event_media (
 
 create index if not exists campus_events_public_dates_idx
   on public.campus_events (status, starts_at desc, created_at desc);
+create index if not exists campus_events_created_by_idx
+  on public.campus_events (created_by);
 create index if not exists event_media_event_created_idx
   on public.event_media (event_id, created_at);
 

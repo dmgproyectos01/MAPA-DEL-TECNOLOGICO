@@ -23,6 +23,8 @@ create table if not exists public.campus_live_sessions (
 );
 create unique index if not exists campus_live_one_active_event_idx
   on public.campus_live_sessions(event_id) where state in ('reserved','live');
+create index if not exists campus_live_sessions_owner_id_idx
+  on public.campus_live_sessions(owner_id);
 alter table public.campus_live_sessions enable row level security;
 revoke all on public.campus_live_sessions from public, anon, authenticated, service_role;
 
