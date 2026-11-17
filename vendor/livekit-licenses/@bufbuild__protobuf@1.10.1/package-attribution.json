@@ -1,0 +1,10 @@
+{
+  "name": "@bufbuild/protobuf",
+  "version": "1.10.1",
+  "license": "(Apache-2.0 AND BSD-3-Clause)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bufbuild/protobuf-es.git",
+    "directory": "packages/protobuf"
+  }
+}

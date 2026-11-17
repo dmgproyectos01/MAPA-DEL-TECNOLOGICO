@@ -1,5 +1,9 @@
 {
   "url": "",
   "publishableKey": "",
-  "bucket": "campus-events"
+  "bucket": "campus-events",
+  "nativeLive": {
+    "enabled": false,
+    "functionName": "campus-live"
+  }
 }

@@ -1,0 +1,9 @@
+{
+  "name": "sdp-transform",
+  "version": "2.15.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "clux/sdp-transform"
+  }
+}

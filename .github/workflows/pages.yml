@@ -11,6 +11,37 @@ concurrency:
   group: pages
   cancel-in-progress: true
 jobs:
+  native-live-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar navegador para la prueba de directo
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - name: Probar cámara y espectadores mediante el SFU real
+        env:
+          CAMPUS_NATIVE_QA_URL: http://127.0.0.1:3000/
+        run: |
+          node tools/serve.mjs --port 3000 > /tmp/campus-native-ui.log 2>&1 &
+          campus_native_ui_pid=$!
+          trap 'kill "$campus_native_ui_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..40}; do
+            if curl --silent --fail http://127.0.0.1:3000/ >/dev/null; then break; fi
+            sleep 0.25
+          done
+          npm run test:live
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas-directos-nativos
+          path: |
+            tests/screenshots/native-live-*.png
+            work/qa-native-live-report.json
+          retention-days: 14
   build:
     runs-on: ubuntu-latest
     steps:
@@ -23,7 +54,7 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html .nojekyll _site/
-          cp -r css js data assets _site/
+          cp -r css js data assets vendor _site/
       - uses: actions/configure-pages@v5
         with:
           enablement: true
@@ -31,7 +62,7 @@ jobs:
         with:
           path: _site
   deploy:
-    needs: build
+    needs: [build, native-live-check]
     runs-on: ubuntu-latest
     environment:
       name: github-pages

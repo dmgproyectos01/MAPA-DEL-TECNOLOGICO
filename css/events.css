@@ -167,6 +167,18 @@
 .events-confirm p { margin: 0 0 12px; font-size: 12px; color: inherit; line-height: 1.6; overflow-wrap: anywhere; }
 .events-confirm button { margin: 4px 6px 0 0; }
 .events-confirm .events-feedback:empty { display: none; }
+.native-live-check { display: flex; align-items: center; gap: 12px; }
+.native-live-check input[type="checkbox"] { order: -1; flex: none; width: 20px; height: 20px; min-height: 20px; padding: 0; margin: 0; }
+.native-producer, .native-watch { min-width: 0; }
+.native-producer h3 { overflow-wrap: anywhere; }
+.native-live-video, .native-remote-media video { display: block; width: 100%; height: auto; max-height: 45dvh; aspect-ratio: 16/9; object-fit: contain; border-radius: 10px; background: #101522; }
+.native-remote-media audio { width: 100%; }
+.native-live-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.native-live-controls button { min-height: 44px; }
+.native-watch { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--line); }
+.native-producer .events-stream-hint { margin-top: 12px; }
+.native-producer[data-state="live"] #native-live-status, .native-watch[data-state="playing"] #native-live-status { color: #a41537; font-weight: 750; }
+[data-theme="dark"] .native-producer[data-state="live"] #native-live-status, [data-theme="dark"] .native-watch[data-state="playing"] #native-live-status { color: #ffb4c2; }
 @media (max-width: 700px) {
   .events-launcher { min-height: 36px; padding: 0 8px; font-size: 11px; border-radius: 8px; }
   .events-dialog { width: 100vw; height: 100dvh; margin: 0; border: 0; border-top: 3px solid var(--brand-purple); border-radius: 0; }

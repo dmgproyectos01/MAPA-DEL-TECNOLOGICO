@@ -4,7 +4,7 @@ La imagen base es un recorte del PNG original de 4096 × 2212, codificado como W
 
 ## Pruebas automáticas
 
-`npm test` ejecuta 69 comprobaciones sin dependencias adicionales:
+`npm test` ejecuta 92 comprobaciones sin dependencias adicionales:
 
 - EE01, EV01, ED01, EW04, EJ10 y EH02; siete sugerencias con E; acentos y mayúsculas.
 - Datos confirmados y ubicaciones pendientes sin edificio inventado; laboratorios de Mecánica y Eléctrica en V.
@@ -21,7 +21,13 @@ La extracción contiene 1132 nodos y 1183 aristas. Se comprobó adicionalmente c
 
 `npm run test:browser` abre la aplicación real en 1366 × 768 y 390 × 844. Las 52 comprobaciones cubren consola, red, desbordamiento, proporción, transparencia de zonas no seleccionadas, búsquedas y teclado, selección y cierre, zoom, tema, favoritos e historial, filtros, eliminación de rutas y apertura/cierre del apartado Eventos. También se comprueba que el destino no quede detrás de la tarjeta inferior en móvil.
 
-`npm run test:events` añade 9 escenarios de interfaz en computadora y celulares de 390 y 320 píxeles, usando un backend Supabase **simulado e interceptado**. Verifica galería, archivos de imagen/video reproducibles, acceso de administrador, borradores, subidas múltiples, publicación fallida y reintento, YouTube tras clic, tema y foco. Estas pruebas no escriben en producción ni sustituyen la activación y validación del proyecto real. El informe `work/qa-events-report.json` distingue expresamente esa condición.
+`npm run test:events` añade 9 escenarios de interfaz en computadora y celulares de 390 y 320 píxeles, usando un backend Supabase **simulado e interceptado**. Verifica galería, archivos de imagen/video reproducibles, acceso de administrador, borradores, subidas múltiples, publicación fallida y reintento, opciones de directo nativo, tema y foco. Estas pruebas no escriben en producción ni sustituyen la activación y validación del proyecto real. El informe `work/qa-events-report.json` distingue expresamente esa condición.
+
+`npm run test:live` conecta la interfaz de emisor y espectador mediante el SDK local y un servidor SFU LiveKit real, con imagen Docker oficial fijada por digest. Auth y las respuestas de base de datos se aíslan con fixtures, sin cuentas ni cámaras personales. Se comprueban video decodificado, pista de audio, permisos de solo recepción, confirmación de publicación, finalización y captura detenida. El job obligatorio `native-live-check` ejecuta esa prueba en un navegador estándar de GitHub Actions antes del despliegue.
+
+En el Chromium administrado de este entorno, la política `WebRtcIPHandling=disable_non_proxied_udp` impide el transporte ICE local del servidor de prueba. Esa protección no se ha modificado: el informe local registra el bloqueo y no lo contabiliza como una transmisión aprobada. La denegación de permisos de captura sí se comprobó en ese navegador. El resultado de transporte completo debe consultarse en el informe del job de CI, separado de la activación de los servicios públicos.
+
+La función de servidor tiene además pruebas de HMAC, Auth, permisos y caducidad de tokens, CORS, prueba de publicación real, cierre de sala y revocación Cloud. El esquema se ejecutó en PostgreSQL 17.12 de prueba con roles Auth/Storage sintéticos: campos protegidos, RPC privados, concurrencia de reservas y repetición de migraciones aprobados. Esto no equivale a desplegar Supabase o LiveKit Cloud.
 
 La configuración de eventos se entrega vacía hasta conectar el proyecto autorizado. La página publicada muestra la galería inicial y avisa que la publicación todavía no está habilitada. Los archivos `events-*-published-gallery.png` son capturas del estado real de esa página; `events-*-public.png` y `events-*-admin.png` proceden de los escenarios con datos de prueba.
 

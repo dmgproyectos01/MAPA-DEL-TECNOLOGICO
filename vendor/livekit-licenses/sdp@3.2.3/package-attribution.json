@@ -1,0 +1,9 @@
+{
+  "name": "sdp",
+  "version": "3.2.3",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fippo/sdp.git"
+  }
+}

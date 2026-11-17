@@ -1,0 +1,10 @@
+{
+  "name": "machina",
+  "version": "7.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ifandelse/machina.js.git"
+  },
+  "homepage": "https://machina-js.org/"
+}

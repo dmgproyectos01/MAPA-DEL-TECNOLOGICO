@@ -50,7 +50,8 @@ Para retirar permisos, el propietario elimina ese UUID de `public.event_admins`.
 - `starts_at`: `timestamptz` opcional. Enviar ISO 8601 con desplazamiento o UTC; presentar la hora en `America/Mazatlan` en la interfaz.
 - `status`: `draft` o `published`; comienza en borrador.
 - `live_state`: `off`, `scheduled`, `live` o `ended`.
-- `youtube_video_id`: nulo cuando `live_state = 'off'`; obligatorio y de exactamente once caracteres `[A-Za-z0-9_-]` en los otros estados. Guardar el identificador, nunca HTML de un iframe ni una URL arbitraria.
+- `native_live_enabled`: permite preparar un directo propio para ese evento. `native_stream_id`, `native_last_seen_at` y `live_state` quedan controlados por la función de servidor.
+- `youtube_video_id`: columna de compatibilidad con la versión anterior; debe ser nula para los directos nativos. La interfaz no solicita enlaces ni muestra reproductores externos.
 - `created_by`: UUID del usuario Auth creador, asignado mediante `auth.uid()` y comprobado al insertar.
 - `created_at`, `updated_at`: fechas del servidor. El trigger conserva identidad, fecha de creación y creador al editar, y actualiza `updated_at`.
 
@@ -101,7 +102,7 @@ Una carga consta de dos operaciones que no son atómicas entre PostgreSQL y Stor
 
 Si falla el paso 3, eliminar el objeto recién subido mediante Storage API. Si esa limpieza también falla, conservar el error y permitir al administrador reintentar; el objeto huérfano no resulta visible al público porque todavía no existe una fila pública que lo vincule.
 
-Para eliminar un evento: primero pasarlo a `draft` y `live_state = 'off'` con `youtube_video_id = null`; después eliminar sus objetos mediante Storage API, y finalmente borrar el evento. Si falla el borrado de objetos, mantener el borrador y los metadatos para poder reintentar. Borrar solo la fila SQL elimina metadatos por cascada pero **no elimina los archivos**.
+Para eliminar un evento con un directo activo, finalizar primero la sesión mediante la función de directo. Después cambiar únicamente `status` a `draft`, eliminar sus objetos mediante Storage API y finalmente borrar el evento. Los clientes no deben modificar el estado del directo que controla el servidor. Si falla el borrado de objetos, mantener el borrador y los metadatos para poder reintentar. Borrar solo la fila SQL elimina metadatos por cascada pero **no elimina los archivos**.
 
 Limpiar objetos huérfanos desde un proceso autorizado que compare los nombres de Storage con `event_media.storage_path`. Usar siempre la API de Storage para subir/borrar archivos; no borrar directamente filas de `storage.objects`, pues puede dejar los bytes almacenados fuera de sincronía. No se instala ninguna tarea programada ni servicio de limpieza automático con este esquema.
 
@@ -109,11 +110,9 @@ Limpiar objetos huérfanos desde un proceso autorizado que compare los nombres d
 
 ## Transmisiones en vivo
 
-La opción prevista es incrustar un directo de **YouTube**, sujeta a la elección del propietario. El SQL almacena su ID y estados; **no transmite una cámara, no envía audio/video a un servidor y no crea una emisión**.
+Los directos se capturan y se reproducen dentro de la propia página mediante WebRTC y LiveKit. Después del esquema de galería, ejecutar `backend/native-live.sql` y desplegar la función `campus-live` según [NATIVE-LIVE.md](NATIVE-LIVE.md). La función verifica al administrador, limita los permisos de publicación o recepción, asigna una sala por sesión y confirma que existen pistas de cámara y micrófono antes de anunciar la emisión.
 
-El organizador debe preparar y emitir el directo desde su canal con las condiciones que exija YouTube. Una vez autorizado y disponible, un administrador registra el ID y cambia `live_state` a `scheduled`, `live` o `ended`. El evento solo se ve públicamente si además está `published`. La aplicación debe construir el embed a partir del ID validado y un dominio de YouTube fijado por código; no interpretar HTML arbitrario guardado en la base.
-
-Un archivo de video subido a Storage es una grabación reproducible bajo demanda, no una transmisión en vivo. Sin canal/ID y configuración de emisión reales, la interfaz debe indicar que el directo está pendiente.
+Supabase por sí solo y los archivos de GitHub Pages no distribuyen el audio/video. Se requiere un proyecto LiveKit autorizado o un servidor propio con HTTPS/WSS y conectividad RTC. Las claves privadas permanecen en los secretos del backend; los clientes reciben tokens temporales restringidos. La cuenta y los servicios públicos todavía deben activarse: no confundir las pruebas con una emisión disponible en producción.
 
 ## Comprobación antes de habilitar el backend
 

@@ -1,0 +1,4 @@
+# Anonymous viewers use this endpoint; publisher identity is verified inside it.
+# This is NOT permission to publish: /auth/v1/user + is_event_admin are mandatory.
+[functions.campus-live]
+verify_jwt = false

@@ -1,0 +1,8 @@
+{
+  "name": "@livekit/protocol",
+  "version": "1.53.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "url": "https://github.com/livekit/protocol"
+  }
+}

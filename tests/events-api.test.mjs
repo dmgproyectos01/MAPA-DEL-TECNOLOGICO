@@ -36,6 +36,48 @@ async function withClient(handler, run, {admin = true, config = CONFIG} = {}) {
 }
 const login = client => client.signIn('admin@example.com', 'a-real-password');
 
+test('El directo sin configurar no solicita permisos ni contacta al servidor', async () => {
+  await withClient(null, async ({client, requests}) => {
+    assert.equal(client.nativeLiveConfigured, false);
+    await assert.rejects(client.nativeLiveRequest('start', {eventId:EVENT}), /todavía no están habilitados/);
+    assert.equal(requests.length, 0);
+  });
+});
+
+test('Ver un directo es público; iniciarlo exige una sesión administradora', async () => {
+  const config = {...CONFIG, nativeLive:{enabled:true, functionName:'campus-live'}};
+  await withClient(({url, body, options}) => {
+    if (url.pathname === '/functions/v1/campus-live') {
+      assert.equal(body.eventId, EVENT);
+      if (body.action === 'view') assert.equal(options.headers.Authorization, undefined);
+      else assert.equal(options.headers.Authorization, 'Bearer admin-access');
+      return json({url:'wss://example.livekit.cloud', token:'temporary-room-token', streamId:OBJECT, roomName:'event-room'});
+    }
+  }, async ({client, requests}) => {
+    assert.equal(client.nativeLiveConfigured, true);
+    await client.nativeLiveRequest('view', {eventId:EVENT});
+    await assert.rejects(client.nativeLiveRequest('start', {eventId:EVENT}), /Inicia sesión/);
+    await login(client);
+    await client.nativeLiveRequest('start', {eventId:EVENT});
+    const count = requests.length;
+    await assert.rejects(client.nativeLiveRequest('arbitrary', {eventId:EVENT}), /acción/);
+    await assert.rejects(client.nativeLiveRequest('stop', {eventId:EVENT, streamId:'wrong'}), /identificador/);
+    assert.equal(requests.length, count);
+  }, {config});
+});
+
+test('Eliminar un evento activo finaliza su directo antes de ocultarlo y limpiar archivos', async () => {
+  const order = [], config = {...CONFIG,nativeLive:{enabled:true,functionName:'campus-live'}};
+  await withClient(({url, options, body}) => {
+    if (url.pathname === '/functions/v1/campus-live') {order.push('stop'); assert.equal(body.streamId, OBJECT); return json({ended:true});}
+    if (url.pathname === '/rest/v1/campus_events' && !options.method) return json([{id:EVENT,native_stream_id:OBJECT,live_state:'live'}]);
+    if (url.pathname === '/rest/v1/campus_events' && options.method === 'GET') return json([{id:EVENT,native_stream_id:OBJECT,live_state:'live'}]);
+    if (url.pathname === '/rest/v1/campus_events' && options.method === 'PATCH') {order.push('hide'); assert.deepEqual(body,{status:'draft'}); return json([{id:EVENT,...body}]);}
+    if (url.pathname === '/rest/v1/event_media') return json([]);
+    if (url.pathname === '/rest/v1/campus_events' && options.method === 'DELETE') {order.push('delete'); return json(null,204);}
+  }, async ({client}) => {await login(client); await client.deleteEvent(EVENT); assert.deepEqual(order,['stop','hide','delete']);}, {config});
+});
+
 for (const url of [`https://youtube.com/watch?v=${ID}`, `https://www.youtube.com/watch?v=${ID}&t=10`, `https://m.youtube.com/live/${ID}`, `https://www.youtube.com/embed/${ID}`, `https://youtu.be/${ID}?si=abc`]) {
   test(`Extrae únicamente el ID de ${url}`, () => assert.equal(parseYouTubeUrl(url), ID));
 }
@@ -197,7 +239,7 @@ test('Genera un enlace firmado de una hora para el bucket privado', async () => 
 test('Borrar un evento primero lo oculta y después limpia Storage y la fila', async () => {
   const operations = [];
   await withClient(({url, options, body}) => {
-    if (url.pathname === '/rest/v1/campus_events' && options.method === 'PATCH') {operations.push('hide'); assert.deepEqual(body, {status: 'draft', live_state: 'off'}); return json([{id: EVENT, ...body}]);}
+    if (url.pathname === '/rest/v1/campus_events' && options.method === 'PATCH') {operations.push('hide'); assert.deepEqual(body, {status: 'draft'}); return json([{id: EVENT, ...body}]);}
     if (url.pathname === '/rest/v1/event_media') {operations.push('list-media'); return json([row]);}
     if (url.pathname === '/storage/v1/object/campus-events') {operations.push('remove-objects'); assert.deepEqual(body.prefixes, [row.storage_path]); return json([]);}
     if (url.pathname === '/rest/v1/campus_events' && options.method === 'DELETE') {operations.push('delete-event'); return json(null, 204);}

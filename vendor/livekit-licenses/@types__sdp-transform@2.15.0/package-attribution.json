@@ -1,0 +1,11 @@
+{
+  "name": "@types/sdp-transform",
+  "version": "2.15.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+    "directory": "types/sdp-transform"
+  },
+  "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/sdp-transform"
+}

@@ -25,12 +25,12 @@ const headers={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':
 function backendState(){
  const media=[{id:'30000000-0000-4000-8000-000000000001',event_id:PUBLIC,storage_path:`${PUBLIC}/30000000-0000-4000-8000-000000000001.png`,kind:'photo',mime_type:'image/png',original_name:'Fotografía del evento.png'},
  {id:'30000000-0000-4000-8000-000000000002',event_id:PUBLIC,storage_path:`${PUBLIC}/30000000-0000-4000-8000-000000000002.mp4`,kind:'video',mime_type:'video/mp4',original_name:'Video del evento.mp4'}];
- const events=[{id:PUBLIC,title:'Semana de Ingeniería',description:'Fotografías, video y transmisión del evento académico.',starts_at:'2026-11-17T17:00:00Z',location:'Aula Magna · H',youtube_video_id:'dQw4w9WgXcQ',live_state:'live',status:'published',created_at:'2026-11-17T10:00:00Z',created_by:ADMIN},
- {id:DRAFT,title:'Borrador privado del organizador',description:'Este borrador no se debe mostrar a los visitantes.',starts_at:null,youtube_video_id:null,live_state:'off',status:'draft',created_at:'2026-11-17T09:00:00Z',created_by:ADMIN}];
+ const events=[{id:PUBLIC,title:'Semana de Ingeniería',description:'Fotografías, video y transmisión del evento académico.',starts_at:'2026-11-17T17:00:00Z',location:'Aula Magna · H',live_state:'off',status:'published',created_at:'2026-11-17T10:00:00Z',created_by:ADMIN},
+ {id:DRAFT,title:'Borrador privado del organizador',description:'Este borrador no se debe mostrar a los visitantes.',starts_at:null,live_state:'off',status:'draft',created_at:'2026-11-17T09:00:00Z',created_by:ADMIN}];
  return{events,media,uploads:[],writes:[],requests:[],unexpected:[],failPublish:0,publishAttempts:0};
 }
 async function mockBackend(page,state){
- await page.route('**/data/events-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({url:host,publishableKey:'sb_publishable_events_test_only',bucket:'campus-events'})}));
+ await page.route('**/data/events-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({url:host,publishableKey:'sb_publishable_events_test_only',bucket:'campus-events',nativeLive:{enabled:false,functionName:'campus-live'}})}));
  await page.route(`${host}/**`,async route=>{
   const request=route.request(),url=new URL(request.url()),method=request.method(),pathname=url.pathname;
   const auth=request.headers().authorization||'',admin=auth==='Bearer test-admin-token';
@@ -83,7 +83,6 @@ async function mockBackend(page,state){
   }
   state.unexpected.push({method,path:pathname,query:url.search});return respond({message:'Endpoint no previsto en la prueba'},500);
  });
- await page.route('https://www.youtube-nocookie.com/**',route=>route.fulfill({status:200,contentType:'text/html',body:'<!doctype html><meta charset="utf-8"><title>Reproductor de prueba</title><style>body{font:14px system-ui;color:white;background:#101522}</style><p>Video de prueba sin conexión externa.</p>'}));
 }
 async function openEvents(page){
  await page.locator('#open-events').waitFor({state:'visible'});
@@ -115,7 +114,7 @@ async function scenario(viewport,title,callback){
  }finally{await context.close();}
 }
 for(const viewport of [['desktop',1366,768],['mobile',390,844],['small-mobile',320,740]]){
- await scenario(viewport,'Visitor media, click-to-load live video, dark mode and dialog focus',async(page,state,name)=>{
+ await scenario(viewport,'Visitor photos and videos, no external player, dark mode and dialog focus',async(page,state,name)=>{
   const card=page.locator(`[data-event-id="${PUBLIC}"]`);
   await card.waitFor({state:'visible'});
   assert.equal(await page.locator(`[data-event-id="${DRAFT}"]`).count(),0,'Drafts must not be shown to visitors');
@@ -130,10 +129,8 @@ for(const viewport of [['desktop',1366,768],['mobile',390,844],['small-mobile',3
   await image.evaluate(async img=>{await img.decode();if(!img.naturalWidth)throw Error('Photo did not decode');});
   assert.equal(await video.getAttribute('controls')!==null,true);assert.equal(await video.getAttribute('playsinline')!==null,true);
   await video.evaluate(async el=>{el.load();await new Promise((resolve,reject)=>{if(el.readyState>=1)return resolve();el.addEventListener('loadedmetadata',resolve,{once:true});el.addEventListener('error',()=>reject(new Error('Video metadata failed')),{once:true});setTimeout(()=>reject(new Error('Video metadata timed out')),5000);});});
-  assert.equal(await card.locator('iframe').count(),0,'YouTube must not load before an explicit click');
-  await card.locator('[data-event-action="watch-live"]').click();
-  const iframe=card.locator('iframe');await iframe.waitFor({state:'attached'});
-  assert.ok((await iframe.getAttribute('src')).startsWith('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ'));
+  assert.equal(await page.locator('#events-dialog iframe').count(),0,'Events must use native media instead of external players');
+  assert.equal(await page.locator('#events-dialog a[href]').count(),0,'No external viewing links should be required');
   await fits(page);
   const lightBackground=await page.locator('#events-dialog').evaluate(el=>getComputedStyle(el).backgroundColor);
   await page.locator('#events-dialog .events-body').evaluate(el=>el.scrollTop=0);
@@ -167,20 +164,15 @@ for(const viewport of [['desktop',1366,768],['mobile',390,844],['small-mobile',3
   await page.locator(`#events-gallery [data-event-id="${PUBLIC}"]`).waitFor({state:'visible'});
   assert.equal(await page.locator(`#events-gallery [data-event-id="${DRAFT}"]`).count(),0,'Saving a draft must not make it public');
   await page.locator('#events-manage').click();await page.locator('#events-new-event').click();
-  const writesBeforeInvalidUrl=state.writes.length;
   await page.locator('#event-title').fill('Prueba de publicación con fotografías y video');
   await page.locator('#event-date').fill('2026-11-17T10:30');
   const location=page.locator('#event-location');if(await location.evaluate(el=>el.tagName)==='SELECT')await location.selectOption('H');else await location.fill('Aula Magna · H');
   await page.locator('#event-description').fill('Registro académico con nombres completos y contenido multimedia.');
-  await page.locator('#event-live-state').selectOption('live');
-  await page.locator('#event-youtube').fill('https://evil.example/watch?v=dQw4w9WgXcQ');
+  assert.equal(await page.locator('#event-youtube,#event-live-state').count(),0,'External streaming controls must be removed');
+  await page.locator('#event-native-live-enabled').check();
   const chooser=page.waitForEvent('filechooser');await page.locator('#event-media').click();
   await(await chooser).setFiles([{name:'foto-prueba.png',mimeType:'image/png',buffer:png},{name:'video-prueba.mp4',mimeType:'video/mp4',buffer:mp4}]);
-  await page.locator('[data-event-action="publish"]').click();
-  await page.locator('#events-editor-feedback[role="alert"]').waitFor({state:'visible'});
-  assert.equal(state.writes.length,writesBeforeInvalidUrl,'Unsafe YouTube URL must be rejected before backend writes');
-  assert.equal(state.uploads.length,0);
-  await page.locator('#event-youtube').fill('https://www.youtube.com/watch?v=dQw4w9WgXcQ');state.failPublish=1;
+  state.failPublish=1;
   await page.locator('[data-event-action="publish"]').click();
   await page.locator('#events-editor-feedback[role="alert"]').waitFor({state:'visible'});
   await page.waitForFunction(()=>document.querySelector('[data-event-action="retry-uploads"]')&&!document.querySelector('[data-event-action="retry-uploads"]').disabled);
@@ -191,9 +183,17 @@ for(const viewport of [['desktop',1366,768],['mobile',390,844],['small-mobile',3
   await page.locator('#events-admin-list').waitFor({state:'visible'});
   assert.ok((await page.locator('#events-admin-feedback').innerText()).includes('Evento publicado.'));
   assert.equal(state.publishAttempts,2);assert.equal(state.uploads.length,2,'Retry must not duplicate already uploaded media');
-  const published=state.events.find(event=>event.title==='Prueba de publicación con fotografías y video');assert.equal(published?.status,'published');assert.equal(published.starts_at,'2026-11-17T17:30:00.000Z','Date must use the Culiacán time zone');
+  const published=state.events.find(event=>event.title==='Prueba de publicación con fotografías y video');assert.equal(published?.status,'published');assert.equal(published.native_live_enabled,true);assert.equal(published.starts_at,'2026-11-17T17:30:00.000Z','Date must use the Culiacán time zone');
   assert.equal(state.media.filter(media=>media.event_id===published.id).length,2);
   await fits(page);await page.screenshot({path:path.join(output,`events-${name}-admin.png`),fullPage:true});
+  await page.locator(`[data-event-id="${published.id}"] [data-event-action="prepare-live"]`).click();
+  await page.locator('#native-live-panel').waitFor({state:'visible'});
+  assert.equal(await page.locator('#native-live-panel').getAttribute('data-state'),'idle');
+  assert.ok(await page.locator('#native-live-start').isDisabled(),'An unconfigured native backend must not pretend streaming is available');
+  assert.match(await page.locator('#native-live-panel').innerText(),/todavía no está habilitado/);
+  assert.equal(await page.locator('#events-dialog iframe,#event-youtube').count(),0);
+  assert.ok(!state.requests.some(request=>request.path.startsWith('/functions/')),'Opening disabled native controls must not start a server session');
+  await fits(page);
  });
 }
 await browser.close();report.finished=new Date().toISOString();await writeFile('work/qa-events-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));if(report.failures.length)process.exitCode=1;

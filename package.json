@@ -6,6 +6,14 @@
     "dev": "node tools/serve.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:browser": "node tests/browser.mjs",
-    "test:events": "node tests/events-browser.mjs"
+    "test:events": "node tests/events-browser.mjs",
+    "build:livekit": "node tools/build-livekit.mjs",
+    "test:live": "node tests/native-live-browser.mjs"
+  },
+  "dependencies": {
+    "livekit-client": "2.24.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
   }
 }

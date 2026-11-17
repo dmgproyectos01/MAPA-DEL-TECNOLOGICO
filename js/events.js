@@ -1,7 +1,11 @@
-import { parseYouTubeUrl, validateMediaFile } from './events-api.js?v=events-v1';
+import { validateMediaFile } from './events-api.js?v=native-v1';
+import { createNativeLive } from './native-live.js?v=native-v1';
 
 const TZ = 'America/Mazatlan';
-const LIVE_LABELS = { off: 'Sin transmisión', scheduled: 'Programada', live: 'En vivo', ended: 'Finalizada' };
+function isNativeLive(event) {
+  const seen = Date.parse(event.native_last_seen_at || '');
+  return event.status === 'published' && event.native_live_enabled === true && event.live_state === 'live' && Number.isFinite(seen) && Date.now() - seen < 75000;
+}
 const node = (tag, className, text) => {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -38,9 +42,6 @@ function utcFromCampusDate(value) {
   const campusAtGuess = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second);
   return new Date(guess.getTime() + guess.getTime() - campusAtGuess).toISOString();
 }
-function videoId(value) {
-  return typeof value === 'string' && /^[A-Za-z0-9_-]{11}$/.test(value) ? value : null;
-}
 function safeMediaUrl(value) {
   if (typeof value !== 'string' || !value.trim()) throw new Error('Archivo no disponible.');
   const url = new URL(value, location.href);
@@ -57,6 +58,7 @@ export function initEvents({ button, dialog, client, notify = () => {}, location
   let editorForm = null, editorFeedback = null, queueList = null, retryButton = null;
   let mediaList = null, editorActions = null;
   const mediaLoads = new WeakSet();
+  const nativeControllers = new Set();
   dialog.classList.add('events-dialog');
   dialog.setAttribute('aria-labelledby', 'events-dialog-title');
   button.classList.add('events-launcher');
@@ -83,7 +85,8 @@ export function initEvents({ button, dialog, client, notify = () => {}, location
     observer?.disconnect();
     observer = null;
     dialog.querySelectorAll('video').forEach(video => video.pause());
-    dialog.querySelectorAll('iframe').forEach(frame => frame.remove());
+    for (const controller of nativeControllers) { controller.destroy().catch(() => {}); }
+    nativeControllers.clear();
   }
   function beginView(view) {
     stopMedia();
@@ -110,8 +113,8 @@ export function initEvents({ button, dialog, client, notify = () => {}, location
     target.replaceChildren(box);
   }
   function badge(event) {
-    const label = event.status === 'draft' ? 'Borrador' : event.live_state === 'off' ? 'Publicado' : LIVE_LABELS[event.live_state] || 'Publicado';
-    const element = node('span', `event-badge${event.status === 'published' && event.live_state === 'live' ? ' is-live' : ''}`, label);
+    const label = event.status === 'draft' ? 'Borrador' : isNativeLive(event) ? 'En vivo' : event.native_live_enabled ? event.live_state === 'ended' ? 'Finalizado' : 'Directo programado' : 'Publicado';
+    const element = node('span', `event-badge${isNativeLive(event) ? ' is-live' : ''}`, label);
     return element;
   }
 
@@ -184,7 +187,7 @@ export function initEvents({ button, dialog, client, notify = () => {}, location
     grid.replaceChildren();
     grid.setAttribute('aria-busy', 'false');
     const visible = events.filter(event => filter === 'all'
-      || filter === 'live' && event.live_state === 'live'
+      || filter === 'live' && isNativeLive(event)
       || filter === 'photos' && event.media?.some(media => media.kind === 'photo')
       || filter === 'videos' && event.media?.some(media => media.kind === 'video'));
     if (!visible.length) {
@@ -200,25 +203,7 @@ export function initEvents({ button, dialog, client, notify = () => {}, location
       card.append(date);
       if (event.location) card.append(node('p', 'event-location', event.location));
       if (event.description) card.append(node('p', 'event-description', event.description));
-      const id = videoId(event.youtube_video_id);
-      if (id && event.live_state !== 'off') {
-        const live = node('div', 'event-stream');
-        const play = action(event.live_state === 'ended' ? 'Ver grabación' : 'Ver transmisión', () => {
-          const frame = node('iframe', 'event-stream-frame');
-          frame.title = `Transmisión: ${event.title || 'Evento del campus'}`;
-          frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
-          frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-          frame.referrerPolicy = 'strict-origin-when-cross-origin';
-          frame.allowFullscreen = true;
-          live.replaceChildren(frame, link);
-        }, 'watch-live', 'events-button events-button-primary');
-        const link = node('a', 'events-text-link', 'Abrir en YouTube');
-        link.href = `https://www.youtube.com/watch?v=${id}`;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        live.append(play, link);
-        card.append(live);
-      }
+      if (event.native_live_enabled) card.append(nativeViewer(event));
       const media = (Array.isArray(event.media) ? event.media : []).filter(row => filter !== 'photos' && filter !== 'videos' || row.kind === (filter === 'photos' ? 'photo' : 'video'));
       if (media.length) {
         const gallery = node('div', 'event-media-grid');
@@ -228,6 +213,106 @@ export function initEvents({ button, dialog, client, notify = () => {}, location
       grid.append(card);
     }
     activateLazyPhotos();
+  }
+  function identifyNativePanel(panel, status, remote) {
+    for (const id of ['native-live-panel', 'native-live-status', 'native-live-remote']) dialog.querySelector('#' + id)?.removeAttribute('id');
+    panel.id = 'native-live-panel'; status.id = 'native-live-status';
+    if (remote) remote.id = 'native-live-remote';
+  }
+  function nativeViewer(event) {
+    const panel = node('section', 'native-watch');
+    panel.dataset.state = 'idle';
+    const status = node('p', 'events-feedback', isNativeLive(event) ? 'Mira el directo aquí, con video y sonido.' : event.live_state === 'ended' ? 'El directo ha finalizado.' : 'El directo aparecerá aquí cuando inicie.');
+    status.setAttribute('role', 'status');
+    const remote = node('div', 'native-remote-media');
+    let controller = null;
+    const sound = action('Activar sonido', () => controller?.enableAudio().catch(error => feedback(status, error.message, true)), 'enable-native-audio');
+    sound.hidden = true;
+    const stop = action('Cerrar directo', async () => {
+      stop.disabled = true;
+      try { await controller?.destroy(); } finally { stop.hidden = true; play.disabled = false; play.hidden = false; }
+    }, 'close-native'); stop.hidden = true;
+    const play = action('Ver directo', async () => {
+      for (const existing of nativeControllers) existing.destroy().catch(() => {});
+      nativeControllers.clear();
+      identifyNativePanel(panel, status, remote);
+      play.disabled = true; stop.hidden = false; stop.disabled = false;
+      controller = createNativeLive({
+        request: (action, payload) => client.nativeLiveRequest(action, payload),
+        onState: next => {
+          if (!panel.isConnected || !dialog.open) return;
+          panel.dataset.state = next.state;
+          feedback(status, next.message || ({connecting:'Conectando al directo…',playing:'En vivo',reconnecting:'Recuperando la conexión…',ended:'El directo ha finalizado.',error:'No se pudo conectar al directo. Inténtalo de nuevo.'})[next.state] || 'Preparando el video…', next.state === 'error');
+          sound.hidden = !next.audioBlocked;
+          if (next.state === 'playing') play.hidden = true;
+          if (['ended', 'error'].includes(next.state)) { play.hidden = false; play.disabled = false; stop.hidden = true; }
+        }
+      });
+      nativeControllers.add(controller);
+      try { await controller.watch(event.id, remote); }
+      catch (error) { feedback(status, error.message || 'No se pudo abrir el directo.', true); play.disabled = false; }
+    }, 'watch-native', 'events-button events-button-primary');
+    play.hidden = !isNativeLive(event);
+    play.disabled = !client.nativeLiveConfigured;
+    if (isNativeLive(event) && !client.nativeLiveConfigured) status.textContent = 'La reproducción de directos todavía no está habilitada.';
+    const controls = node('div', 'native-live-controls'); controls.append(play, sound, stop);
+    panel.append(status, remote, controls);
+    return panel;
+  }
+  async function showNativeProducer(event) {
+    const token = beginView('producer');
+    const panel = node('section', 'native-producer'); panel.dataset.state = 'idle';
+    const heading = node('div', 'events-editor-toolbar');
+    heading.append(node('h3', '', `Directo · ${event.title}`), action('Volver a administración', showAdmin, 'back-admin'));
+    const status = node('p', 'events-feedback', 'Abre la cámara para revisar la imagen antes de transmitir.'); status.setAttribute('role', 'status');
+    const video = node('video', 'native-live-video'); video.id = 'native-live-preview'; video.autoplay = true; video.muted = true; video.playsInline = true;
+    let controller, latest = {state:'idle', microphoneEnabled:true, cameraEnabled:true};
+    const showError = error => { if (panel.isConnected) feedback(status, error.message || 'No pudimos completar la operación del directo.', true); };
+    const prepare = action('Abrir cámara y micrófono', async () => {
+      prepare.disabled = true;
+      try { await controller.prepare(video, {facingMode:'environment'}); }
+      catch (error) { showError(error); }
+      finally { if (panel.isConnected) prepare.disabled = false; }
+    }, 'open-camera', 'events-button events-button-primary'); prepare.id = 'native-live-prepare';
+    const start = action('Iniciar directo', async () => {
+      start.disabled = true;
+      try { await controller.start(event.id); }
+      catch (error) { showError(error); }
+    }, 'start-native', 'events-button events-button-primary'); start.id = 'native-live-start'; start.disabled = true;
+    const stop = action('Cerrar cámara', async () => {
+      stop.disabled = true;
+      try { await controller.stop(); }
+      catch (error) { showError(error); stop.disabled = false; stop.textContent = 'Reintentar finalizar'; }
+    }, 'stop-native', 'events-button events-button-danger'); stop.id = 'native-live-stop'; stop.disabled = true;
+    const mic = action('Silenciar micrófono', () => controller.setMicrophone(latest.microphoneEnabled === false).catch(showError), 'native-mic'); mic.id = 'native-live-mic';
+    const camera = action('Apagar cámara', () => controller.setCamera(latest.cameraEnabled === false).catch(showError), 'native-camera'); camera.id = 'native-live-camera';
+    const flip = action('Cambiar cámara', () => controller.flipCamera().catch(showError), 'native-flip'); flip.id = 'native-live-flip';
+    for (const control of [mic, camera, flip]) control.disabled = true;
+    const controls = node('div', 'native-live-controls'); controls.append(prepare, start, stop, mic, camera, flip);
+    panel.append(heading, status, video, controls, node('p', 'events-stream-hint', 'La vista previa solo la ves tú. El video se comparte cuando aparezca «En vivo». Al salir de esta ventana se detienen la cámara y el directo.'));
+    if (!client.nativeLiveConfigured) panel.append(node('p', 'events-error', 'Puedes revisar la cámara, pero el servicio de directos todavía no está habilitado.'));
+    identifyNativePanel(panel, status);
+    body.append(panel);
+    controller = createNativeLive({
+      request: (action, payload) => client.nativeLiveRequest(action, payload),
+      onState: next => {
+        latest = {...latest, ...next};
+        if (generation !== token || !dialog.open) return;
+        panel.dataset.state = next.state;
+        feedback(status, next.message || ({preview:'Vista previa · todavía no estás transmitiendo.',connecting:'Conectando el directo…',live:'En vivo',reconnecting:'Recuperando la conexión…',ended:'Cámara y directo detenidos.',error:'No se pudo iniciar el directo.'})[next.state] || 'Preparando la cámara…', next.state === 'error');
+        const ready = ['preview','live','reconnecting'].includes(next.state);
+        start.disabled = next.state !== 'preview' || !client.nativeLiveConfigured || latest.cameraEnabled === false || latest.microphoneEnabled === false;
+        prepare.hidden = ['preview','connecting','live','reconnecting'].includes(next.state);
+        stop.disabled = !ready && next.state !== 'connecting';
+        stop.textContent = ['live','reconnecting'].includes(next.state) ? 'Finalizar directo' : 'Cerrar cámara';
+        mic.disabled = camera.disabled = !ready; flip.disabled = !ready || latest.cameraEnabled === false;
+        mic.textContent = latest.microphoneEnabled === false ? 'Activar micrófono' : 'Silenciar micrófono';
+        camera.textContent = latest.cameraEnabled === false ? 'Activar cámara' : 'Apagar cámara';
+        mic.setAttribute('aria-pressed', String(latest.microphoneEnabled !== false)); camera.setAttribute('aria-pressed', String(latest.cameraEnabled !== false));
+        if (['ended','error'].includes(next.state)) { video.pause(); video.srcObject = null; }
+      }
+    });
+    nativeControllers.add(controller);
   }
   function mediaFigure(row, event) {
     const figure = node('figure', 'event-media');
@@ -376,8 +461,19 @@ export function initEvents({ button, dialog, client, notify = () => {}, location
         const row = node('article', 'event-admin-row'); row.dataset.eventId = event.id;
         const info = node('div'); info.append(badge(event), node('h4', '', event.title || 'Evento sin título'), node('p', '', eventDate(event.starts_at)));
         const controls = node('div', 'event-admin-actions');
-        controls.append(action('Editar', () => showEditor(event), 'edit-event'), action('Eliminar', () => confirmDeletion(event, controls), 'delete-event', 'events-button events-button-danger'));
-        controls.querySelectorAll('button').forEach(control => control.disabled = busy);
+        if (event.native_stream_id && ['scheduled','live'].includes(event.live_state)) {
+          const end = action('Finalizar directo activo', async () => {
+            end.disabled = true;
+            try { await client.nativeLiveRequest('stop', {eventId:event.id, streamId:event.native_stream_id}); await showAdmin('Directo finalizado.'); }
+            catch (error) { feedback(status, error.message || 'No se pudo finalizar el directo.', true); end.disabled = false; }
+          }, 'end-native-active', 'events-button events-button-danger');
+          controls.append(end);
+        }
+        if (event.status === 'published' && event.native_live_enabled) controls.append(action('Preparar directo', () => showNativeProducer(event), 'prepare-live', 'events-button events-button-primary'));
+        const edit = action('Editar', () => showEditor(event), 'edit-event');
+        if (event.native_stream_id && ['scheduled','live'].includes(event.live_state)) { edit.disabled = true; edit.dataset.nativeLocked = 'true'; edit.title = 'Finaliza el directo antes de editar el evento.'; }
+        controls.append(edit, action('Eliminar', () => confirmDeletion(event, controls), 'delete-event', 'events-button events-button-danger'));
+        controls.querySelectorAll('button').forEach(control => control.disabled = busy || control.dataset.nativeLocked === 'true');
         row.append(info, controls); list.append(row);
       }
     } catch {
@@ -430,10 +526,11 @@ export function initEvents({ button, dialog, client, notify = () => {}, location
       if (!fileError) feedback(editorFeedback, uploadQueue.length ? `${uploadQueue.length} archivo(s) por subir. Todavía no están publicados.` : '');
     });
     mediaList = node('div', 'events-existing-media'); editorForm.append(mediaList); renderExistingMedia();
-    const streamHeading = node('h4', 'events-section-title', 'Transmisión por YouTube'); editorForm.append(streamHeading, node('p', 'events-stream-hint', 'Inicia la transmisión en tu canal de YouTube y pega aquí su enlace para que se vea en Eventos.'));
-    const youtube = inputField(editorForm, 'Enlace de YouTube', 'event-youtube'); youtube.inputMode = 'url'; youtube.placeholder = 'https://www.youtube.com/watch?v=…'; youtube.value = videoId(event?.youtube_video_id) ? `https://www.youtube.com/watch?v=${event.youtube_video_id}` : '';
-    const live = inputField(editorForm, 'Estado de la transmisión', 'event-live-state', 'select');
-    for (const [value, text] of Object.entries(LIVE_LABELS)) { const option = node('option', '', text); option.value = value; live.append(option); } live.value = event?.live_state || 'off';
+    editorForm.append(node('h4', 'events-section-title', 'Directo desde esta página'));
+    const live = inputField(editorForm, 'Permitir directo con cámara y micrófono', 'event-native-live-enabled', 'checkbox');
+    live.checked = Boolean(event?.native_live_enabled);
+    live.parentElement.classList.add('native-live-check');
+    editorForm.append(node('p', 'events-stream-hint', 'Guarda y publica el evento. Después podrás preparar la cámara e iniciar el directo desde Administrar eventos.'));
     editorFeedback = node('p', 'events-feedback'); editorFeedback.id = 'events-editor-feedback'; editorFeedback.setAttribute('role', 'status');
     editorActions = node('div', 'events-editor-actions');
     const publish = action('Publicar evento', () => saveEvent(true), 'publish', 'events-button events-button-primary');
@@ -489,12 +586,7 @@ export function initEvents({ button, dialog, client, notify = () => {}, location
     const get = id => editorForm.querySelector(`#${id}`).value;
     let fields;
     try {
-      const youtube = get('event-youtube').trim();
-      const id = youtube ? parseYouTubeUrl(youtube) : null;
-      const live = get('event-live-state');
-      if (id && live === 'off') throw new Error('Elige Programada, En vivo o Finalizada para guardar el enlace de YouTube.');
-      if (live !== 'off' && !id) throw new Error('Agrega un enlace válido de YouTube para activar la transmisión.');
-      fields = { title: get('event-title').trim(), description: get('event-description').trim(), location: get('event-location').trim(), starts_at: utcFromCampusDate(get('event-date')), status: 'draft', live_state: live, youtube_video_id: id };
+      fields = { title: get('event-title').trim(), description: get('event-description').trim(), location: get('event-location').trim(), starts_at: utcFromCampusDate(get('event-date')), status: 'draft', native_live_enabled: editorForm.querySelector('#event-native-live-enabled').checked };
       if (!fields.title) throw new Error('Escribe el título del evento.');
     } catch (error) { feedback(editorFeedback, error.message || 'Revisa la información del evento.', true); return; }
     setBusy(true); retryButton.hidden = true;
@@ -528,8 +620,9 @@ export function initEvents({ button, dialog, client, notify = () => {}, location
       }
     } finally {
       if (editorForm.isConnected && currentView === 'editor') setBusy(false);
-      else { busy = false; manageButton.disabled = false; close.disabled = false; body.querySelectorAll('button').forEach(control => control.disabled = false); }
+      else { busy = false; manageButton.disabled = false; close.disabled = false; body.querySelectorAll('button').forEach(control => control.disabled = control.dataset.nativeLocked === 'true'); }
     }
   }
+  window.addEventListener('pagehide', stopMedia);
   return { open, close: () => { if (!busy) dialog.close(); }, refresh: () => { if (!busy) return showGallery(); } };
 }

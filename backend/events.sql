@@ -16,13 +16,15 @@ create table if not exists public.campus_events (
   status text not null default 'draft' check (status in ('draft', 'published')),
   live_state text not null default 'off'
     check (live_state in ('off', 'scheduled', 'live', 'ended')),
-  youtube_video_id text,
+  youtube_video_id text, -- Legacy only; native broadcasts do not use an external video ID.
+  native_live_enabled boolean not null default false,
+  native_stream_id uuid,
+  native_last_seen_at timestamptz,
   created_by uuid not null default auth.uid() references auth.users(id) on delete restrict,
   created_at timestamptz not null default pg_catalog.now(),
   updated_at timestamptz not null default pg_catalog.now(),
-  constraint campus_events_youtube_state_check check (
-    (live_state = 'off' and youtube_video_id is null)
-    or (live_state <> 'off' and youtube_video_id is not null and youtube_video_id ~ '^[A-Za-z0-9_-]{11}$')
+  constraint campus_events_legacy_video_check check (
+    youtube_video_id is null or (not native_live_enabled and youtube_video_id ~ '^[A-Za-z0-9_-]{11}$')
   )
 );
 
@@ -303,3 +305,6 @@ create policy campus_event_objects_delete_guard on storage.objects
 -- Grants are limited to application tables/functions. Existing policies and
 -- grants on other Storage buckets are neither replaced nor broadened.
 commit;
+
+-- REQUIRED before exposing native controls: apply backend/native-live.sql.
+-- It installs service-role-only session RPCs and guards server-owned live fields.

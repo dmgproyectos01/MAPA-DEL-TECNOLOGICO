@@ -66,9 +66,9 @@ initPreferences(locations,storage,selectLocation,notify);
 const eventsButton=document.querySelector('#open-events');
 try{
  const [{createEventsClient},{initEvents},eventsConfig]=await Promise.all([
-  import('./events-api.js?v=events-v1'),
-  import('./events.js?v=events-v1'),
-  fetch('data/events-config.json?v=events-v1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Events configuration unavailable');return r.json();})
+  import('./events-api.js?v=native-v1'),
+  import('./events.js?v=native-v1'),
+  fetch('data/events-config.json?v=native-v1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Events configuration unavailable');return r.json();})
  ]);
  await initEvents({button:eventsButton,dialog:document.querySelector('#events-dialog'),client:createEventsClient(eventsConfig),notify,locations});
  eventsButton.disabled=false;

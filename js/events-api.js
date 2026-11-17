@@ -61,6 +61,10 @@ function idValue(id) {
 function eventFields(fields, creating = false) {
   if (!fields || typeof fields !== 'object' || Array.isArray(fields)) throw new Error('Los datos del evento no son válidos.');
   const result = {};
+  if (Object.hasOwn(fields, 'native_live_enabled')) {
+    if (typeof fields.native_live_enabled !== 'boolean') throw new Error('Revisa la opción de directo del evento.');
+    result.native_live_enabled = fields.native_live_enabled;
+  }
   for (const [key, max] of [['title', 120], ['description', 4000], ['location', 160]]) {
     if (!Object.hasOwn(fields, key) && !(creating && key === 'title')) continue;
     if (typeof fields[key] !== 'string' || fields[key].length > max) throw new Error(`${({title: 'El título', description: 'La descripción', location: 'La ubicación'})[key]} debe tener como máximo ${max} caracteres.`);
@@ -100,6 +104,8 @@ const encodePath = path => path.split('/').map(encodeURIComponent).join('/');
 export function createEventsClient(config = {}) {
   const configured = isEventsConfigured(config), base = configured ? new URL(config.url).origin : '', bucket = config.bucket || 'campus-events';
   const key = config.publishableKey, sessionKey = `campus-events-session:${base}`;
+  const nativeFunction = config.nativeLive?.functionName || 'campus-live';
+  const nativeLiveConfigured = configured && config.nativeLive?.enabled === true && /^[a-z0-9-]{1,63}$/.test(nativeFunction);
   let refreshing = null;
   const assertConfigured = () => {if (!configured) throw new Error(CONFIG_ERROR);};
   function getSession() {
@@ -123,14 +129,14 @@ export function createEventsClient(config = {}) {
     if (typeof data?.access_token !== 'string' || typeof (data.refresh_token || previous.refresh_token) !== 'string' || !UUID.test(user?.id || '') || !Number.isFinite(expiresAt)) throw new Error('Supabase no devolvió una sesión válida.');
     return {access_token: data.access_token, refresh_token: data.refresh_token || previous.refresh_token, expires_at: expiresAt, token_type: 'bearer', user: {id: user.id, email: user.email || ''}};
   }
-  async function request(path, {method = 'GET', token = null, body, file, headers: extraHeaders} = {}) {
+  async function request(path, {method = 'GET', token = null, body, file, headers: extraHeaders, keepalive = false} = {}) {
     assertConfigured();
     const headers = {apikey: key, ...extraHeaders};
     if (token) headers.Authorization = `Bearer ${token}`;
     else if (!key.startsWith('sb_publishable_')) headers.Authorization = `Bearer ${key}`;
     if (body !== undefined) headers['Content-Type'] = 'application/json';
     let response;
-    try {response = await fetch(base + path, {method, headers, credentials: 'omit', body: file !== undefined ? file : body === undefined ? undefined : JSON.stringify(body)});}
+    try {response = await fetch(base + path, {method, headers, credentials: 'omit', keepalive, body: file !== undefined ? file : body === undefined ? undefined : JSON.stringify(body)});}
     catch {throw new Error('No se pudo conectar con el servicio de eventos. Revisa la conexión e inténtalo de nuevo.');}
     const text = await response.text();
     let data = null;
@@ -214,8 +220,12 @@ export function createEventsClient(config = {}) {
   async function deleteEvent(id) {
     idValue(id);
     const current = await requireAdmin();
+    if (nativeLiveConfigured) {
+      const existing = eventRow(await request('/rest/v1/campus_events?id=eq.' + id + '&select=id,native_stream_id,live_state', {token: current.access_token}));
+      if (existing.native_stream_id && ['scheduled', 'live'].includes(existing.live_state)) await nativeLiveRequest('stop', {eventId: id, streamId: existing.native_stream_id});
+    }
     // Hide the event first: a partial cleanup must never leave public broken media.
-    eventRow(await request('/rest/v1/campus_events?id=eq.' + id, {method: 'PATCH', token: current.access_token, body: {status: 'draft', live_state: 'off'}, headers: {Prefer: 'return=representation'}}));
+    eventRow(await request('/rest/v1/campus_events?id=eq.' + id, {method: 'PATCH', token: current.access_token, body: {status: 'draft'}, headers: {Prefer: 'return=representation'}}));
     try {
       const params = new URLSearchParams({select: '*', event_id: 'eq.' + id});
       const rows = await request('/rest/v1/event_media?' + params, {token: current.access_token});
@@ -253,5 +263,20 @@ export function createEventsClient(config = {}) {
     if (url.protocol !== 'https:' || url.origin !== base || !url.pathname.startsWith('/storage/v1/object/sign/')) throw new Error('El servicio devolvió un enlace de archivo no válido.');
     return url.href;
   }
-  return {configured, getSession, signIn, isAdmin, signOut, listEvents, createEvent, updateEvent, deleteEvent, uploadMedia, removeMedia, mediaUrl};
+  async function nativeLiveRequest(action, {eventId, streamId, keepalive = false} = {}) {
+    if (!nativeLiveConfigured) throw new Error('Los directos desde la cámara todavía no están habilitados.');
+    if (!['start', 'confirm', 'heartbeat', 'stop', 'view'].includes(action)) throw new Error('La acción del directo no es válida.');
+    idValue(eventId);
+    if (streamId !== undefined) idValue(streamId);
+    if (['confirm', 'heartbeat', 'stop'].includes(action) && !streamId) throw new Error('No se encontró la sesión del directo.');
+    const current = action === 'view' ? await session() : keepalive && action === 'stop' ? getSession() : await requireAdmin();
+    if (action !== 'view' && !current) throw new Error('Inicia sesión para transmitir.');
+    const data = await request('/functions/v1/' + encodeURIComponent(nativeFunction), {
+      method: 'POST', token: current?.access_token, keepalive: keepalive && action === 'stop',
+      body: {action, eventId, ...(streamId ? {streamId} : {})}
+    });
+    if (!data || typeof data !== 'object') throw new Error('El servicio de directos no respondió correctamente.');
+    return data;
+  }
+  return {configured, nativeLiveConfigured, getSession, signIn, isAdmin, signOut, listEvents, createEvent, updateEvent, deleteEvent, uploadMedia, removeMedia, mediaUrl, nativeLiveRequest};
 }

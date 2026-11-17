@@ -1,0 +1,58 @@
+LiveKit SDK 2.24.1 rebundled/minified for the campus application.
+No provider credentials are included. Sources and license texts follow.
+
+@bufbuild/protobuf@1.10.1 — (Apache-2.0 AND BSD-3-Clause)
+Source: https://github.com/bufbuild/protobuf-es.git
+Included license files: license declared in package manifest
+
+@livekit/mutex@1.1.1 — Apache-2.0
+Source: git@github.com:livekit/ts-mutex.git
+Included license files: @livekit__mutex@1.1.1/LICENSE
+
+@livekit/protocol@1.53.0 — Apache-2.0
+Source: https://github.com/livekit/protocol
+Included license files: @livekit__protocol@1.53.0/LICENSE
+
+@types/sdp-transform@2.15.0 — MIT
+Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+Included license files: @types__sdp-transform@2.15.0/LICENSE
+
+events@3.3.0 — MIT
+Source: git://github.com/Gozala/events.git
+Included license files: events@3.3.0/LICENSE
+
+jose@6.2.17 — MIT
+Source: panva/jose
+Included license files: jose@6.2.17/LICENSE.md
+
+livekit-client@2.24.1 — Apache-2.0
+Source: git@github.com:livekit/client-sdk-js.git
+Included license files: livekit-client@2.24.1/LICENSE
+
+loglevel@1.9.2 — MIT
+Source: git://github.com/pimterry/loglevel.git
+Included license files: license declared in package manifest
+
+machina@7.0.1 — MIT
+Source: git://github.com/ifandelse/machina.js.git
+Included license files: machina@7.0.1/LICENSE
+
+sdp@3.2.3 — MIT
+Source: git+https://github.com/fippo/sdp.git
+Included license files: sdp@3.2.3/LICENSE
+
+sdp-transform@2.15.0 — MIT
+Source: clux/sdp-transform
+Included license files: sdp-transform@2.15.0/LICENSE
+
+tslib@2.8.1 — 0BSD
+Source: https://github.com/Microsoft/tslib.git
+Included license files: tslib@2.8.1/LICENSE.txt
+
+typed-emitter@2.1.0 — MIT
+Source: github:andywer/typed-emitter
+Included license files: typed-emitter@2.1.0/LICENSE
+
+webrtc-adapter@9.0.6 — BSD-3-Clause
+Source: https://github.com/webrtchacks/adapter.git
+Included license files: webrtc-adapter@9.0.6/LICENSE.md
