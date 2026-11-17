@@ -3,7 +3,7 @@
   "publishableKey": "sb_publishable_wROISnWJt3vzvufdXczPKg_QmhnfkiK",
   "bucket": "campus-events",
   "nativeLive": {
-    "enabled": false,
+    "enabled": true,
     "functionName": "campus-live"
   }
 }

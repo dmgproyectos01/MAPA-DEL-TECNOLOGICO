@@ -24,7 +24,7 @@
     },
     "edgeFunction": {
       "name": "campus-live",
-      "version": 1,
+      "version": 5,
       "verifyJwt": false,
       "bundleSha256": "de09cb801b95b70ee47b1afff7d2201f3d2b99316fb21f99fe1ae71a6371454c"
     }
@@ -35,15 +35,16 @@
     "nativeRpcsServiceRoleOnly": true,
     "verifiedAdministrators": 1,
     "ownerForeignKeyIndexes": 2,
-    "healthAdvisories": 0
+    "healthAdvisories": 0,
+    "livekitSecretsConfirmedByOwner": true,
+    "nativePublicContractCheck": "tests/browser.mjs verifies production CORS, anonymous publisher denial and unavailable viewer responses"
   },
   "client": {
     "configuration": "data/events-config.json",
     "keyType": "publishable",
-    "nativeLiveEnabled": false
+    "nativeLiveEnabled": true
   },
   "pending": [
-    "LiveKit secrets entered by the owner in Edge Functions Secrets",
     "Production broadcast, viewer reception and stop verification"
   ],
   "securityNotes": "See backend/NATIVE-LIVE.md for reviewed SECURITY DEFINER and private-session RLS advisory findings."

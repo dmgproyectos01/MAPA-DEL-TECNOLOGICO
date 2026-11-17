@@ -421,7 +421,7 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
         if(url.origin===backendOrigin&&!['GET','HEAD','OPTIONS'].includes(request.method())&&(/^\/(rest|auth|functions)\/v1\//.test(url.pathname)||url.pathname.startsWith('/storage/v1/object/')&&!url.pathname.startsWith('/storage/v1/object/sign/')))mutations.push({method:request.method(),path:url.pathname});
       };
       page.on('request',observe);
-      let publicReadStatus,publishedCount;
+      let publicReadStatus,publishedCount,nativeReadiness;
       try{
         if(configured){
           const [response]=await Promise.all([
@@ -446,6 +446,33 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
         if(configured){
           await page.locator('#events-login-form').waitFor({state:'visible'});
           assert.equal(await page.locator('#events-new-event,#events-editor-form').count(),0,'A public visitor must not open the publisher');
+          if(config.nativeLive?.enabled&&new URL(target).origin==='https://dmgproyectos01.github.io'){
+            // Public production checks use no user token, password or media.
+            // Authentication must reject start before any room can be reserved.
+            const endpoint=new URL('/functions/v1/'+config.nativeLive.functionName,config.url).href;
+            const origin=new URL(target).origin,headers={Origin:origin,apikey:config.publishableKey,'Content-Type':'application/json'};
+            const preflight=await page.request.fetch(endpoint,{method:'OPTIONS',headers:{...headers,'Access-Control-Request-Method':'POST','Access-Control-Request-Headers':'apikey,authorization,content-type'}});
+            assert.equal(preflight.status(),204,'Native server configuration must accept production preflight');
+            assert.equal(preflight.headers()['access-control-allow-origin'],origin);
+            const expected=[['start',401,'AUTH_REQUIRED'],['view',404,'STREAM_UNAVAILABLE']];
+            const statuses={};
+            for(const[action,status,code]of expected){
+              const response=await page.request.post(endpoint,{headers,data:{action,eventId:'00000000-0000-4000-8000-000000000000'}});
+              const body=await response.json();
+              assert.equal(response.status(),status,`Native public ${action} must return ${code}`);
+              assert.equal(body.error?.code,code);
+              assert.deepEqual(Object.keys(body),['error'],'Public denial must not return connection credentials');
+              assert.deepEqual(Object.keys(body.error).sort(),['code','message']);
+              assert.equal(response.headers()['access-control-allow-origin'],origin);
+              assert.equal(response.headers()['cache-control'],'no-store');
+              statuses[action]={status,code,tokenIssued:false};
+            }
+            const denied=await page.request.post(endpoint,{headers:{...headers,Origin:'https://invalid.example'},data:{action:'view',eventId:'00000000-0000-4000-8000-000000000000'}});
+            assert.equal(denied.status(),403);
+            assert.equal((await denied.json()).error?.code,'ORIGIN_DENIED');
+            assert.equal(denied.headers()['access-control-allow-origin'],undefined);
+            nativeReadiness={preflight:204,publicStart:statuses.start,unavailableView:statuses.view,foreignOrigin:403,providerCredentials:'A signed-in production broadcast must still verify the LiveKit key pair'};
+          }
         }else{
           assert.ok((await page.locator('#events-gallery-feedback').innerText()).includes('La publicación de eventos todavía no está habilitada.'));
           assert.equal(await page.locator('#events-login-form').count(),0);
@@ -459,7 +486,7 @@ for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844
       await search(page,'EH02');
       assert.equal(await page.locator('.place.selected').getAttribute('data-id'),'H');
       await closeDetail(page);
-      return{eventsConfigured:configured,...(configured?{publicReadStatus,publishedCount}:{}),backendMutations:mutations.length};
+      return{eventsConfigured:configured,...(configured?{publicReadStatus,publishedCount}:{}),...(nativeReadiness?{nativeReadiness}:{}),backendMutations:mutations.length};
     });
     await check(page, row, 'No console or page errors', async () => { assert.deepEqual(consoleErrors,[]);assert.deepEqual(pageErrors,[]);assert.deepEqual(failedRequests,[]); });
   } catch (error) {

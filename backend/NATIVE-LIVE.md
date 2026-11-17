@@ -4,6 +4,8 @@ La emisión y la reproducción permanecen dentro de la página del campus. El na
 
 La función `campus-live` ya está instalada en el proyecto autorizado de Supabase, junto con sus tablas y permisos. [deployment.json](deployment.json) registra el estado verificado. Los secretos de LiveKit se introducen exclusivamente en la configuración privada de Edge Functions. La configuración pública habilita los controles cuando el servicio está preparado; una transmisión solo pasa a «En vivo» tras publicar ambas pistas y obtener la confirmación del servidor. Las pruebas de integración no sustituyen la prueba de la cuenta de producción.
 
+El propietario confirmó la entrada de los tres secretos y los controles nativos están habilitados. La comprobación de la página publicada exige preflight `204`, inicio anónimo `401/AUTH_REQUIRED`, vista de un evento inexistente `404/STREAM_UNAVAILABLE` y origen ajeno `403/ORIGIN_DENIED`, siempre sin devolver credenciales. Estas solicitudes comprueban configuración, Auth, CORS y el acceso del servidor a su RPC; no crean salas ni validan por sí solas la pareja de claves de LiveKit. Esa última validación requiere iniciar una transmisión con la cuenta administradora, comprobar recepción de audio/video desde otro dispositivo y finalizarla.
+
 ## Instalar y activar
 
 1. Usar el proyecto Supabase autorizado y el administrador Auth verificado que figuren en `public.event_admins`, según `backend/README.md`. No convertir cada registro nuevo en administrador.
