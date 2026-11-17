@@ -47,12 +47,22 @@ export async function ensureLocalSFU(){
 
 export async function createNativeTestBackend(origin){
  const {createLiveHandler}=await import('../supabase/functions/_shared/campus-live.js');
- const state={event:{id:EVENT,title:'Transmisión RTC local',description:'Prueba de cámara y micrófono mediante el SFU real.',location:'Aula Magna · H',starts_at:'2026-11-17T17:00:00Z',status:'published',live_state:'off',native_live_enabled:true,created_at:'2026-11-17T10:00:00Z',media:[]},sessions:new Map(),requests:[],unexpected:[],actions:[],holdConfirm:false,releaseConfirm:null};
+ const state={event:{id:EVENT,title:'Transmisión RTC local',description:'Prueba de cámara y micrófono mediante el SFU real.',location:'Aula Magna · H',starts_at:'2026-11-17T17:00:00Z',status:'published',live_state:'off',native_live_enabled:true,created_at:'2026-11-17T10:00:00Z',media:[]},sessions:new Map(),requests:[],unexpected:[],actions:[],providerSnapshots:[],nativeResponses:[],holdConfirm:false,releaseConfirm:null};
  let currentStream=null;
  const snapshot=()=>currentStream?state.sessions.get(currentStream):null;
  async function supabaseFetch(input,init={}){
   const request=input instanceof Request?input:new Request(input,init),url=new URL(request.url),pathname=url.pathname,method=request.method,auth=request.headers.get('authorization')||'';
-  if(!request.url.startsWith(MOCK_BASE))return fetch(request);
+  if(!request.url.startsWith(MOCK_BASE)){
+   const response=await fetch(request);
+   if(url.origin===SFU_URL.replace(/^ws/,'http')&&pathname.startsWith('/twirp/livekit.RoomService/')){
+    let body={};try{body=await response.clone().json();}catch{}
+    const current=snapshot();
+    // Record only provider state needed to diagnose confirmation races. Never
+    // retain Authorization, access tokens, TURN credentials or full SDP.
+    state.providerSnapshots.push({time:new Date().toISOString(),method:pathname.split('/').at(-1),status:response.status,errorCode:body.code||null,participants:Array.isArray(body.participants)?body.participants.map(participant=>({expectedPublisher:participant.identity===`publisher-${current?.owner_id}-${current?.stream_id}`,state:participant.state,tracks:(participant.tracks||[]).map(track=>({kind:track.type??null,source:track.source??null,muted:track.muted??false}))})):null});
+   }
+   return response;
+  }
   state.requests.push({path:pathname,method});
   let payload;try{payload=await request.json();}catch{payload={};}
   if(pathname==='/auth/v1/user'){
@@ -90,8 +100,14 @@ export async function createNativeTestBackend(origin){
  }
  const env={SUPABASE_URL:MOCK_BASE,SUPABASE_ANON_KEY:'mockanon',SUPABASE_SERVICE_ROLE_KEY:'mockservice',LIVEKIT_URL:SFU_URL,LIVEKIT_API_KEY:SFU_KEY,LIVEKIT_API_SECRET:SFU_SECRET,LIVEKIT_ALLOW_LOCALHOST:'true',TEST_ORIGIN:origin};
  const handler=createLiveHandler({env,fetchImpl:supabaseFetch,cryptoImpl:webcrypto});
+ async function observeNativeResponse(action,response){
+  let body={};try{body=await response.clone().json();}catch{}
+  state.nativeResponses.push({time:new Date().toISOString(),action,status:response.status,errorCode:body.error?.code||null,errorMessage:body.error?.message||null,live:body.live===true,ended:body.ended===true});
+  return response;
+ }
  async function invoke(action,payload={},token='test-admin-token'){
-  return handler(new Request(origin+'/functions/v1/campus-live',{method:'POST',headers:{'content-type':'application/json',origin,...(token?{authorization:`Bearer ${token}`}:{})},body:JSON.stringify({action,...payload})}));
+  const response=await handler(new Request(origin+'/functions/v1/campus-live',{method:'POST',headers:{'content-type':'application/json',origin,...(token?{authorization:`Bearer ${token}`}:{})},body:JSON.stringify({action,...payload})}));
+  return observeNativeResponse(action,response);
  }
  async function install(page){
   await page.route('**/data/events-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({url:'https://example.supabase.co',publishableKey:'sb_publishable_native_test_only',bucket:'campus-events',nativeLive:{enabled:true,functionName:'campus-live'}})}));
@@ -105,6 +121,8 @@ export async function createNativeTestBackend(origin){
    if(url.pathname==='/rest/v1/campus_events'&&method==='GET')return respond([{...state.event,event_media:[]}]);
    if(url.pathname==='/functions/v1/campus-live'){
     const response=await handler(new Request(origin+url.pathname,{method,headers:{...request.headers(),origin},body:method==='GET'?undefined:request.postData()}));
+    let action;try{action=request.postDataJSON().action;}catch{}
+    await observeNativeResponse(action,response);
     return route.fulfill({status:response.status,headers:Object.fromEntries(response.headers),body:await response.text()});
    }
    state.unexpected.push({method,path:url.pathname});return respond({message:'Unexpected browser backend request'},500);

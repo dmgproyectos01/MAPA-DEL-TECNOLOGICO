@@ -36,7 +36,7 @@ El flujo es:
 
 1. `start`: verifica al administrador, bloquea la fila del evento y reserva una sesión con un UUID nuevo. Solo se admite un emisor activo por evento. Se crea una sala con nombre derivado en el servidor y el estado queda `scheduled`.
 2. El navegador solicita permiso y publica sus pistas de cámara y micrófono. Una vista previa local no declara el evento en vivo.
-3. `confirm`: el servidor consulta `ListParticipants` en el SFU y exige la identidad del propietario y ambas pistas publicadas antes de pasar a `live`.
+3. `confirm`: el servidor consulta `ListParticipants` en el SFU y exige la identidad del propietario activo y ambas pistas publicadas en la misma respuesta antes de pasar a `live`. Como la publicación puede aparecer después de su acuse inicial, consulta hasta seis veces, con pausas de 300 ms y un presupuesto total de consulta de 3 segundos. Si faltan pistas, mantiene la reserva sin declarar LIVE; los errores del proveedor se devuelven de inmediato. Este sondeo solo se aplica a la confirmación: `heartbeat` y `view` comprueban una única respuesta actual.
 4. `heartbeat`: vuelve a comprobar la presencia y las pistas reales, y renueva la marca de tiempo del servidor. El cliente debe enviarlo aproximadamente cada 20 segundos mientras emite.
 5. `view`: solo concede una credencial de espectador si el evento está publicado, está habilitado para emisión nativa, existe una sesión `live` con actividad menor a 75 segundos y el SFU sigue mostrando al emisor y sus pistas.
 6. `stop`: verifica propietario, cierra la sala real y después marca la sesión como terminada. Si el proveedor falla, se devuelve un error recuperable y no se afirma falsamente que todo terminó. La repetición del cierre admite una sala ya eliminada.

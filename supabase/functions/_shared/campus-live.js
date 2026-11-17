@@ -4,6 +4,9 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const PROD_ORIGIN = 'https://dmgproyectos01.github.io';
 const TTL_SECONDS = 120;
 const LEASE_MS = 75_000;
+const CONFIRM_ATTEMPTS = 6;
+const CONFIRM_INTERVAL_MS = 300;
+const CONFIRM_BUDGET_MS = 3000;
 const ACTIONS = new Set(['start', 'confirm', 'heartbeat', 'stop', 'view']);
 class LiveError extends Error {
   constructor(status, code, message) { super(message); this.status = status; this.code = code; }
@@ -14,7 +17,8 @@ const roomFor = (eventId, streamId) => `campus-${eventId}-${streamId}`;
 const publisherFor = s => `publisher-${s.owner_id}-${s.stream_id}`;
 const seconds = () => Math.floor(Date.now() / 1000);
 
-export function createLiveHandler({ env, fetchImpl = globalThis.fetch, cryptoImpl = globalThis.crypto } = {}) {
+export function createLiveHandler({ env, fetchImpl = globalThis.fetch, cryptoImpl = globalThis.crypto,
+  sleepImpl = ms => new Promise(resolve => setTimeout(resolve, ms)) } = {}) {
   const read = key => typeof env?.get === 'function' ? env.get(key) : env?.[key];
   const localFlag = read('LIVEKIT_ALLOW_LOCALHOST') === 'true';
   let configuration;
@@ -48,8 +52,8 @@ export function createLiveHandler({ env, fetchImpl = globalThis.fetch, cryptoImp
   function response(status, value, headers = {}) {
     return new Response(value === null ? null : JSON.stringify(value), { status, headers: { ...headers, 'Content-Type': 'application/json; charset=utf-8' } });
   }
-  async function request(url, options) {
-    try { return await fetchImpl(url, { ...options, redirect: 'error', signal: AbortSignal.timeout(8000) }); }
+  async function request(url, options, timeoutMs = 8000) {
+    try { return await fetchImpl(url, { ...options, redirect: 'error', signal: AbortSignal.timeout(timeoutMs) }); }
     catch { fail(502, 'LIVE_DEPENDENCY_UNAVAILABLE', 'No se pudo contactar al servidor de transmisión. Intenta de nuevo.'); }
   }
   async function json(res) { try { return await res.json(); } catch { return null; } }
@@ -97,13 +101,13 @@ export function createLiveHandler({ env, fetchImpl = globalThis.fetch, cryptoImp
     const signature = await cryptoImpl.subtle.sign('HMAC', key, new TextEncoder().encode(`${header}.${payload}`));
     return `${header}.${payload}.${encode(signature)}`;
   }
-  async function roomService(method, room, create = false, extra = {}) {
+  async function roomService(method, room, create = false, extra = {}, timeoutMs = 8000) {
     const c = config();
     const grant = create ? { roomCreate: true, room } : { roomAdmin: true, room };
     const token = await jwt('campus-live-service', grant, 60);
     const body = method === 'CreateRoom' ? { name: room, empty_timeout: 75, departure_timeout: 20 } : { room, ...extra };
     const res = await request(`${c.http}/twirp/livekit.RoomService/${method}`, { method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) }, timeoutMs);
     const data = await json(res);
     if (!res.ok) {
       if (res.status === 404 || data?.code === 'not_found') {
@@ -124,12 +128,28 @@ export function createLiveHandler({ env, fetchImpl = globalThis.fetch, cryptoImp
     return data;
   }
   function recent(value) { const timestamp = Date.parse(value); return Number.isFinite(timestamp) && timestamp > Date.now() - LEASE_MS && timestamp <= Date.now() + 5000; }
-  async function publisherPresent(s) {
-    const data = await roomService('ListParticipants', s.room_name);
+  async function publisherPresent(s, timeoutMs = 8000) {
+    const data = await roomService('ListParticipants', s.room_name, false, {}, timeoutMs);
     const publisher = Array.isArray(data.participants) && data.participants.find(p => p.identity === publisherFor(s) && (p.state === 2 || p.state === 'ACTIVE'));
     const tracks = Array.isArray(publisher?.tracks) ? publisher.tracks : [];
     return tracks.some(t => t.source === 1 || String(t.source).toUpperCase() === 'CAMERA') &&
       tracks.some(t => t.source === 2 || String(t.source).toUpperCase() === 'MICROPHONE');
+  }
+  async function confirmPublisherPresent(s) {
+    // Publish acknowledgements can precede the SFU's participant snapshot.
+    // Only confirmation waits: every success still requires both real tracks
+    // from the active, authenticated publisher in the same snapshot.
+    const deadline = Date.now() + CONFIRM_BUDGET_MS;
+    for (let attempt = 0; attempt < CONFIRM_ATTEMPTS; attempt++) {
+      const remaining = deadline - Date.now();
+      if (remaining <= 0) return false;
+      if (await publisherPresent(s, remaining)) return true;
+      if (attempt === CONFIRM_ATTEMPTS - 1) return false;
+      const pause = Math.min(CONFIRM_INTERVAL_MS, deadline - Date.now());
+      if (pause <= 0) return false;
+      await sleepImpl(pause);
+    }
+    return false;
   }
   async function closeRoom(room, publisherIdentity) {
     let revokeError;
@@ -204,7 +224,7 @@ export function createLiveHandler({ env, fetchImpl = globalThis.fetch, cryptoImp
         return response(200, { ended: true, streamId: s.stream_id }, headers);
       }
       if (s.state === 'ended' || !recent(s.heartbeat_at)) fail(409, 'STREAM_STALE', 'La sesión venció o ya terminó.');
-      if (!await publisherPresent(s)) fail(409, 'MEDIA_NOT_PUBLISHING', 'La cámara y el micrófono todavía no están publicando en el servidor.');
+      if (!await (action === 'confirm' ? confirmPublisherPresent(s) : publisherPresent(s))) fail(409, 'MEDIA_NOT_PUBLISHING', 'La cámara y el micrófono todavía no están publicando en el servidor.');
       const result = session(await rpc('campus_live_transition', { ...params(eventId, s.stream_id, ownerId), p_action: action }), eventId, ownerId);
       if (result.state !== 'live') fail(502, 'LIVE_SESSION_INVALID', 'El servidor no confirmó la emisión.');
       return response(200, { live: true, streamId: s.stream_id }, headers);

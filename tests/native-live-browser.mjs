@@ -42,6 +42,13 @@ async function contextFor(backend,{width=1366,height=768,capture=false}={}){
  const context=await browser.newContext({viewport:{width,height},isMobile:width<700,hasTouch:width<700,permissions:capture?['camera','microphone']:[]});
  await context.addInitScript(()=>{
   window.__captureCalls=0;window.__captureTracks=[];window.__captureErrors=[];
+  window.__nativeRTCPeers=new Set();
+  // Passive observation only: the constructor, SDP, transport, media and method
+  // return values remain native. This gives getStats() access to real SFU RTP.
+  const setRemoteDescription=RTCPeerConnection.prototype.setRemoteDescription;
+  RTCPeerConnection.prototype.setRemoteDescription=function(...args){
+   window.__nativeRTCPeers.add(this);return Reflect.apply(setRemoteDescription,this,args);
+  };
   const original=navigator.mediaDevices?.getUserMedia?.bind(navigator.mediaDevices);
   if(original)navigator.mediaDevices.getUserMedia=async constraints=>{
    window.__captureCalls++;
@@ -56,9 +63,22 @@ async function contextFor(backend,{width=1366,height=768,capture=false}={}){
  return{context,page};
 }
 function safeText(value){return String(value).replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g,'[redacted token]').replace(/((?:https?|wss?):\/\/[^\s?\"'#)]+)[?#][^\s\"')]+/g,'$1?[redacted query]');}
+async function inboundAudioRTP(page){
+ return page.evaluate(async()=>{
+  const rows=[];let index=0;
+  for(const pc of window.__nativeRTCPeers||[]){
+   const peer=index++;
+   try{
+    const stats=await pc.getStats();
+    for(const value of stats.values())if(value.type==='inbound-rtp'&&(value.kind==='audio'||value.mediaType==='audio'))rows.push({id:`${peer}:${value.id}`,bytesReceived:Number(value.bytesReceived||0),packetsReceived:Number(value.packetsReceived||0),totalSamplesReceived:value.totalSamplesReceived??null,totalAudioEnergy:value.totalAudioEnergy??null});
+   }catch{}
+  }
+  return rows;
+ });
+}
 async function diagnostics(page,{captureCause=false}={}){
  if(!page)return null;
- const detail=await page.evaluate(async()=>({state:document.querySelector('#native-live-panel')?.dataset.state,status:document.querySelector('#native-live-status')?.textContent,captureCalls:window.__captureCalls,captureErrors:window.__captureErrors,tracks:window.__captureTracks?.map(track=>({kind:track.kind,state:track.readyState,enabled:track.enabled})),permissions:await Promise.all(['camera','microphone'].map(async name=>({name,state:(await navigator.permissions.query({name})).state})))})).catch(error=>({readError:error.message}));
+ const detail=await page.evaluate(async()=>({state:document.querySelector('#native-live-panel')?.dataset.state,status:document.querySelector('#native-live-status')?.textContent,captureCalls:window.__captureCalls,captureErrors:window.__captureErrors,rtcPeerConnections:window.__nativeRTCPeers?.size,tracks:window.__captureTracks?.map(track=>({kind:track.kind,state:track.readyState,enabled:track.enabled})),permissions:await Promise.all(['camera','microphone'].map(async name=>({name,state:(await navigator.permissions.query({name})).state})))})).catch(error=>({readError:error.message}));
  if(captureCause)detail.directPrepare=await page.evaluate(async()=>{
   const {createNativeLive}=await import('/js/native-live.js');const video=document.createElement('video');document.body.append(video);
   const live=createNativeLive({request:async()=>{throw Error('Unexpected backend request from preview diagnostic');}});
@@ -66,7 +86,7 @@ async function diagnostics(page,{captureCause=false}={}){
   catch(error){return{name:error.name,message:error.message,cause:error.cause?{name:error.cause.name,message:error.cause.message,stack:error.cause.stack}:null};}
   finally{await live.destroy().catch(()=>{});video.remove();}
  }).catch(error=>({diagnosticError:error.message}));
- detail.console=page.nativeConsole;detail.pageErrors=page.nativePageErrors;
+ detail.console=page.nativeConsole;detail.pageErrors=page.nativePageErrors;detail.inboundAudioRTP=await inboundAudioRTP(page).catch(()=>[]);
  return JSON.parse(JSON.stringify(detail,(key,value)=>typeof value==='string'?safeText(value):value));
 }
 async function openEvents(page){await page.waitForFunction(()=>!document.querySelector('#open-events')?.disabled);await page.locator('#open-events').click();await page.locator('#events-dialog').waitFor({state:'visible'});}
@@ -141,7 +161,8 @@ try{
     await noOverflow(hostPage);
     backend.state.holdConfirm=true;
     await hostPage.locator('#native-live-start').click();
-    await until(()=>typeof backend.state.releaseConfirm==='function','The production handler never verified the published tracks');
+    await until(()=>typeof backend.state.releaseConfirm==='function'||backend.state.nativeResponses.some(response=>response.action==='confirm'&&response.status>=400),'The production handler never verified the published tracks');
+    if(typeof backend.state.releaseConfirm!=='function')throw Error(`Server confirmation failed: ${backend.state.nativeResponses.find(response=>response.action==='confirm'&&response.status>=400)?.errorCode||'unknown error'}`);
     assert.equal(await hostPage.locator('#native-live-panel').getAttribute('data-state'),'connecting','LIVE must wait for server confirmation');
     assert.equal(backend.state.event.live_state,'scheduled');
     backend.state.releaseConfirm();backend.state.holdConfirm=false;
@@ -152,11 +173,14 @@ try{
     await remoteVideo.waitFor({state:'attached'});await remoteVideo.scrollIntoViewIfNeeded();
     await stateIs(viewerPage,'playing');await remoteVideo.waitFor({state:'visible'});
     await viewerPage.waitForFunction(()=>{const video=document.querySelector('#native-live-remote video');return video?.videoWidth>0&&video.readyState>=2;});
+    await viewerPage.waitForFunction(()=>document.querySelector('#native-live-remote audio')?.srcObject?.getAudioTracks().some(track=>track.readyState==='live'));
+    await until(async()=>(await inboundAudioRTP(viewerPage)).some(row=>row.bytesReceived>0&&row.packetsReceived>0),'The viewer did not receive real inbound audio RTP');
+    const audioBefore=await inboundAudioRTP(viewerPage);
     const before=await remoteVideo.evaluate(video=>({frames:video.getVideoPlaybackQuality().totalVideoFrames,width:video.videoWidth,height:video.videoHeight}));
     await viewerPage.waitForTimeout(1600);
-    const after=await remoteVideo.evaluate(video=>video.getVideoPlaybackQuality().totalVideoFrames);
+    const after=await remoteVideo.evaluate(video=>video.getVideoPlaybackQuality().totalVideoFrames),audioAfter=await inboundAudioRTP(viewerPage);
     assert.ok(after>before.frames+2,`No advancing decoded video frames: ${before.frames} -> ${after}`);
-    await viewerPage.waitForFunction(()=>document.querySelector('#native-live-remote audio')?.srcObject?.getAudioTracks().some(track=>track.readyState==='live'));
+    assert.ok(audioAfter.some(row=>{const previous=audioBefore.find(before=>before.id===row.id);return previous&&row.bytesReceived>previous.bytesReceived&&row.packetsReceived>previous.packetsReceived;}),`Inbound audio RTP did not advance: ${JSON.stringify({before:audioBefore,after:audioAfter})}`);
     assert.equal(await viewerPage.evaluate(()=>window.__captureCalls),0,'Watching must never request camera or microphone');
     await noOverflow(viewerPage);await noOverflow(hostPage);
     await hostPage.screenshot({path:path.join(output,`native-live-${name}-host.png`),fullPage:true});
@@ -193,10 +217,10 @@ try{
     assert.equal(await viewerPage.evaluate(()=>window.__captureCalls),0);
     const stopped=await backend.invoke('view',{eventId:EVENT},null);assert.ok(stopped.status>=400,'A stopped stream must not issue new viewer credentials');
     assert.deepEqual(backend.state.unexpected,[]);assert.deepEqual(hostPage.nativePageErrors,[]);assert.deepEqual(viewerPage.nativePageErrors,[]);
-    return{decodedFramesBefore:before.frames,decodedFramesAfter:after,videoWidth:before.width,videoHeight:before.height,audioTrackReceived:true,viewerCaptureRequests:0};
+    return{decodedFramesBefore:before.frames,decodedFramesAfter:after,videoWidth:before.width,videoHeight:before.height,audioTrackReceived:true,audioRTP:{before:audioBefore,after:audioAfter},viewerCaptureRequests:0,providerSnapshots:backend.state.providerSnapshots,nativeResponses:backend.state.nativeResponses};
    }catch(error){
     if(backend.state.releaseConfirm)backend.state.releaseConfirm();
-    const debug={host:await diagnostics(hostPage,{captureCause:backend.state.sessions.size===0}),viewer:await diagnostics(viewerPage),actions:backend.state.actions.map(item=>({action:item.action,transition:item.payload.p_action})),unexpected:backend.state.unexpected};
+    const debug={host:await diagnostics(hostPage,{captureCause:backend.state.sessions.size===0}),viewer:await diagnostics(viewerPage),actions:backend.state.actions.map(item=>({action:item.action,transition:item.payload.p_action})),unexpected:backend.state.unexpected,providerSnapshots:backend.state.providerSnapshots,nativeResponses:backend.state.nativeResponses};
     error.nativeDiagnostics=debug;
     error.message+='\nDiagnostic: '+JSON.stringify(debug);
     for(const [role,page]of[['host',hostPage],['viewer',viewerPage]])if(page)await page.screenshot({path:path.join(output,`native-live-${name}-${role}-failure.png`),fullPage:true}).catch(()=>{});
