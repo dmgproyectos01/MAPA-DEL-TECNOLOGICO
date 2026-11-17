@@ -24,7 +24,18 @@ if(executablePath==='/usr/bin/chromium'&&existsSync('/etc/chromium/policies/mana
  try{managedRTCPolicy=JSON.parse(await readFile('/etc/chromium/policies/managed/misc.json','utf8')).WebRtcIPHandling||null;}catch{}
 }
 if(managedRTCPolicy==='disable_non_proxied_udp')report.environmentBlocked={source:'/etc/chromium/policies/managed/misc.json',policy:'WebRtcIPHandling',value:managedRTCPolicy,message:'The managed local browser prohibits direct RTC transport. No policy was changed. Real transport assertions require the normal fresh CI browser.'};
-const browser=await chromium.launch({...(executablePath?{executablePath}:{}),headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--use-fake-device-for-media-stream','--autoplay-policy=no-user-gesture-required','--allow-loopback-in-peer-connection']});
+// Use the full Chromium browser's new headless mode for native media coverage.
+// The default headless shell is a separate binary with different capabilities.
+// https://playwright.dev/docs/browsers#chromium-new-headless-mode
+const browser=await chromium.launch({...(executablePath?{executablePath}:{channel:'chromium'}),headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--use-fake-device-for-media-stream','--autoplay-policy=no-user-gesture-required','--allow-loopback-in-peer-connection']});
+report.browser={version:browser.version(),selection:executablePath?'explicit executable':'full Chromium new headless',channel:executablePath?null:'chromium'};
+try{
+ const cdp=await browser.newBrowserCDPSession();const command=await cdp.send('Browser.getBrowserCommandLine');
+ report.browser.binary=path.basename(command.arguments[0]);
+ report.browser.fakeDeviceCapture=command.arguments.includes('--use-fake-device-for-media-stream');
+ await cdp.detach();
+}catch{report.browser.commandLineAvailable=false;}
+
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function until(callback,message,timeout=15000){const end=Date.now()+timeout;while(Date.now()<end){if(await callback())return;await pause(100);}throw Error(message);}
 async function contextFor(backend,{width=1366,height=768,capture=false}={}){
