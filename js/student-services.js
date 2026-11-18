@@ -3,7 +3,7 @@ import {normalize} from './search.js';
 export function filterStudentServices(services, query = '', category = 'Todos') {
   const words = normalize(query).split(/\s+/).filter(Boolean);
   return services.filter(service => (category === 'Todos' || service.category === category) && words.every(word =>
-    normalize([service.title, service.summary, ...(service.keywords || []), ...(service.sections || []).flatMap(section => [section.title, section.text])].join(' ')).includes(word)));
+    normalize([service.title, service.summary, service.category, ...(service.links || []).map(link => link.label), ...(service.keywords || []), ...(service.sections || []).flatMap(section => [section.title, section.text])].join(' ')).includes(word)));
 }
 
 export function safeServiceUrl(value) {
@@ -20,7 +20,7 @@ const node = (tag, className, text) => {
 export async function initStudentServices({button, dialog, selectLocation, notify = () => {}}) {
   let services;
   try {
-    const response = await fetch('data/student-services.json?v=student-services-v1', {cache: 'no-store'});
+    const response = await fetch('data/student-services.json?v=student-services-v2', {cache: 'no-store'});
     if (!response.ok) throw Error('No se pudo cargar la guía');
     ({services} = await response.json());
     if (!Array.isArray(services)) throw Error('Guía inválida');
@@ -84,6 +84,10 @@ export async function initStudentServices({button, dialog, selectLocation, notif
       if (sourceUrl) {
         const anchor = node('a', '', service.source.label); anchor.href = sourceUrl; anchor.target = '_blank'; anchor.rel = 'noopener noreferrer'; source.append('Fuente: ', anchor);
       } else source.textContent = `Fuente: ${service.source?.label || 'Directorio del campus'}`;
+      if (service.source?.checkedAt) {
+        const date = new Date(service.source.checkedAt + 'T12:00:00Z');
+        if (Number.isFinite(date.getTime())) source.append(' · Consultado el ' + new Intl.DateTimeFormat('es-MX', {timeZone: 'America/Mazatlan', dateStyle: 'long'}).format(date));
+      }
       body.append(source);
       details.append(summary, body); details.open = service.id === selectedId;
       list.append(details);

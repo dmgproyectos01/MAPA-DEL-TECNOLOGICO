@@ -25,6 +25,18 @@ try {
     await page.locator('#student-services-search').fill('evaluacion vocacional');
     await page.locator('[data-service-id="evaluacion-vocacional"] summary').click();
     assert.match(await dialog.innerText(), /coordinación de la carrera de destino/);
+    assert.match(await dialog.locator('[data-service-id="evaluacion-vocacional"] a').getAttribute('href'), /itculiacanedu.sharepoint.com/);
+    await page.locator('#student-services-search').fill('kardex');
+    const escolar = dialog.locator('[data-service-id="control-escolar"]');
+    await escolar.locator('summary').click();
+    assert.match(await escolar.innerText(), /08:00 a 18:00/);
+    assert.match(await escolar.innerText(), /Consultado el/);
+    assert.equal(await escolar.locator('a').first().getAttribute('href'), 'https://www.culiacan.tecnm.mx/control-escolar/');
+    await page.locator('#student-services-search').fill('');
+    await dialog.getByRole('button', {name: 'Bienestar', exact: true}).click();
+    assert.equal(await dialog.locator('[data-service-id="control-escolar"]').count(), 0);
+    assert.ok(await dialog.locator('[data-service-id="seguro-thona"]').count());
+    await dialog.getByRole('button', {name: 'Todos', exact: true}).click();
     await page.locator('#student-services-search').fill('sin-coincidencias');
     assert.match(await dialog.innerText(), /No encontramos ese servicio/);
     await page.keyboard.press('Escape'); await dialog.waitFor({state: 'hidden'});

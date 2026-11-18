@@ -66,7 +66,7 @@ await initRoutes(locations,camera,notify);
 const {initPreferences}=await import('./preferences.js?v=levels-v1');
 initPreferences(locations,storage,selectLocation,notify);
 
-const {initStudentServices}=await import('./student-services.js?v=student-services-v1');
+const {initStudentServices}=await import('./student-services.js?v=student-services-v2');
 await initStudentServices({button:document.querySelector('#open-student-services'),dialog:document.querySelector('#student-services-dialog'),selectLocation,notify});
 
 const eventsButton=document.querySelector('#open-events');

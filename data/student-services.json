@@ -93,36 +93,80 @@
       "id": "biblioteca",
       "category": "Apoyo académico",
       "title": "Centro de Información · Biblioteca",
-      "summary": "Localiza el Centro de Información en el mapa del campus.",
+      "summary": "Préstamo de libros, consulta en sala, cubículos de estudio, computadoras y recursos digitales.",
       "keywords": [
         "libros",
         "biblioteca",
         "estudiar"
       ],
-      "sections": [],
-      "links": [],
+      "sections": [
+        {
+          "title": "Para solicitar libros",
+          "text": "Presenta tu credencial institucional vigente. Si no cuentas con ella, lleva una identificación con fotografía y acredita tu vigencia. Nuevo ingreso debe registrarse en el sistema de préstamos."
+        },
+        {
+          "title": "Préstamos",
+          "text": "El tríptico publicado indica préstamos de consulta por tres días, literatura por siete días y una renovación. Revisa las condiciones y sanciones completas en el reglamento."
+        },
+        {
+          "title": "Contacto",
+          "text": "Conmutador 667-454-0100, extensiones 1250 y 1251."
+        }
+      ],
+      "links": [
+        {
+          "label": "Servicios de biblioteca · PDF, 20 MB",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2024/04/2TRIP_CENTRO-INFORMACION-2024.pdf"
+        },
+        {
+          "label": "Reglamento de biblioteca",
+          "url": "https://www.culiacan.tecnm.mx/reglamento-del-centro-de-informacion/"
+        }
+      ],
       "locationId": "I",
       "source": {
-        "label": "Directorio del mapa del campus",
-        "type": "campus-map"
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2024/04/2TRIP_CENTRO-INFORMACION-2024.pdf",
+        "type": "official",
+        "checkedAt": "2026-11-18"
       }
     },
     {
       "id": "idiomas",
       "category": "Apoyo académico",
       "title": "CELE · Idiomas",
-      "summary": "Encuentra el edificio de Idiomas en el campus.",
+      "summary": "Informes de la Coordinación de Lenguas Extranjeras y acceso al programa de inglés.",
       "keywords": [
         "inglés",
         "lenguas",
         "CELE"
       ],
-      "sections": [],
-      "links": [],
+      "sections": [
+        {
+          "title": "Atención publicada",
+          "text": "Lunes a viernes, de 08:00 a 15:00. Conmutador 667-454-0100, extensiones 1270 y 1271."
+        },
+        {
+          "title": "Inscripciones",
+          "text": "Consulta con CLE el periodo actual: la página del programa contiene fechas de inscripción de 2023, que no corresponden al semestre actual."
+        }
+      ],
+      "links": [
+        {
+          "label": "Informes y contacto de CLE",
+          "url": "https://www.culiacan.tecnm.mx/cle-informes/"
+        },
+        {
+          "label": "Programa e inscripciones",
+          "url": "https://www.culiacan.tecnm.mx/cle-programa-e-inscripciones/"
+        }
+      ],
       "locationId": "O",
       "source": {
-        "label": "Directorio del mapa del campus",
-        "type": "campus-map"
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/cle-informes/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
       }
     },
     {
@@ -146,37 +190,68 @@
     {
       "id": "medico",
       "category": "Bienestar",
-      "title": "Consultorio médico",
-      "summary": "El consultorio médico está registrado entre los servicios del edificio H.",
+      "title": "Consultorio médico y dental",
+      "summary": "Consulta médica, medicina de primer contacto y atención dental para limpiezas generales.",
       "keywords": [
         "doctor",
         "médico",
         "salud"
       ],
-      "sections": [],
-      "links": [],
+      "sections": [
+        {
+          "title": "Edificio H · consulta médica",
+          "text": "El cartel oficial publica atención de lunes a viernes de 07:00 a 11:00 y de 14:00 a 16:00; de lunes a jueves también de 16:00 a 19:00."
+        },
+        {
+          "title": "Actividades Extraescolares",
+          "text": "El cartel también registra consultorio médico en este departamento: lunes a viernes de 16:00 a 19:00."
+        },
+        {
+          "title": "Dentista y enfermería · edificio H",
+          "text": "Dentista general: lunes a viernes de 08:00 a 12:00. Enfermería: lunes a viernes de 08:00 a 14:00."
+        }
+      ],
+      "links": [
+        {
+          "label": "Ver cartel de servicios médicos",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2026/04/SERVICIOS-MEDICOS-DEL-ITC.jpg"
+        }
+      ],
       "locationId": "H",
       "source": {
-        "label": "Directorio del mapa del campus",
-        "type": "campus-map"
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2026/04/SERVICIOS-MEDICOS-DEL-ITC.jpg",
+        "type": "official",
+        "checkedAt": "2026-11-18"
       }
     },
     {
       "id": "deportes-cultura",
       "category": "Vida estudiantil",
       "title": "Promoción Deportiva y Cultural",
-      "summary": "Localiza el área de Promoción Deportiva y Cultural.",
+      "summary": "Consulta las actividades deportivas y culturales y encuentra el departamento de Actividades Extraescolares.",
       "keywords": [
         "deportes",
         "cultura",
         "actividades"
       ],
       "sections": [],
-      "links": [],
+      "links": [
+        {
+          "label": "Actividades Extraescolares",
+          "url": "https://www.culiacan.tecnm.mx/actividades-extraescolares/"
+        },
+        {
+          "label": "Créditos de actividades complementarias",
+          "url": "https://www.culiacan.tecnm.mx/actividades-complementarias/"
+        }
+      ],
       "locationId": "G",
       "source": {
-        "label": "Directorio del mapa del campus",
-        "type": "campus-map"
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/actividades-complementarias/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
       }
     },
     {
@@ -197,12 +272,750 @@
         {
           "label": "Abrir sitio oficial",
           "url": "https://www.culiacan.tecnm.mx/"
+        },
+        {
+          "label": "Directorio institucional",
+          "url": "https://www.culiacan.tecnm.mx/directorio/"
         }
       ],
       "source": {
-        "label": "Sitio institucional",
+        "label": "Tecnológico de Culiacán · sitio oficial",
         "url": "https://www.culiacan.tecnm.mx/",
-        "type": "official-link"
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "ambar",
+      "category": "Enlaces oficiales",
+      "title": "AMBAR · portal académico",
+      "summary": "Acceso a la plataforma AMBAR enlazada por el Tecnológico para alumnos y docentes.",
+      "keywords": [
+        "sistema",
+        "alumnos",
+        "plataforma",
+        "portal académico",
+        "estudiantes"
+      ],
+      "sections": [],
+      "links": [
+        {
+          "label": "Entrar a AMBAR",
+          "url": "https://culiacan.ambar.tecnm.mx/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "control-escolar",
+      "category": "Trámites",
+      "title": "Control Escolar · constancias y kárdex",
+      "summary": "Expedición de constancias, kárdex, duplicados de boletas y certificados.",
+      "keywords": [
+        "constancia",
+        "kardex",
+        "boletas",
+        "certificado",
+        "escolares"
+      ],
+      "sections": [
+        {
+          "title": "Horario publicado",
+          "text": "Lunes a jueves de 08:00 a 18:00; viernes de 08:00 a 15:00."
+        },
+        {
+          "title": "Contacto",
+          "text": "Servicios Escolares: conmutador 667-454-0100, extensiones 1240 y 1241. Consulta el directorio para comunicarte con el área."
+        }
+      ],
+      "links": [
+        {
+          "label": "Servicios y horarios",
+          "url": "https://www.culiacan.tecnm.mx/control-escolar/"
+        },
+        {
+          "label": "Directorio institucional",
+          "url": "https://www.culiacan.tecnm.mx/directorio/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/control-escolar/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "servicios-estudiantiles",
+      "category": "Trámites",
+      "title": "Servicios Estudiantiles",
+      "summary": "Orientación para trámites de seguro facultativo y titulación.",
+      "keywords": [
+        "seguro",
+        "imss",
+        "becas",
+        "titulacion"
+      ],
+      "sections": [
+        {
+          "title": "Horario publicado",
+          "text": "Lunes a viernes de 08:00 a 15:00."
+        },
+        {
+          "title": "Becas",
+          "text": "Consulta las convocatorias actuales del portal y confirma con Servicios Estudiantiles los apoyos disponibles; la página de horarios conserva referencias a programas anteriores."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/control-escolar/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/control-escolar/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "servicio-social",
+      "category": "Trámites",
+      "title": "Servicio social",
+      "summary": "Consulta los requisitos, la inducción y los formatos para iniciar y acreditar tu servicio social.",
+      "keywords": [
+        "70",
+        "créditos",
+        "480",
+        "inducción",
+        "vinculación"
+      ],
+      "sections": [
+        {
+          "title": "Requisitos publicados",
+          "text": "Al menos 70 % de créditos aprobados y asistencia al curso de inducción. La página indica 480 horas en un periodo de seis meses a dos años."
+        },
+        {
+          "title": "Dónde iniciar",
+          "text": "Oficina de Servicio Social, en el Departamento de Gestión Tecnológica y Vinculación. Revisa los formatos correspondientes a tu plan de estudios y las fechas de inducción actuales."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/servicio-social/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/servicio-social/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "residencias",
+      "category": "Trámites",
+      "title": "Residencias profesionales",
+      "summary": "Requisitos, proyecto y formatos para realizar tus residencias.",
+      "keywords": [
+        "80",
+        "prácticas",
+        "proyecto",
+        "empresa",
+        "vinculación"
+      ],
+      "sections": [
+        {
+          "title": "Requisitos publicados",
+          "text": "Mínimo 80 % de créditos, servicio social y actividades complementarias acreditados, y ninguna asignatura en Curso Especial."
+        },
+        {
+          "title": "Proyecto y duración",
+          "text": "La página contempla banco de proyectos o propuesta propia, de cuatro a seis meses y 500 horas acumuladas. Consulta los formatos y la convocatoria del periodo que te corresponde."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/residencias-profesionales/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/residencias-profesionales/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "titulacion",
+      "category": "Trámites",
+      "title": "Opciones y formatos de titulación",
+      "summary": "Elige los requisitos correspondientes a tu plan de estudios.",
+      "keywords": [
+        "título",
+        "egreso",
+        "competencias",
+        "1993",
+        "2004",
+        "2009"
+      ],
+      "sections": [
+        {
+          "title": "Según tu plan",
+          "text": "La página separa planes 1993–1994, 2004–2005, 2009–2010 y planes por competencias. Revisa el tríptico y los formatos de tu generación."
+        },
+        {
+          "title": "Contacto",
+          "text": "Conmutador 667-454-0100, extensión de Titulación 1322, según el directorio institucional."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/requisitos-de-titulacion/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/requisitos-de-titulacion/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "complementarias",
+      "category": "Vida estudiantil",
+      "title": "Actividades complementarias · créditos",
+      "summary": "Recoge tu crédito complementario en el departamento donde realizaste la actividad.",
+      "keywords": [
+        "crédito",
+        "tutorías",
+        "deporte",
+        "cultura",
+        "constancia",
+        "liberación"
+      ],
+      "sections": [
+        {
+          "title": "Áreas de atención",
+          "text": "El directorio de actividades incluye Desarrollo Académico, Extraescolares, Centro de Información y departamentos de carrera. Consulta la actividad específica para identificar el área responsable."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/actividades-complementarias/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/actividades-complementarias/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "tutorias",
+      "category": "Apoyo académico",
+      "title": "Tutorías y Desarrollo Académico",
+      "summary": "Apoyo al proceso educativo mediante el Programa Institucional de Tutoría.",
+      "keywords": [
+        "tutor",
+        "acompañamiento",
+        "inducción",
+        "desarrollo académico"
+      ],
+      "sections": [
+        {
+          "title": "Contacto",
+          "text": "Conmutador 667-454-0100, extensiones 1310 y 1311, según el directorio institucional."
+        }
+      ],
+      "links": [
+        {
+          "label": "Desarrollo Académico",
+          "url": "https://www.culiacan.tecnm.mx/desarrollo-academico/"
+        },
+        {
+          "label": "Directorio institucional",
+          "url": "https://www.culiacan.tecnm.mx/directorio/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/desarrollo-academico/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "coordinaciones",
+      "category": "Apoyo académico",
+      "title": "Coordinaciones de carrera · Estudios Profesionales",
+      "summary": "Encuentra a la coordinación de tu carrera y los canales de atención de Estudios Profesionales.",
+      "keywords": [
+        "cambio de carrera",
+        "coordinador",
+        "carga",
+        "coordinación",
+        "estudios profesionales"
+      ],
+      "sections": [
+        {
+          "title": "Contacto",
+          "text": "Conmutador 667-454-0100, extensiones 1320 y 1321. El directorio detalla las coordinaciones por carrera."
+        }
+      ],
+      "links": [
+        {
+          "label": "Directorio de coordinaciones",
+          "url": "https://www.culiacan.tecnm.mx/directorio/"
+        },
+        {
+          "label": "División de Estudios Profesionales",
+          "url": "https://www.culiacan.tecnm.mx/division-de-estudios/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/directorio/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "biblioteca-digital",
+      "category": "Apoyo académico",
+      "title": "Bibliotecas digitales y eLibro",
+      "summary": "Accede a libros electrónicos y recursos de información de acceso abierto.",
+      "keywords": [
+        "elibro",
+        "digital",
+        "investigación",
+        "libros",
+        "bases de datos",
+        "tutorial"
+      ],
+      "sections": [],
+      "links": [
+        {
+          "label": "Plataforma eLibro",
+          "url": "https://elibro.net/es/lc/itculiacan/inicio/"
+        },
+        {
+          "label": "Tutorial de eLibro",
+          "url": "https://drive.google.com/file/d/1ojp69NKLzT-pk3a2jv0cRsn64DdxP35o/view?usp=drive_link"
+        },
+        {
+          "label": "Recursos de acceso abierto",
+          "url": "https://www.culiacan.tecnm.mx/recursos-de-informacion/"
+        },
+        {
+          "label": "Bibliotecas digitales TecNM",
+          "url": "https://www.tecnm.mx/?vista=TecNM_Virtual&tecnm_virtual=Bibliotecas"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "seguro-imss",
+      "category": "Bienestar",
+      "title": "Seguro facultativo · IMSS",
+      "summary": "Consulta cómo revisar tu vigencia y tramitar el seguro de salud para estudiantes.",
+      "keywords": [
+        "afiliación",
+        "seguro",
+        "salud",
+        "vigencia",
+        "curp"
+      ],
+      "sections": [
+        {
+          "title": "Vigencia de derechos",
+          "text": "El folleto institucional indica revisar la vigencia con CURP y correo electrónico. Si sigues dado de alta en bachillerato, solicita la baja en esa institución y lleva el comprobante a Servicios Escolares para gestionar el alta del ITC."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2024/04/SEGURO-FACULTATIVO-2024.pdf"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2024/04/SEGURO-FACULTATIVO-2024.pdf",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "seguro-thona",
+      "category": "Bienestar",
+      "title": "Seguro escolar y de vida · THONA",
+      "summary": "Información institucional de cobertura, documentación y solicitud de reclamos.",
+      "keywords": [
+        "accidentes",
+        "póliza",
+        "reembolso",
+        "vida",
+        "seguro"
+      ],
+      "sections": [
+        {
+          "title": "Atención para reclamos",
+          "text": "El documento publica atención en Servicios Escolares de lunes a viernes de 08:00 a 13:30."
+        },
+        {
+          "title": "Antes de solicitarlo",
+          "text": "Consulta el documento 2026: distingue accidentes escolares, seguro de vida, exclusiones, plazos y documentación. Confirma tu póliza y cobertura con Servicios Escolares."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2026/04/THONA-SEGUROS-2026.pdf"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2026/04/THONA-SEGUROS-2026.pdf",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "calendario",
+      "category": "Trámites",
+      "title": "Calendario escolar · agosto–diciembre 2026",
+      "summary": "Consulta el calendario oficial del semestre agosto–diciembre de 2026.",
+      "keywords": [
+        "fechas",
+        "semestre",
+        "inscripciones",
+        "carga",
+        "vacaciones"
+      ],
+      "sections": [
+        {
+          "title": "Periodo",
+          "text": "Agosto–diciembre de 2026. Si consultas esta guía en otro semestre, revisa el calendario actualizado del portal."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/calendario-escolar-para-agosto-diciembre-2026/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/calendario-escolar-para-agosto-diciembre-2026/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "cuotas",
+      "category": "Trámites",
+      "title": "Cuotas de servicios · agosto–diciembre 2026",
+      "summary": "Consulta los importes publicados para el semestre agosto–diciembre de 2026.",
+      "keywords": [
+        "pago",
+        "costo",
+        "inscripción",
+        "recibo",
+        "dinero"
+      ],
+      "sections": [
+        {
+          "title": "Periodo",
+          "text": "Importes del semestre agosto–diciembre de 2026. Confirma la cuota aplicable a tu trámite antes de pagar."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/conoce-las-cuotas-de-servicios-para-el-semestre-agosto-diciembre-2026/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/conoce-las-cuotas-de-servicios-para-el-semestre-agosto-diciembre-2026/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "recibo-fiscal",
+      "category": "Trámites",
+      "title": "Recibo oficial deducible de impuestos",
+      "summary": "Accede a las instrucciones y al formulario de Recursos Financieros.",
+      "keywords": [
+        "factura",
+        "facturación",
+        "fiscal",
+        "pago",
+        "depósito",
+        "recibo"
+      ],
+      "sections": [
+        {
+          "title": "Instrucción publicada",
+          "text": "La página indica llenar el formulario como máximo dos días después del depósito bancario. Revisa las instrucciones antes de solicitar el recibo."
+        }
+      ],
+      "links": [
+        {
+          "label": "Instrucciones oficiales",
+          "url": "https://www.culiacan.tecnm.mx/necesitas-recibo-oficial-deducible-de-impuestos/"
+        },
+        {
+          "label": "Formulario de recibo oficial",
+          "url": "https://forms.cloud.microsoft/r/gvF9d0LFuv?origin=lprLink"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/necesitas-recibo-oficial-deducible-de-impuestos/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "financieros",
+      "category": "Trámites",
+      "title": "Recursos Financieros · atención",
+      "summary": "Consulta el aviso de horarios de ventanilla bancaria y atención por correo.",
+      "keywords": [
+        "pago",
+        "banco",
+        "ventanilla",
+        "finanzas"
+      ],
+      "sections": [
+        {
+          "title": "Aviso publicado",
+          "text": "El aviso de febrero de 2023 indica lunes a viernes de 08:00 a 18:00. Confirma el horario actual con Recursos Financieros."
+        },
+        {
+          "title": "Contacto",
+          "text": "Conmutador 667-454-0100, extensiones 1110 y 1111, según el directorio."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/horarios-de-atencion-en-ventanilla-bancaria-y-en-correo-electronico/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/horarios-de-atencion-en-ventanilla-bancaria-y-en-correo-electronico/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "reglamentos",
+      "category": "Trámites",
+      "title": "Reglamento estudiantil y lineamientos académicos",
+      "summary": "Consulta las normas de evaluación, acreditación, equivalencia y convalidación según tu plan.",
+      "keywords": [
+        "reglamento",
+        "normas",
+        "evaluación",
+        "acreditación",
+        "equivalencia",
+        "convalidación",
+        "plan 2015",
+        "2004",
+        "2009"
+      ],
+      "sections": [
+        {
+          "title": "Elige tu plan",
+          "text": "El portal distingue documentos de planes 2004–2005, 2009–2010 y 2015. Verifica el plan aplicable antes de iniciar un trámite."
+        }
+      ],
+      "links": [
+        {
+          "label": "Reglamento de Estudiantes · PDF",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2024/04/Reglamento_de_Estudiantes_del_TecNM.pdf"
+        },
+        {
+          "label": "Manual académico-administrativo · plan 2015",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2015/11/Manual_de_Lineamientos_TecNM-plan-2015.pdf"
+        },
+        {
+          "label": "Evaluación y acreditación · desde agosto 2015",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2022/06/R4.1.-ManuallineamientosacademicoadministrativosTecNM-33-47.pdf"
+        },
+        {
+          "label": "Acreditación · plan 2004–2005",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2015/11/2-ACREDITACION-DE-ASIGNATURAS.pdf"
+        },
+        {
+          "label": "Equivalencia · plan 2004–2005",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2015/11/7-EQUIVALENCIAS-DE-ESTUDIOS.pdf"
+        },
+        {
+          "label": "Convalidación · plan 2004–2005",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2015/11/5.-CONVALIDACION-DE-ESTUDIOS.pdf"
+        },
+        {
+          "label": "Acreditación · plan 2009–2010",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2015/11/Lineamiento-para-la-Evaluaci%C3%B3n-y-Acreditaci%C3%B3n-de-Asignaturas-plan-2009-2010.pdf"
+        },
+        {
+          "label": "Equivalencia · plan 2009–2010",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2015/11/Lineamiento-para-la-Resoluci%C3%B3n-de-Equivalencia-de-Estudios-plan-2009-2010.pdf"
+        },
+        {
+          "label": "Convalidación · plan 2009–2010",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2015/11/Lineamiento-para-la-Convalidaci%C3%B3n-de-Estudios-plan-2009-2010.pdf"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "bolsa-trabajo",
+      "category": "Vida estudiantil",
+      "title": "Bolsa de trabajo",
+      "summary": "Consulta la bolsa de empleo para estudiantes y egresados enlazada por el Tecnológico.",
+      "keywords": [
+        "empleo",
+        "vacantes",
+        "currículum",
+        "egresados",
+        "OCC"
+      ],
+      "sections": [],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/bolsa-de-trabajo/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/bolsa-de-trabajo/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "buzon",
+      "category": "Vida estudiantil",
+      "title": "Buzón de quejas y sugerencias",
+      "summary": "Envía comentarios sobre formación, docencia, ventanillas y servicios estudiantiles.",
+      "keywords": [
+        "queja",
+        "sugerencia",
+        "atención",
+        "inconformidad"
+      ],
+      "sections": [
+        {
+          "title": "Cómo usarlo",
+          "text": "El formulario solicita correo institucional, tipo de queja o sugerencia y una descripción. La información se envía en el portal oficial."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/buzon-de-quejas-yo-sugerencias/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/buzon-de-quejas-yo-sugerencias/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "igualdad",
+      "category": "Bienestar",
+      "title": "Igualdad de género · atención y denuncia",
+      "summary": "Consulta el procedimiento, formato de denuncia y protocolos institucionales.",
+      "keywords": [
+        "acoso",
+        "hostigamiento",
+        "discriminación",
+        "denuncia",
+        "igualdad",
+        "violencia"
+      ],
+      "sections": [
+        {
+          "title": "Documentos disponibles",
+          "text": "La página enlaza el procedimiento y formato de denuncia, el protocolo frente al hostigamiento y acoso sexual, y el protocolo ante presuntos actos de discriminación."
+        }
+      ],
+      "links": [
+        {
+          "label": "Consultar información oficial",
+          "url": "https://www.culiacan.tecnm.mx/coordinacion-de-igualdad-de-genero/"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/coordinacion-de-igualdad-de-genero/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
+      }
+    },
+    {
+      "id": "sustentabilidad",
+      "category": "Vida estudiantil",
+      "title": "Campus sustentable · agua, energía y residuos",
+      "summary": "Guías institucionales sobre ahorro de energía, uso eficiente del agua y manejo de residuos.",
+      "keywords": [
+        "agua",
+        "energía",
+        "residuos",
+        "reciclaje",
+        "ambiente",
+        "sustentabilidad"
+      ],
+      "sections": [],
+      "links": [
+        {
+          "label": "Ahorro de energía · cartel",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2026/04/AHORRO-ENERGIA-2026-scaled.jpg"
+        },
+        {
+          "label": "Uso eficiente del agua · cartel",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2026/04/USO-DEL-AGUA-2026-scaled.jpg"
+        },
+        {
+          "label": "Manejo de residuos · cartel",
+          "url": "https://www.culiacan.tecnm.mx/wp-content/uploads/2026/04/RESIDUOS-SOLIDOS-2026-scaled.jpg"
+        }
+      ],
+      "source": {
+        "label": "Tecnológico de Culiacán · sitio oficial",
+        "url": "https://www.culiacan.tecnm.mx/",
+        "type": "official",
+        "checkedAt": "2026-11-18"
       }
     }
   ]

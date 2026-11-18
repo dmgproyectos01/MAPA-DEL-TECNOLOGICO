@@ -3521,7 +3521,8 @@
       "x": 584.111328125,
       "y": 438.818359375,
       "approximate": true
-    }
+    },
+    "studentServiceId": "deportes-cultura"
   },
   {
     "id": "I",
@@ -4740,7 +4741,8 @@
       "x": 636.181640625,
       "y": 211.220703125,
       "approximate": true
-    }
+    },
+    "studentServiceId": "biblioteca"
   },
   {
     "id": "2",
@@ -4871,10 +4873,10 @@
     ],
     "services": [
       "Aula Magna",
-      "Consultorio médico"
+      "Consultorio médico",
+      "Consultorio dental"
     ],
-    "description": "Información de servicios confirmada.",
-    "hours": "Lunes a viernes · 7:00 a. m. a 1:00 p. m. · America/Mazatlan",
+    "description": "Aula Magna, consultorio médico y consultorio dental. Consulta los horarios de cada servicio en su ficha.",
     "footprint": [
       [
         602.32,
@@ -4901,7 +4903,8 @@
       "x": 673.134765625,
       "y": 259.091796875,
       "approximate": true
-    }
+    },
+    "studentServiceId": "medico"
   },
   {
     "id": "J",
@@ -5332,7 +5335,8 @@
       "x": 787.353515625,
       "y": 402.705078125,
       "approximate": true
-    }
+    },
+    "studentServiceId": "idiomas"
   },
   {
     "id": "P",
@@ -10225,8 +10229,10 @@
     "category": "salud",
     "rooms": [],
     "services": [],
-    "description": "",
-    "hours": "Lunes a viernes · 7:00 a. m. a 1:00 p. m. · America/Mazatlan"
+    "description": "Atención dental para limpiezas generales en el edificio H, según el cartel oficial de Servicios Escolares.",
+    "hours": "Lunes a viernes · 08:00 a 12:00",
+    "buildingId": "H",
+    "studentServiceId": "medico"
   },
   {
     "id": "MIC",
