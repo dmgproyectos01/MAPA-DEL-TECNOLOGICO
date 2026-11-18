@@ -10216,7 +10216,8 @@
     "description": "Atención psicológica en Oficinas Administrativas. Agenda tu cita con el psicólogo.",
     "hours": "Lunes a viernes · 7:00 a. m. a 1:00 p. m. · America/Mazatlan",
     "buildingId": "L",
-    "appointmentUrl": "https://misael-burgos.youcanbook.me/"
+    "appointmentUrl": "https://misael-burgos.youcanbook.me/",
+    "studentServiceId": "psicologia-misael"
   },
   {
     "id": "DEN",
@@ -10250,5 +10251,25 @@
     "rooms": [],
     "services": [],
     "description": ""
+  },
+  {
+    "id": "PSIL",
+    "name": "Psicología · Alma Lorena López Ríos",
+    "category": "salud",
+    "rooms": [],
+    "services": [
+      "Atención psicológica gratuita",
+      "Atención anónima y confidencial"
+    ],
+    "aliases": [
+      "Psicóloga Lorena",
+      "Alma Lorena López Ríos",
+      "Desarrollo Académico",
+      "Psicología y tutorías"
+    ],
+    "description": "Edificio de Desarrollo Académico, enfrente del edificio de Control Escolar. Puerta de “Psicología y tutorías”, primera puerta a tu derecha. Requisito: estado activo o vigente en la institución.",
+    "appointmentUrl": "https://psicologa-lorena.youcanbook.me/",
+    "appointmentLabel": "Agendar cita con Alma Lorena",
+    "studentServiceId": "psicologia-lorena"
   }
 ]

@@ -1,0 +1,209 @@
+{
+  "services": [
+    {
+      "id": "psicologia-lorena",
+      "category": "Bienestar",
+      "title": "Atención psicológica · Alma Lorena López Ríos",
+      "summary": "Servicio gratuito, anónimo y confidencial para estudiantes con estado activo o vigente en la institución.",
+      "keywords": [
+        "psicóloga",
+        "psicología",
+        "salud mental",
+        "terapia",
+        "Lorena"
+      ],
+      "sections": [
+        {
+          "title": "Requisito",
+          "text": "Tener estado activo o vigente en la institución."
+        },
+        {
+          "title": "Dónde acudir",
+          "text": "Edificio de Desarrollo Académico, enfrente del edificio de Control Escolar. Entra por la puerta de “Psicología y tutorías”; es la primera puerta a tu derecha."
+        }
+      ],
+      "links": [
+        {
+          "label": "Agendar cita con Alma Lorena",
+          "url": "https://psicologa-lorena.youcanbook.me/"
+        }
+      ],
+      "source": {
+        "label": "Cartel de atención psicológica compartido por la comunidad",
+        "type": "community-poster"
+      }
+    },
+    {
+      "id": "psicologia-misael",
+      "category": "Bienestar",
+      "title": "Atención psicológica · Misael Burgos",
+      "summary": "Agenda una cita con el psicólogo Misael Burgos.",
+      "keywords": [
+        "psicología",
+        "psicólogo",
+        "salud mental"
+      ],
+      "sections": [
+        {
+          "title": "Ubicación",
+          "text": "Oficinas Administrativas."
+        }
+      ],
+      "links": [
+        {
+          "label": "Agendar cita con Misael",
+          "url": "https://misael-burgos.youcanbook.me/"
+        }
+      ],
+      "locationId": "PSI",
+      "source": {
+        "label": "Información compartida por la comunidad",
+        "type": "community"
+      }
+    },
+    {
+      "id": "evaluacion-vocacional",
+      "category": "Trámites",
+      "title": "Evaluación vocacional y cambio de carrera",
+      "summary": "Para solicitar un cambio de carrera, acude primero con la coordinación de la carrera a la que quieres cambiarte.",
+      "keywords": [
+        "vocación",
+        "vocacional",
+        "cambio de carrera",
+        "orientación"
+      ],
+      "sections": [
+        {
+          "title": "Primer paso",
+          "text": "Habla con la coordinación de la carrera de destino antes de agendar la evaluación vocacional."
+        }
+      ],
+      "links": [
+        {
+          "label": "Solicitar evaluación vocacional",
+          "url": "https://itculiacanedu.sharepoint.com/sites/AREA3/_layouts/15/listforms.aspx?cid=ZWY0MDI3MzQtNjIxYS00NWVlLWJmNTMtOTQ5Nzg5MjkyMWYw&nav=MDAzM2Y0MGItZjc2MS00ZTAxLTk0YjgtNmIwZTM2Nzk3NjNi"
+        }
+      ],
+      "source": {
+        "label": "Aviso de evaluación vocacional compartido por la comunidad",
+        "type": "community-poster"
+      }
+    },
+    {
+      "id": "biblioteca",
+      "category": "Apoyo académico",
+      "title": "Centro de Información · Biblioteca",
+      "summary": "Localiza el Centro de Información en el mapa del campus.",
+      "keywords": [
+        "libros",
+        "biblioteca",
+        "estudiar"
+      ],
+      "sections": [],
+      "links": [],
+      "locationId": "I",
+      "source": {
+        "label": "Directorio del mapa del campus",
+        "type": "campus-map"
+      }
+    },
+    {
+      "id": "idiomas",
+      "category": "Apoyo académico",
+      "title": "CELE · Idiomas",
+      "summary": "Encuentra el edificio de Idiomas en el campus.",
+      "keywords": [
+        "inglés",
+        "lenguas",
+        "CELE"
+      ],
+      "sections": [],
+      "links": [],
+      "locationId": "O",
+      "source": {
+        "label": "Directorio del mapa del campus",
+        "type": "campus-map"
+      }
+    },
+    {
+      "id": "asesorias",
+      "category": "Apoyo académico",
+      "title": "Asesorías y Ciencias Básicas",
+      "summary": "Ubica el edificio de Asesorías y Ciencias Básicas.",
+      "keywords": [
+        "matemáticas",
+        "asesorías",
+        "apoyo"
+      ],
+      "sections": [],
+      "links": [],
+      "locationId": "M",
+      "source": {
+        "label": "Directorio del mapa del campus",
+        "type": "campus-map"
+      }
+    },
+    {
+      "id": "medico",
+      "category": "Bienestar",
+      "title": "Consultorio médico",
+      "summary": "El consultorio médico está registrado entre los servicios del edificio H.",
+      "keywords": [
+        "doctor",
+        "médico",
+        "salud"
+      ],
+      "sections": [],
+      "links": [],
+      "locationId": "H",
+      "source": {
+        "label": "Directorio del mapa del campus",
+        "type": "campus-map"
+      }
+    },
+    {
+      "id": "deportes-cultura",
+      "category": "Vida estudiantil",
+      "title": "Promoción Deportiva y Cultural",
+      "summary": "Localiza el área de Promoción Deportiva y Cultural.",
+      "keywords": [
+        "deportes",
+        "cultura",
+        "actividades"
+      ],
+      "sections": [],
+      "links": [],
+      "locationId": "G",
+      "source": {
+        "label": "Directorio del mapa del campus",
+        "type": "campus-map"
+      }
+    },
+    {
+      "id": "portal-oficial",
+      "category": "Enlaces oficiales",
+      "title": "Portal del Tecnológico de Culiacán",
+      "summary": "Consulta el apartado de Estudiantes y los avisos vigentes en el sitio institucional.",
+      "keywords": [
+        "estudiantes",
+        "servicios",
+        "portal",
+        "trámites",
+        "becas",
+        "calendario"
+      ],
+      "sections": [],
+      "links": [
+        {
+          "label": "Abrir sitio oficial",
+          "url": "https://www.culiacan.tecnm.mx/"
+        }
+      ],
+      "source": {
+        "label": "Sitio institucional",
+        "url": "https://www.culiacan.tecnm.mx/",
+        "type": "official-link"
+      }
+    }
+  ]
+}

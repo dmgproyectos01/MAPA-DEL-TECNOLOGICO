@@ -1,0 +1,45 @@
+/* The guide stays closed until requested; it adds no markers or labels to the map. */
+#open-student-services { color: var(--accent-ink); background: var(--accent-soft); font-weight: 650; }
+#student-services-dialog { color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--brand-purple); border-radius: 16px; padding: 0; width: min(760px, calc(100vw - 32px)); max-width: none; height: min(780px, calc(100dvh - 48px)); max-height: none; box-shadow: var(--shadow); overflow: hidden; }
+#student-services-dialog[open] { display: flex; flex-direction: column; }
+#student-services-dialog::backdrop { background: #11182799; }
+.student-services-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 24px 26px 12px; flex: none; }
+.student-services-header h2 { font-size: 25px; line-height: 1.25; margin: 8px 0; letter-spacing: -.6px; }
+.student-services-header p { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.5; }
+.student-services-header .close { flex-shrink: 0; }
+.student-services-controls { padding: 8px 26px 0; flex: none; }
+#student-services-search { width: 100%; min-height: 44px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; color: var(--ink); }
+.student-services-filters { display: flex; gap: 6px; overflow-x: auto; padding: 12px 3px 6px; }
+.student-services-filters button { flex-shrink: 0; font-size: 11px; min-height: 38px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; }
+.student-services-filters button[aria-pressed="true"] { background: var(--accent); color: white; border-color: var(--accent); }
+.student-services-count { font-size: 11px; color: var(--muted); margin: 8px 0; }
+.student-services-list { flex: 1; min-height: 0; overflow: auto; padding: 4px 26px 18px; overscroll-behavior: contain; scrollbar-width: thin; }
+.student-service { border: 1px solid var(--line); border-radius: 10px; margin: 0 0 10px; background: var(--surface); }
+.student-service summary { cursor: pointer; padding: 16px 18px; position: relative; list-style: none; padding-right: 42px; }
+.student-service summary::-webkit-details-marker { display: none; }
+.student-service summary::after { content: '+'; position: absolute; top: 18px; right: 18px; color: var(--accent-ink); font-size: 20px; }
+.student-service[open] summary::after { content: '−'; }
+.student-service[open] { border-color: var(--accent); background: var(--panel); }
+.student-service-category { display: block; text-transform: uppercase; font-size: 9px; letter-spacing: 1px; color: var(--accent-ink); font-weight: 700; }
+.student-service h3 { font-size: 15px; line-height: 1.4; margin: 6px 0; }
+.student-service-summary { display: block; font-size: 12px; line-height: 1.65; color: var(--muted); }
+.student-service-body { padding: 0 18px 18px; }
+.student-service-body h4 { margin: 10px 0 4px; font-size: 12px; }
+.student-service-body p { margin: 4px 0 12px; line-height: 1.7; font-size: 12px; }
+.student-service-actions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 8px; }
+.student-service-actions a { text-decoration: none; display: inline-flex; align-items: center; }
+.student-service-actions .secondary { min-height: 44px; background: var(--accent-soft); color: var(--accent-ink); }
+.student-service-body .student-service-source { font-size: 10px; color: var(--muted); margin: 14px 0 0; }
+.student-services-footer { flex: none; border-top: 1px solid var(--line); padding: 12px 26px; font-size: 10px; color: var(--muted); line-height: 1.5; }
+.student-services-empty { color: var(--muted); font-size: 13px; line-height: 1.6; padding: 20px 0; }
+@media (max-width: 700px) {
+  .bottom-bar .campus-signature { display: none; }
+  .bottom-bar > div { width: 100%; justify-content: space-around; }
+  #student-services-dialog { width: calc(100vw - 16px); height: calc(100dvh - 24px); border-radius: 12px; }
+  .student-services-header { padding: 18px 16px 12px; gap: 8px; }
+  .student-services-header h2 { font-size: 21px; }
+  .student-services-header p { font-size: 12px; }
+  .student-services-controls { padding: 4px 16px 0; }
+  .student-services-list { padding: 4px 16px 16px; }
+  .student-services-footer { padding: 10px 16px; }
+}
